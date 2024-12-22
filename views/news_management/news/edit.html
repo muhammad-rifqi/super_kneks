@@ -12,11 +12,11 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
-    <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/tagify.min.css" />
+    <script type="text/javascript" src="https://js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function () {
             new nicEditor({ maxHeight: 100 }).panelInstance('editor1');
@@ -51,7 +51,7 @@
                     <div class="col-lg-12">
                         <form action="/updatenews" method="post" enctype="multipart/form-data">
                             <input type="hidden" name="id" id="id" value="">
-                            <input type="hidden" id="taggings" name="taggings" value="">
+                            <input type="hidden" id="max_id" name="MAX_FILE_SIZE" value="1048000" />
                             <div class="card stretch stretch-full">
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
@@ -79,23 +79,19 @@
                                         </div>
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Excerpt Indonesia</label>
-                                            <textarea class="form-control" name="excerpt"
-                                                id="editor1"></textarea>
+                                            <textarea class="form-control" name="excerpt" id="editor1"></textarea>
                                         </div>
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Excerpt English</label>
-                                            <textarea class="form-control" name="excerpt_en"
-                                                id="editor2"></textarea>
+                                            <textarea class="form-control" name="excerpt_en" id="editor2"></textarea>
                                         </div>
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Content Indonesia</label>
-                                            <textarea class="form-control" name="content"
-                                                id="editor3"></textarea>
+                                            <textarea class="form-control" name="content" id="editor3"></textarea>
                                         </div>
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Content English</label>
-                                            <textarea class="form-control" name="content_en"
-                                                id="editor4"></textarea>
+                                            <textarea class="form-control" name="content_en" id="editor4"></textarea>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
@@ -105,7 +101,8 @@
 
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Photo</label>
-                                            <input class="form-control" name="photo" id="photo" type="file">
+                                            <input class="form-control" name="photo" id="photo" type="file"
+                                                accept="image/*" onchange="upload_check()"> )* Max Upload 1 MB
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
@@ -132,8 +129,14 @@
                                             <span id="tag">
 
                                             </span>
+                                            <input name="taggings" type="text" class="tagify" id="tagify" required>
                                         </div>
 
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Direktorat</label>
+                                            <select class="form-control" name="hot_category_id" id="mySelect" multiple placeholder="Silahkan Pilih" required>
+                                            </select>
+                                        </div>
 
                                         <div class="col-lg-12 mb-4 text-left">
                                             <label class="form-label"></label>
@@ -164,23 +167,30 @@
         </footer>
         <!-- [ Footer ] end -->
     </main>
-
+    <script src="/assets/vendors/js/jquery.min.js"></script>
     <script src="/assets/vendors/js/vendors.min.js"></script>
-    <script src="/assets/vendors/js/dataTables.min.js"></script>
-    <script src="/assets/vendors/js/dataTables.bs5.min.js"></script>
     <script src="/assets/vendors/js/select2.min.js"></script>
-    <script src="/assets/vendors/js/select2-active.min.js"></script>
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/theme-customizer-init.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    <script src="/assets/vendors/js/tagify.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#mySelect').select2();
+        });
+    </script>
     <script>
         window.addEventListener("load", async () => {
+            const inputElm = document.querySelector('input.tagify');
+            new Tagify(inputElm);
             let news_category_id;
             await getUrlById();
             await getCategoryHotIssue();
             await getTagging();
-            await handleClick();
-
+            await getCategoryHotIssueId();
+            // await handleClick();
+            await upload_check();
+            
         })
 
         function getUrlById() {
@@ -191,12 +201,12 @@
                     document.getElementById("id").value = rows[0]?.id;
                     document.getElementById("title").value = rows[0]?.title;
                     document.getElementById("title_en").value = rows[0]?.title_en;
-                    nicEditors.findEditor( "editor1" ).setContent( rows[0]?.excerpt );
-                    nicEditors.findEditor( "editor2" ).setContent( rows[0]?.excerpt_en );
-                    nicEditors.findEditor( "editor3" ).setContent( rows[0]?.content );
-                    nicEditors.findEditor( "editor4" ).setContent( rows[0]?.content_en );
+                    nicEditors.findEditor("editor1").setContent(rows[0]?.excerpt);
+                    nicEditors.findEditor("editor2").setContent(rows[0]?.excerpt_en);
+                    nicEditors.findEditor("editor3").setContent(rows[0]?.content);
+                    nicEditors.findEditor("editor4").setContent(rows[0]?.content_en);
                     news_category_id = rows[0]?.category_id;
-                    document.getElementById("listtag").innerHTML=`<b>[${rows[0]?.tag}]</b>`;
+                    document.getElementById("listtag").innerHTML = `<b>[${rows[0]?.tag}]</b>`;
                     if (rows?.is_publish == 1) {
                         document.getElementById("is_publish").setAttribute('checked', true);
                     } else {
@@ -228,23 +238,51 @@
         }
 
 
-        function getTagging(){
+        function getTagging() {
             fetch('/tagging')
                 .then(res => res.json())
                 .then((rrr) => {
-                    let ttt = "";
+                    let tttt = "";
                     rrr.forEach(items => {
-                        ttt += `&nbsp;<input type="checkbox" id="cek${items?.id}" name="options" value="${items?.tagging}" onchange="handleClick(${items?.id})"> &nbsp; ${items?.tagging} &nbsp;`;
+                        // ttt += `&nbsp;<input type="checkbox" id="cek${items?.id}" name="options" value="${items?.tagging}" onchange="handleClick(${items?.id})"> &nbsp; ${items?.tagging} &nbsp;`;
+                        tttt += `${items?.tagging},`;
                     });
-                    document.getElementById("tag").innerHTML = ttt;
+                    document.getElementById("tag").innerHTML = tttt;
+                    document.getElementById("tagify").value = tttt;
                 })
         }
 
-        function handleClick(event) {
-            const checkboxes = document.querySelectorAll('input[name="options"]:checked');
-            const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
-            document.getElementById("taggings").value = selectedValues.join(',');
+
+        function getCategoryHotIssueId() {
+            fetch('/hotissuecategory')
+                .then(res => res.json())
+                .then((qqq) => {
+                    qqq.forEach(items => {
+                        const aaa = document.createElement('option')
+                        aaa.value = `${items?.id}`;
+                        aaa.text = `${items?.title}`;
+                        document.getElementById("mySelect").append(aaa);
+                    });
+                })
         }
+
+        // function handleClick(event) {
+        //     const checkboxes = document.querySelectorAll('input[name="options"]:checked');
+        //     const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+        //     document.getElementById("taggings").value = selectedValues.join(',');
+        // }
+
+        function upload_check() {
+            var upl = document.getElementById("photo");
+            var max = document.getElementById("max_id").value;
+            if (upl.files[0].size > max) {
+                alert("File too big!");
+                upl.value = "";
+                return false;
+            }
+
+            return true;
+        };
 
     </script>
 </body>

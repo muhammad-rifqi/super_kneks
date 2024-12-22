@@ -7,6 +7,14 @@ const port = process.env.PORT;
 const path = require('path');
 const cookieParser = require("cookie-parser");
 const db = require('./db/query');
+const peserta = require('./db/data_peserta.json');
+const pembuka = require('./db/data_pembuka.json');
+const prioritas = require('./db/data_prioritas.json');
+const usia = require('./db/data_usia.json');
+const negara = require('./db/data_negara.json');
+const kbli = require('./db/data_kbli.json');
+const gender = require('./db/data_gender.json');
+const area = require('./db/data_area.json');
 
 apps.use(cookieParser());
 apps.use(bodyParser.json())
@@ -82,6 +90,30 @@ let custom_page = multer.diskStorage(
     }
 );
 let page_path = multer({ storage: custom_page });
+// :::::::::::::::::::::::::::::::::: Slide Show Path ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+let directorat_images = multer.diskStorage(
+    {
+        destination: './public/uploads/directorat/images/',
+        filename: function (req, file, cb) {
+            cb(null, file.originalname.replace(" ", ""));
+        }
+    }
+);
+let directorats_images = multer({ storage: directorat_images });
+
+//:::::::::::::::::::::::::::::::::::::::::::::End Of Direktorat Images :::::::::::::::::::::::::::::::::::::::
+
+
+let slideshow_page = multer.diskStorage(
+    {
+        destination: './public/uploads/slideshow/',
+        filename: function (req, file, cb) {
+            cb(null, file.originalname.replace(" ", ""));
+        }
+    }
+);
+let slide_path = multer({ storage: slideshow_page });
 
 //::::::::::::::: Start Of Routes :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -223,6 +255,34 @@ apps.get('/zk_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/profile/zona_khas/edit.html'));
 })
 
+apps.get('/kdeks', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/kdeks.html'));
+})
+
+apps.get('/kdeks_add', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/kdeks_add.html'));
+})
+
+apps.get('/kdeks_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/kdeks_edit.html'));
+})
+
+apps.get('/master', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/master.html'));
+})
+
+apps.get('/master_add', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/master_add.html'));
+})
+
+apps.get('/master_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/master_edit.html'));
+})
+
+apps.get('/es', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/tentang_kami/ekonomi_syariah.html'));
+})
+
 //::::::::::::::: Home Management :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/i', (req, res) => {
@@ -253,6 +313,10 @@ apps.get('/b', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/banner/list.html'));
 })
 
+apps.get('/b_add', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/banner/add.html'));
+})
+
 apps.get('/b_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/banner/edit.html'));
 })
@@ -273,6 +337,21 @@ apps.get('/m_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/maps/edit.html'));
 })
 
+apps.get('/directorats', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/directorat/list.html'));
+})
+
+apps.get('/directorats_add', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/directorat/add.html'));
+})
+
+apps.get('/directorats_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/directorat/edit.html'));
+})
+
+apps.get('/directorats_detail/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/directorat/detail.html'));
+})
 //::::::::::::::: One Data Center ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/f', (req, res) => {
@@ -319,31 +398,7 @@ apps.get('/p_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/one_data_center/pdes/edit.html'));
 })
 
-apps.get('/pm', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_menu/list.html'));
-})
-
-apps.get('/pm_edit/:id', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_menu/edit.html'));
-})
-
-apps.get('/ps', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_submenu/list.html'));
-})
-
-apps.get('/ps_edit/:id', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_submenu/edit.html'));
-})
-
-apps.get('/po', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_overview/list.html'));
-})
-
-apps.get('/po_edit/:id', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/pdes_overview/edit.html'));
-})
-
-apps.get('/custom', (req, res) => {
+apps.get('/customfront', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/custom_page/list.html'));
 })
 
@@ -361,12 +416,130 @@ apps.get('/u_add', (req, res) => {
     res.sendFile(path.resolve('./views/user_management/users/add.html'));
 })
 
-apps.get('/u_edit', (req, res) => {
+apps.get('/u_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/user_management/users/edit.html'));
 })
 
 apps.get('/cp', (req, res) => {
     res.sendFile(path.resolve('./views/user_management/change_password/list.html'));
+})
+
+apps.get('/new_user', (req, res) => {
+    res.sendFile(path.resolve('./views/user_management/new_user/list.html'));
+})
+
+apps.get('/whitelist', (req, res) => {
+    res.sendFile(path.resolve('./views/user_management/whitelist/list.html'));
+})
+//:::::::::::::::::::::::::::::::: Custom Page :::::::::::::::::::::::::::::::::::::
+
+
+apps.get('/slidefront', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/slide/list.html'));
+})
+
+apps.get('/slide_add', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/slide/add.html'));
+})
+
+apps.get('/datafront', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/list.html'));
+})
+
+apps.get('/data_add', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/add.html'));
+})
+
+apps.get('/data_detail/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/view.html'));
+});
+
+apps.get('/narationfront', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/naration.html'));
+});
+
+apps.get('/edit_narationfront/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/naration_edit.html'));
+});
+
+apps.get('/narationfront_add', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/naration_add.html'));
+});
+
+apps.get('/metabase', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/metabase.html'));
+});
+
+// :::::::::::::::::::::::::::: Opini ::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/opini', (req, res) => {
+    res.sendFile(path.resolve('./views/opini/opini.html'));
+})
+
+apps.get('/opini_add', (req, res) => {
+    res.sendFile(path.resolve('./views/opini/opini_add.html'));
+})
+
+apps.get('/opini_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/opini/opini_edit.html'));
+})
+
+//::::::::::::::: Pengaturan :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/titleweb', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/title.html'));
+})
+
+apps.get('/web_title_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/edit_title.html'));
+})
+
+apps.get('/logo', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/logo.html'));
+})
+
+apps.get('/web_logo_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/edit_logo.html'));
+})
+
+apps.get('/header', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/header.html'));
+})
+
+apps.get('/web_header_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/edit_header.html'));
+})
+
+apps.get('/color', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/color.html'));
+})
+
+apps.get('/web_color_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/identitas_web/edit_color.html'));
+})
+
+apps.get('/menu', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/menu/list.html'));
+})
+
+apps.get('/menu_add', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/menu/add.html'));
+})
+
+apps.get('/menu_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/menu/edit.html'));
+})
+
+apps.get('/submenu', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/sub_menu/list.html'));
+})
+
+apps.get('/submenu_add', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/sub_menu/add.html'));
+})
+
+apps.get('/submenu_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/pengaturan/sub_menu/edit.html'));
 })
 
 //::::::::::::::: Api & Query DB :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -409,6 +582,16 @@ apps.get('/detailnewscategory/:id', db.detailnewscategory);
 apps.get('/deletenewscategory/:id', db.deletenewscategory);
 
 apps.get('/api/newspaging', db.pagingnews);
+
+apps.get('/api_news', db.news_kdeks);
+
+apps.get('/api_news_detail/:id', db.news_details_kdeks);
+
+apps.get('/api_newscategory', db.news_categories_kdeks);
+
+apps.get('/api_detailnewscategory/:id', db.news_detailnewscategory_kdeks);
+
+
 //::::::::::::::: Api & Query DB PHOTOS ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/photodetail/:id', db.photodetail);
@@ -433,9 +616,19 @@ apps.get('/deletevideo/:id', db.deletevideo);
 
 apps.get('/users', db.users);
 
+apps.get('/users_detail/:id', db.users_detail);
+
+apps.get('/users_new', db.users_new);
+
+apps.get('/users_whitelist', db.users_whitelist);
+
 apps.get('/roles', db.userroles);
 
+apps.get('/approveusers/:id', db.approveusers);
+
 apps.post('/insertusers', db.insertusers);
+
+apps.post('/updateusers', db.updateusers);
 
 apps.get('/deleteuser/:id', db.deleteuser);
 
@@ -447,11 +640,23 @@ apps.post('/changespassword', db.changespassword);
 
 apps.get('/abouts', db.abouts);
 
+apps.get('/api_about', db.abouts_kdeks);
+
+apps.get('/api_history', db.history_kdeks);
+
 apps.get('/detailabouts/:id', db.detailabout);
+
+apps.get('/api_sejarah_province/:id', db.history_province);
+
+apps.get('/api_about_province/:id', db.about_province);
 
 apps.post('/updatetentangkami', db.updateabouts);
 
 apps.get('/deleteabouts/:id', db.deleteabout);
+
+apps.post('/insertkdeks', db.insertkdeks);
+
+apps.post('/updatekdeks', db.updatekdeks);
 
 //::::::::::::::: Api & Query DB STRUCTURE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -472,6 +677,18 @@ apps.get('/hotissue', db.hotissue);
 apps.get('/directorat', db.directorat);
 
 apps.get('/directorat_path/:id', db.directorat_path);
+
+apps.post('/insertdirectorats', db.insertdirectorats);
+
+apps.post('/directorats_update', db.update_directorats);
+
+apps.post('/directorats_upload', directorats_images.fields([{ name: "images", maxCount: 1 }, { name: "banners", maxCount: 1 },]), db.directorats_uploads);
+
+apps.get('/directorats_delete/:id', db.delete_direactorats);
+
+apps.get('/images_direactorat_delete/:id/:foto', db.delete_images_direactorats);
+
+apps.get('/banners_direactorat_delete/:id/:foto', db.delete_banners_direactorats);
 
 apps.get('/hotissuedetail/:id', db.hotissue_detail);
 
@@ -498,8 +715,6 @@ apps.get('/detailhotissuecategory/:id', db.detailhotissuecategory);
 apps.post('/inserthotissubcategory', db.inserthotissubcategory);
 
 apps.post('/updatehotissuesubcategory', db.updatehotissuesubcategory);
-
-apps.get('/direktorat', db.directorat);
 
 //::::::::::::::: Api & Query DB INSTITUTION ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -548,9 +763,11 @@ apps.get('/banners', db.banners);
 
 apps.get('/detailbanners/:id', db.detailbanner);
 
+apps.post('/insertbanners', slide_path.single('images'), db.insertbanners);
+
 apps.get('/deletebanners/:id', db.deletebanner);
 
-apps.post('/updatebanner', db.updatebanners);
+apps.post('/updatebanner', slide_path.single('images'), db.updatebanners);
 //::::::::::::::: Api & Query DB FILES ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/files', db.files);
@@ -591,30 +808,6 @@ apps.get('/search_agenda', db.search_agenda);
 
 //::::::::::::::: Api & Query DB PDES ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-apps.get('/pdes', db.pdes);
-
-apps.get('/pdes_detail/:id', db.pdes_detail);
-
-apps.post('/updatepdes', db.updatepdes);
-
-apps.get('/pdes_menu', db.pdes_menu);
-
-apps.get('/pdes_menu_detail/:id', db.pdes_menu_detail);
-
-apps.post('/updatepdesmenu', db.updatepdesmenu);
-
-apps.get('/pdes_submenu', db.pdes_submenu);
-
-apps.get('/pdes_submenu_detail/:id', db.pdes_submenu_detail);
-
-apps.post('/updatepdessubmenu', db.updatepdessubmenu);
-
-apps.get('/pdes_overview', db.pdes_overview);
-
-apps.get('/pdes_overview_detail/:id', db.pdes_overview_detail);
-
-apps.post('/updatepdesoverview', db.updatepdesoverview);
-
 apps.get('/zona_khas', db.khas_zone);
 
 apps.get('/zona_peta', db.zona_peta);
@@ -641,6 +834,40 @@ apps.post('/updatetagging', db.updatetagging);
 
 apps.get('/provinces', db.provinces);
 
+apps.get('/provinces_detail/:id', db.provinces_detail);
+
+apps.get('/kbli', async (req, res) => {
+    return res.status(200).json(kbli);
+});
+
+apps.get('/peserta', async (req, res) => {
+    return res.status(200).json(peserta);
+});
+
+apps.get('/area', async (req, res) => {
+    return res.status(200).json(area);
+});
+
+apps.get('/gender', async (req, res) => {
+    return res.status(200).json(gender);
+});
+
+apps.get('/negara', async (req, res) => {
+    return res.status(200).json(negara);
+});
+
+apps.get('/pembuka', async (req, res) => {
+    return res.status(200).json(pembuka);
+});
+
+apps.get('/prioritas', async (req, res) => {
+    return res.status(200).json(prioritas);
+});
+
+apps.get('/usia', async (req, res) => {
+    return res.status(200).json(usia);
+});
+
 //::::::::::::::: Api & Query DB AUTH ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/custom_page', db.custom_page);
@@ -650,7 +877,96 @@ apps.get('/detail_custom_page/:id', db.detail_custom_page);
 apps.post('/insertcustompage', page_path.single('files_image'), db.insertcustompage);
 
 apps.get('/delete_custom_page/:id/:foto', db.delete_custom_page);
+
 //::::::::::::::: Api & Query CUSTOM PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/narations', db.naration);
+
+apps.get('/narations_detail/:id', db.naration_detail);
+
+apps.post('/insertnarations', db.insertnarations);
+
+apps.post('/updatenarations', db.updatenarations);
+
+apps.get('/api_metabase', db.metabase);
+
+apps.get('/api_metabase_detail/:id', db.detail_metabase);
+
+apps.get('/api_metabase_delete/:id', db.metabase_delete);
+
+apps.post('/insertapimeta', db.insertapimeta);
+
+apps.get('/statistics', db.statistics);
+
+apps.get('/delete_statistics/:id', db.deletestatistic);
+
+apps.post('/insertstatistics', db.insertstatistic);
+
+apps.get('/sourcesdata', db.sourcesdata);
+
+apps.get('/sourcesdatadetail/:id', db.sourcesdatadetail);
+
+apps.get('/deletesourcesdata/:id', db.deletesourcesdata);
+
+apps.post('/insertsourcesdata', db.insertsourcesdata);
+
+apps.post('/insertdetailsourcedata', db.insertdetailsourcedata);
+
+apps.get('/sourcesdatadetaillist/:id', db.sourcesdatadetaillist);
+
+apps.get('/sourcedata_detail_delete/:id', db.sourcesdatadetaildelete);
+//::::::::::::::::::::::::::: APi Opini ::::::::::::::::::::::::::::::::::::
+
+apps.get('/api_opini', db.opini);
+
+apps.get('/api_opini_detail/:id', db.opini_detail);
+
+apps.post('/insertopini', db.insertopini);
+
+apps.post('/updateopini', db.updateopini);
+
+apps.get('/deleteopini/:id', db.deleteopini);
+
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::: Api & Setting ::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/api_web_profile', db.web_profile);
+
+apps.get('/api_detail_webprofile/:id', db.web_profile_detail);
+
+apps.post('/updatewebtitle', db.updatewebtitle);
+
+apps.post('/updateweblogo', db.updateweblogo);
+
+apps.post('/updatewebheader', db.updatewebheader);
+
+apps.post('/updatewebcolor', db.updatewebcolor);
+
+apps.get('/api_menu', db.menu);
+
+apps.post('/insertmenu', db.insertmenu);
+
+apps.post('/updatemenu', db.updatemenu);
+
+apps.get('/api_menu_detail/:id', db.menu_detail);
+
+apps.get('/api_submenu', db.submenu);
+
+apps.post('/insertsubmenu', db.insertsubmenu);
+
+apps.post('/updatesubmenu', db.updatesubmenu);
+
+apps.get('/api_submenu_detail/:id', db.submenu_detail);
+//::::::::::::::: Api & Query CUSTOM DATA NARATION PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/api_kdeks', db.kdeks);
+
+apps.post('/insertmaster', db.insertmaster);
+
+apps.post('/updatemaster', db.updatemaster);
+
+apps.get('/master_delete/:id', db.deletemaster);
+
+//::::::::::::::::: End Of KDEKS ::::::::::::::::::::::::::
 
 apps.post('/insertusers', db.user_register);
 
