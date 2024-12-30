@@ -16,9 +16,13 @@ const do_login = async (req, res) => {
         res.cookie("id", sql[0]?.id);
         res.cookie("name", sql[0]?.name);
         res.cookie("roles_id", sql[0]?.role_id);
-        res.redirect("/dashboard");
+        res.cookie("id_province", sql[0]?.id_province);
+        res.cookie("directorat_id", sql[0]?.directorat_id);
+        // res.redirect("/dashboard");
+        res.status(200).json({ "success": "true" })
     } else {
-        res.redirect("/");
+        // res.redirect("/");
+        res.status(200).json({ "success": "false" })
     }
 }
 
@@ -38,6 +42,8 @@ const do_logout = (req, res) => {
     res.clearCookie("name");
     res.clearCookie("id");
     res.clearCookie("roles_id");
+    res.clearCookie("id_province");
+    res.clearCookie("directorat_id");
     res.redirect("/");
 }
 
@@ -151,11 +157,23 @@ const history_province = async (req, res) => {
 }
 
 const kdeks = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks'");
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
+    //rifqi
+    const role_id_users = req.cookies.roles_id;
+    const roles_prov = req.cookies.id_province;
+    if (role_id_users == 1 || role_id_users == 2) {
+        const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks'");
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json({ "success": false })
+        }
     } else {
-        res.status(200).json({ "success": false })
+        const sql = await executeQuery("SELECT * FROM abouts where id_province = $1", [roles_prov]);
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json({ "success": false })
+        }
     }
 }
 
@@ -327,16 +345,27 @@ const updatestructure = async (req, res) => {
 
 const directorat = async (req, res) => {
     // const sql = await executeQuery('SELECT * FROM `hot_issues` LEFT JOIN `hot_subcategories`on hot_issues.hot_subcategory_id = hot_subcategories.id LEFT JOIN hot_categories on hot_subcategories.hot_category_id = hot_categories.id GROUP BY hot_categories.id');
-    const sql = await executeQuery('SELECT * FROM `hot_categories`');
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
+    const role_id_users = req.cookies.roles_id;
+    if (role_id_users == 1 || role_id_users == 2) {
+        const sql = await executeQuery('SELECT * FROM hot_categories');
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json([])
+        }
     } else {
-        res.status(200).json({ "success": false })
+        const sql = await executeQuery("SELECT * FROM hot_categories where id = $1", [role_id_users]);
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json([])
+        }
     }
 }
 
 const insertdirectorats = async (req, res) => {
-    const sql = await executeQuery('INSERT INTO hot_categories(title,title_en,description,description_en)values($1,$2,$3,$4)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en]);
+    const a = req.body.daerah.split('-');
+    const sql = await executeQuery('INSERT INTO hot_categories(title,title_en,description,description_en,id_province,province_name)values($1,$2,$3,$4,$5,$6)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1]]);
     if (sql?.length > 0) {
         res.redirect('/directorats');
     } else {
@@ -347,7 +376,7 @@ const insertdirectorats = async (req, res) => {
 
 const directorat_path = async (req, res) => {
     const id_hot_cat = req.params.id;
-    const sql = await executeQuery('SELECT * FROM `hot_issues` where hot_issue_category = $1 ', [id_hot_cat]);
+    const sql = await executeQuery('SELECT * FROM hot_issues where hot_issue_category = $1 ', [id_hot_cat]);
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -362,9 +391,9 @@ const update_directorats = async (req, res) => {
     const date = today.getFullYear() + '-' + mmm + '-' + today.getDate();
     const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     const datetimes = date + ' ' + time;
-
-    const sql = await executeQuery("update hot_categories set title=$1,title_en=$2,description=$3,description_en=$4,created_at=$5,updated_at=$6,deleted_at=$7 where id = $8",
-        [req.body.title, req.body.title_en, req.body.description, req.body.description_en, datetimes, datetimes, datetimes, req.body.id]);
+    const a = req.body.daerah.split('-');
+    const sql = await executeQuery("update hot_categories set title=$1,title_en=$2,description=$3,description_en=$4,created_at=$5,updated_at=$6,deleted_at=$7,id_province=$8,province_name=$9 where id = $10",
+        [req.body.title, req.body.title_en, req.body.description, req.body.description_en, datetimes, datetimes, datetimes, a[0], a[1], req.body.id]);
 
     if (sql) {
         res.redirect('/directorats');
@@ -692,7 +721,7 @@ const deleteinstitution = async (req, res) => {
 const updateinstitution = async (req, res) => {
 
     if (req.body.logo != "" || req.body.logo == undefined || !req.body.logo) {
-        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, logo=$3, link=$4, `order`=$5 where id = $6 ', [req.body.tag, req.body.name, req.body.logo, req.body.link, req.body.order, req.body.id]);
+        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, logo=$3, link=$4, order=$5 where id = $6 ', [req.body.tag, req.body.name, req.body.logo, req.body.link, req.body.order, req.body.id]);
         if (sql) {
             res.redirect('/i');
         } else {
@@ -700,7 +729,7 @@ const updateinstitution = async (req, res) => {
             res.redirect('/i');
         }
     } else {
-        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, link=$3, `order`=$4 where id = $5 ', [req.body.tag, req.body.name, req.body.link, req.body.order, req.body.id]);
+        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, link=$3, order=$4 where id = $5 ', [req.body.tag, req.body.name, req.body.link, req.body.order, req.body.id]);
         if (sql) {
             res.redirect('/i');
         } else {
@@ -1493,8 +1522,10 @@ const insertnews = async (req, res) => {
     const timeupdate = date + ' ' + time;
     const news_datetime = req.body.news_datetime.replace("T", " ");
     const fileupload = site_url + "/uploads/news/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("insert into news(title,title_en,excerpt,excerpt_en,content,content_en,image,is_publish,news_datetime,created_at,updated_at,deleted_at,category_id,tag,directorat) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)",
-        [req.body.title, req.body.title_en, req.body.excerpt, req.body.excerpt_en, req.body.content, req.body.content_en, fileupload, req.body.is_publish, news_datetime, timeupdate, timeupdate, null, req.body.category_id, req.body.taggings, req.body.hot_category_id]);
+    const id_user = req.cookies.id;
+    const wei = (req.cookies.roles_id == '6') ? 'kdeks' :  'kneks';
+    const sql = await executeQuery("insert into news(title,title_en,excerpt,excerpt_en,content,content_en,image,is_publish,news_datetime,created_at,updated_at,deleted_at,category_id,web_identity,tag,directorat,users_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)",
+        [req.body.title, req.body.title_en, req.body.excerpt, req.body.excerpt_en, req.body.content, req.body.content_en, fileupload, req.body.is_publish, news_datetime, timeupdate, timeupdate, null, req.body.category_id, wei, req.body.taggings, req.body.hot_category_id,id_user]);
     if (sql) {
         res.redirect('/n');
     } else {
@@ -1869,8 +1900,8 @@ const insertusers = async (req, res) => {
     const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     const time_datetime = date + ' ' + time;
     const pw = md5(req.body.password);
-    const sql = await executeQuery("insert into users(name,email,password,role_id,created_at,updated_at,ip_address) values($1,$2,$3,$4,$5,$6,$7)",
-        [req.body.name.replace( /\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, req.body.ip_address]);
+    const sql = await executeQuery("insert into users(name,email,password,role_id,created_at,updated_at,ip_address, directorat_id, id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9)",
+        [req.body.name.replace(/\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, req.body.ip_address, req.body.directorat_id, req.body.id_province]);
     if (sql) {
         res.redirect('/u');
     } else {
@@ -1917,10 +1948,10 @@ const deleteuser = async (req, res) => {
 const updateusers = async (req, res) => {
     const id_user = req.body.id;
     if (req.body.passwords == "" || req.body.passwords == null) {
-        await executeQuery("UPDATE users SET name=$1 , email=$2 ,  role_id = $3 , ip_address = $4 WHERE id=$5 ", [req.body.names.replace( /\s/g, ''), req.body.emails, req.body.roles_id, req.body.ip_address, id_user]);
+        await executeQuery("UPDATE users SET name=$1 , email=$2 ,  role_id = $3 , ip_address = $4 , directorat_id = $5, id_province=$6 WHERE id=$7 ", [req.body.names.replace(/\s/g, ''), req.body.emails, req.body.roles_id, req.body.ip_address, req.body.directorat_id, req.body.id_province, id_user]);
         res.redirect('/u');
     } else {
-        await executeQuery("UPDATE users SET name=$1 , email=$2 , password = $3 , role_id = $4, ip_address = $5 WHERE id=$6 ", [req.body.names.replace( /\s/g, ''), req.body.emails, md5(req.body.passwords), req.body.roles_id, req.body.ip_address, id_user]);
+        await executeQuery("UPDATE users SET name=$1 , email=$2 , password = $3 , role_id = $4, ip_address = $5, directorat_id = $6, id_province = $7 WHERE id=$8 ", [req.body.names.replace(/\s/g, ''), req.body.emails, md5(req.body.passwords), req.body.roles_id, req.body.ip_address, req.body.directorat_id, req.body.id_province, id_user]);
         res.redirect('/u');
     }
 }
