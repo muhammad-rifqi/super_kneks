@@ -23,7 +23,7 @@ const do_login = async (req, res) => {
         res.status(200).json({ "success": "true" })
     } else {
         // res.redirect("/");
-        res.status(200).json({ "success": "false" })
+        res.status(200).json({ "success": "false", "data" : sql })
     }
 }
 
