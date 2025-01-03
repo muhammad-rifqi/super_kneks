@@ -236,6 +236,11 @@ if(path == 'cp'){
     breadcrumb1 = "Ubah Password";
     breadcrumb2 = "Form Data";
 }
+//-----------------------End Of Whitelist-----------------------------
+if(path == 'ip_address'){
+    breadcrumb1 = "IP Address";
+    breadcrumb2 = "List IP Address";
+}
 
 
 document.write(`<div class="page-header">

@@ -431,6 +431,10 @@ apps.get('/new_user', (req, res) => {
 apps.get('/whitelist', (req, res) => {
     res.sendFile(path.resolve('./views/user_management/whitelist/list.html'));
 })
+
+apps.get('/ip_address', (req, res) => {
+    res.sendFile(path.resolve('./views/user_management/whitelist/ipaddress.html'));
+})
 //:::::::::::::::::::::::::::::::: Custom Page :::::::::::::::::::::::::::::::::::::
 
 
@@ -622,9 +626,15 @@ apps.get('/users_new', db.users_new);
 
 apps.get('/users_whitelist', db.users_whitelist);
 
+apps.get('/users_ipaddress', db.users_ipaddress);
+
 apps.get('/roles', db.userroles);
 
 apps.get('/approveusers/:id', db.approveusers);
+
+apps.get('/approveipaddress/:id', db.approveipaddress);
+
+apps.get('/deleteipaddress/:id', db.deleteipaddress);
 
 apps.post('/insertusers', db.insertusers);
 
