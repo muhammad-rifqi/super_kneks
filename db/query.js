@@ -9,9 +9,9 @@ let site_url = "https://webdev.rifhandi.com";
 const do_login = async (req, res) => {
     const email = req?.body?.email;
     const password = md5(req?.body?.password);
-    // const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = 'Y' AND ip_address = $3", [email, password, req.body.ip_address]);
-    const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = $3", [email, password,'Y']);
+    const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = 'Y'", [email, password]);
     if (sql?.length > 0) {
+        u_id = sql[0]?.id;
         const isLogin = true;
         res.cookie("islogin", isLogin);
         res.cookie("id", sql[0]?.id);
@@ -364,6 +364,26 @@ const directorat = async (req, res) => {
     }
 }
 
+const directorat_devisi = async (req, res) => {
+    const sql = await executeQuery('SELECT * FROM devisi');
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorats_devisi_delete = async (req, res) => {
+    const iddev = req.params.id;
+    const sql = await executeQuery('DELETE FROM  devisi where id=$1', [iddev]);
+    if (sql) {
+        res.redirect('/directorats_devisi/' + iddev);
+    } else {
+        console.log(sql)
+        res.redirect('/directorats_devisi/' + iddev);
+    }
+}
+
 const insertdirectorats = async (req, res) => {
     const a = req.body.daerah.split('-');
     const sql = await executeQuery('INSERT INTO hot_categories(title,title_en,description,description_en,id_province,province_name)values($1,$2,$3,$4,$5,$6)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1]]);
@@ -424,6 +444,17 @@ const directorats_uploads = async (req, res) => {
         res.redirect('/directorats_detail/' + req.body.id);
     } else {
         res.redirect('/directorats_detail/' + req.body.id);
+    }
+}
+
+
+const directorat_devisi_add = async (req, res) => {
+    const sql = await executeQuery("insert into devisi(title,description,directorats_id)values($1,$2,$3)",
+        [req.body.title, req.body.description, req.body.id]);
+    if (sql) {
+        res.redirect('/directorats_devisi/' + req.body.id);
+    } else {
+        res.redirect('/directorats_devisi/' + req.body.id);
     }
 }
 
@@ -722,7 +753,7 @@ const deleteinstitution = async (req, res) => {
 const updateinstitution = async (req, res) => {
 
     if (req.body.logo != "" || req.body.logo == undefined || !req.body.logo) {
-        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, logo=$3, link=$4, order=$5 where id = $6 ', [req.body.tag, req.body.name, req.body.logo, req.body.link, req.body.order, req.body.id]);
+        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, logo=$3, link=$4 where id = $5 ', [req.body.tag, req.body.name, req.body.logo, req.body.link, req.body.id]);
         if (sql) {
             res.redirect('/i');
         } else {
@@ -730,7 +761,7 @@ const updateinstitution = async (req, res) => {
             res.redirect('/i');
         }
     } else {
-        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, link=$3, order=$4 where id = $5 ', [req.body.tag, req.body.name, req.body.link, req.body.order, req.body.id]);
+        const sql = await executeQuery('UPDATE institutions set tag=$1, name=$2, link=$3 where id = $5 ', [req.body.tag, req.body.name, req.body.link, req.body.id]);
         if (sql) {
             res.redirect('/i');
         } else {
@@ -923,7 +954,7 @@ const deletebanner = async (req, res) => {
 const insertbanners = async (req, res) => {
     if (req.file) {
         const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery('INSERT INTO banners (title,title_en,content,content_en,image,order, is_publish)values($1,$2,$3,$4,$5,$6,$7) ', [req.body.title, req.body.title_en, req.body.content, req.body.content_en, filesimage, '0', '1']);
+        const sql = await executeQuery('INSERT INTO banners (title,title_en,content,content_en,image, is_publish)values($1,$2,$3,$4,$5,$6) ', [req.body.title, req.body.title_en, req.body.content, req.body.content_en, filesimage, '1']);
         if (sql) {
             res.redirect('/b');
         } else {
@@ -1902,6 +1933,7 @@ const approveusers = async (req, res) => {
 }
 
 const approveipaddress = async (req, res) => {
+
     const today = new Date();
     const month = (today.getMonth() + 1);
     const mmm = month.length < 2 ? "0" + month : month;
@@ -2201,7 +2233,7 @@ const deletetagging = async (req, res) => {
 }
 
 const custom_page = async (req, res) => {
-    const sql = await executeQuery('SELECT * FROM custom_page');
+    const sql = await executeQuery("SELECT * FROM custom_page where flag = 'login'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
@@ -2240,6 +2272,66 @@ const insertcustompage = async (req, res) => {
     }
 }
 
+const custom_page_slogo = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM custom_page where flag = 's_logo'");
+    const array = [];
+    sql.forEach((element, index) => {
+        const rrr = {
+            "id": element?.id,
+            "name": element?.name,
+            "path": element?.path,
+            "imgs": element?.path?.split('/')[5],
+        }
+        array.push(rrr);
+    })
+
+    if (array?.length > 0) {
+        res.status(200).json(array)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const insertcustompage_slogo = async (req, res) => {
+    const filesimage = site_url + "/uploads/custompage/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into custom_page(name,path,flag) values ($1,$2,$3)', [req.body.names, filesimage, req.body.flag]);
+    if (sql?.length > 0) {
+        res.redirect('/s_logo');
+    } else {
+        res.redirect('/s_logo');
+    }
+}
+
+const custom_page_welcome = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM custom_page where flag = 'welcome'");
+    const array = [];
+    sql.forEach((element, index) => {
+        const rrr = {
+            "id": element?.id,
+            "name": element?.name,
+            "path": element?.path,
+            "imgs": element?.path?.split('/')[5],
+        }
+        array.push(rrr);
+    })
+
+    if (array?.length > 0) {
+        res.status(200).json(array)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const insertcustompage_welcome = async (req, res) => {
+    const filesimage = site_url + "/uploads/custompage/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into custom_page(name,path,flag) values ($1,$2,$3)', [req.body.names, filesimage, req.body.flag]);
+    if (sql?.length > 0) {
+        res.redirect('/welcomebanner');
+    } else {
+        res.redirect('/welcomebanner');
+    }
+}
+
 const delete_custom_page = async (req, res) => {
     const id_custom = req.params.id;
     const image = req.params.foto;
@@ -2261,6 +2353,56 @@ const delete_custom_page = async (req, res) => {
             res.redirect('/customfront');
         } else {
             res.redirect('/customfront');
+        }
+    }
+}
+
+const delete_custom_page_slogo = async (req, res) => {
+    const id_custom = req.params.id;
+    const image = req.params.foto;
+    if (fs.existsSync(fileslinux + 'custompage/' + image)) {
+        fs.unlink(fileslinux + 'custompage/' + image, async function (err) {
+            if (err) return console.log(err);
+            const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+            if (sql) {
+                res.redirect('/s_logo');
+            } else {
+                res.redirect('/s_logo');
+                console.log(sql);
+            }
+        });
+        console.log("ada")
+    } else {
+        const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+        if (sql?.length > 0) {
+            res.redirect('/s_logo');
+        } else {
+            res.redirect('/s_logo');
+        }
+    }
+}
+
+const delete_custom_page_welcome = async (req, res) => {
+    const id_custom = req.params.id;
+    const image = req.params.foto;
+    if (fs.existsSync(fileslinux + 'custompage/' + image)) {
+        fs.unlink(fileslinux + 'custompage/' + image, async function (err) {
+            if (err) return console.log(err);
+            const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+            if (sql) {
+                res.redirect('/welcomebanner');
+            } else {
+                res.redirect('/welcomebanner');
+                console.log(sql);
+            }
+        });
+        console.log("ada")
+    } else {
+        const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+        if (sql?.length > 0) {
+            res.redirect('/welcomebanner');
+        } else {
+            res.redirect('/welcomebanner');
         }
     }
 }
@@ -2714,6 +2856,9 @@ module.exports = {
     deletehotissuecategory,
     delete_direactorats,
     directorats_uploads,
+    directorat_devisi_add,
+    directorat_devisi,
+    directorats_devisi_delete,
     deletehotissuesubcategory,
     detailhotissuesubcategory,
     updatehotissue,
@@ -2796,7 +2941,13 @@ module.exports = {
     custom_page,
     detail_custom_page,
     insertcustompage,
+    custom_page_slogo,
+    insertcustompage_slogo,
+    custom_page_welcome,
+    insertcustompage_welcome,
     delete_custom_page,
+    delete_custom_page_slogo,
+    delete_custom_page_welcome,
     naration,
     naration_detail,
     insertnarations,

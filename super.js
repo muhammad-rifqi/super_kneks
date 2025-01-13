@@ -219,6 +219,14 @@ apps.get('/s_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/profile/struktur/edit.html'));
 })
 
+apps.get('/s_logo', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/struktur/s_logo.html'));
+})
+
+apps.get('/custom_add_s_logo', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/struktur/add_s_logo.html'));
+})
+
 apps.get('/v', (req, res) => {
     res.sendFile(path.resolve('./views/profile/videos/list.html'));
 })
@@ -352,6 +360,11 @@ apps.get('/directorats_edit/:id', (req, res) => {
 apps.get('/directorats_detail/:id', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/directorat/detail.html'));
 })
+
+apps.get('/directorats_devisi/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/directorat/devisi.html'));
+})
+
 //::::::::::::::: One Data Center ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/f', (req, res) => {
@@ -404,6 +417,14 @@ apps.get('/customfront', (req, res) => {
 
 apps.get('/custom_add', (req, res) => {
     res.sendFile(path.resolve('./views/home_management/custom_page/add.html'));
+})
+
+apps.get('/welcomebanner', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/welcome/update.html'));
+})
+
+apps.get('/custom_add_welcome', (req, res) => {
+    res.sendFile(path.resolve('./views/home_management/welcome/add.html'));
 })
 
 //::::::::::::::: User Management ::::::::::::::::::::::::::::
@@ -700,6 +721,12 @@ apps.get('/images_direactorat_delete/:id/:foto', db.delete_images_direactorats);
 
 apps.get('/banners_direactorat_delete/:id/:foto', db.delete_banners_direactorats);
 
+apps.get('/directorat_devisi/:id', db.directorat_devisi);
+
+apps.post('/directorats_devisi_add', db.directorat_devisi_add);
+
+apps.get('/directorat_devisi_delete/:id', db.directorats_devisi_delete);
+
 apps.get('/hotissuedetail/:id', db.hotissue_detail);
 
 apps.post('/inserthotissue', hotissue_path.single('photo'), db.inserthotissue);
@@ -886,7 +913,19 @@ apps.get('/detail_custom_page/:id', db.detail_custom_page);
 
 apps.post('/insertcustompage', page_path.single('files_image'), db.insertcustompage);
 
+apps.get('/custom_page_slogo', db.custom_page_slogo);
+
+apps.post('/insertcustompage_slogo', page_path.single('files_image'), db.insertcustompage_slogo);
+
+apps.get('/custom_page_welcome', db.custom_page_welcome);
+
+apps.post('/insertcustompage_welcome', page_path.single('files_image'), db.insertcustompage_welcome);
+
 apps.get('/delete_custom_page/:id/:foto', db.delete_custom_page);
+
+apps.get('/delete_custom_page_slogo/:id/:foto', db.delete_custom_page_slogo);
+
+apps.get('/delete_custom_page_welcome/:id/:foto', db.delete_custom_page_welcome);
 
 //::::::::::::::: Api & Query CUSTOM PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

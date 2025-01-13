@@ -86,7 +86,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script> -->
 
     <script src="/assets/js/theme-customizer-init.min.js"></script>
-    <script src="/cookie.js"></script>
+    <!-- <script src="/cookie.js"></script> -->
     <script>
         $(document).ready(function () {
             // 2. Inisialisasi DataTable
@@ -107,8 +107,9 @@
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            if (cookie['roles_id'] == '1' || cookie['roles_id'] == 2) {
+                            if (cookie['roles_id'] == '1' || cookie['roles_id'] == 2 || cookie['roles_id'] == 3 || cookie['roles_id'] == 4) {
                                 return `<p>
+                                        <button class='devisi-btn-directorat btn btn-success' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Devisi</button>
                                         <button class='view-btn-directorat btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Icon/Banner</button>
                                         <button class='edit-btn-directorat btn btn-warning' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Edit</button>
                                         <button class='delete-btn-directorat btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Delete</button>
@@ -133,6 +134,11 @@
                 // ],
             });
 
+            $('#direktorat').on('click', '.devisi-btn-directorat', function () {
+                var id = $(this).data('id');
+                window.location.href = '/directorats_devisi/' + id;
+            });
+
             $('#direktorat').on('click', '.view-btn-directorat', function () {
                 var id = $(this).data('id');
                 window.location.href = '/directorats_detail/' + id;
@@ -152,7 +158,8 @@
         });
     </script>
     <script>
-        if(cookie['roles_id'] == 1 || cookie['roles_id'] == 2){
+        console.log(cookie['roles_id'])
+        if(cookie['roles_id'] == 1){
             document.getElementById("tambah_directorat").innerHTML = `<button class="btn btn-primary" onclick="window.location.href = '/directorats_add'"> Tambah Direktorat </button>`;
         }else{
             document.getElementById("tambah_directorat").innerHTML=`<h4>Direktorat</h4>`;
