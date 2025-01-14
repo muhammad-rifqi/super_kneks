@@ -45,23 +45,6 @@ document.write(`<header class="nxl-header">
             <div class="header-right ms-auto">
                 <div class="d-flex align-items-center">
                     
-                    <div class="nxl-h-item d-none d-sm-flex">
-                        <div class="full-screen-switcher">
-                            <a href="javascript:void(0);" class="nxl-head-link me-0" onclick="$('body').fullScreenHelper('toggle');">
-                                <i class="feather-maximize maximize"></i>
-                                <i class="feather-minimize minimize"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="nxl-h-item dark-light-theme">
-                        <a href="javascript:void(0);" class="nxl-head-link me-0 dark-button">
-                            <i class="feather-cloud-lightning"></i>
-                        </a>
-                        <a href="javascript:void(0);" class="nxl-head-link me-0 light-button" style="display: none">
-                            <i class="feather-sun"></i>
-                        </a>
-                    </div>
-                    
                     <div class="dropdown nxl-h-item">
                         <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
                             <img src="/assets/images/avatar/1.png" alt="user-image" class="img-fluid user-avtar me-0" />
@@ -81,7 +64,7 @@ document.write(`<header class="nxl-header">
                                 <span>Change Password</span>
                             </a>
 
-                            <a href="/logout" class="dropdown-item">
+                            <a href="#" onclick="logout()" class="dropdown-item">
                                 <i class="feather-log-out"></i>
                                 <span>Logout</span>
                             </a>
@@ -104,9 +87,45 @@ for (var i = 0; i < a.length; i++) {
     var [key, value] = b;
     cookies[key.trim()] = value;
 }
-if (cookie['name'] == "" || cookie['name'] == undefined) {
+if (cookies['name'] == "" || cookies['name'] == undefined) {
     window.location.href = '/';
 } else {
     document.getElementById("nama").innerText = cookies["name"]
 }
-;
+
+
+{/* <div class="nxl-h-item d-none d-sm-flex">
+<div class="full-screen-switcher">
+    <a href="javascript:void(0);" class="nxl-head-link me-0" onclick="$('body').fullScreenHelper('toggle');">
+        <i class="feather-maximize maximize"></i>
+        <i class="feather-minimize minimize"></i>
+    </a>
+</div>
+</div>
+<div class="nxl-h-item dark-light-theme">
+<a href="javascript:void(0);" class="nxl-head-link me-0 dark-button">
+    <i class="feather-cloud-lightning"></i>
+</a>
+<a href="javascript:void(0);" class="nxl-head-link me-0 light-button" style="display: none">
+    <i class="feather-sun"></i>
+</a>
+</div> */}
+
+
+function logout(){
+    swal({
+        title: "Are you sure?",
+        text: "To Leave this Page ??",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+    })
+        .then((willOut) => {
+            if (willOut) {
+                window.location.href = '/logout';
+            } else {
+                console.log('NaN')
+            }
+        });
+   
+}
