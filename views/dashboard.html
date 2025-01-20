@@ -20,9 +20,6 @@
     <!--! END: Bootstrap CSS-->
     <!--! BEGIN: Vendors CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/dataTables.bs5.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
     <!--! END: Vendors CSS-->
     <!--! BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
@@ -67,7 +64,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter" id="jumlah1"></span></div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">News
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Berita
                                             </h3>
                                         </div>
                                     </div>
@@ -176,7 +173,7 @@
                                         </div>
                                         <div>
                                             <div class="fs-4 fw-bold text-dark"><span class="counter" id="jumlah7"></span></div>
-                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Files
+                                            <h3 class="fs-13 fw-semibold text-truncate-1-line">Berkas
                                             </h3>
                                         </div>
                                     </div>
@@ -207,7 +204,7 @@
             <!-- [ Main Content ] end -->
         </div>
         <!-- [ Footer ] start -->
-        <footer class="footer">
+        <!-- <footer class="footer">
             <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
                 <span>Copyright ©</span>
                 <script>
@@ -219,7 +216,7 @@
                 <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
                 <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
             </div>
-        </footer>
+        </footer> -->
         <!-- [ Footer ] end -->
     </main>
 
@@ -227,10 +224,6 @@
     <script src="/assets/vendors/js/vendors.min.js"></script>
     <!-- vendors.min.js {always must need to be top} -->
     <script src="/assets/vendors/js/dataTables.min.js"></script>
-    <script src="/assets/vendors/js/dataTables.bs5.min.js"></script>
-    <script src="/assets/vendors/js/select2.min.js"></script>
-    <script src="/assets/vendors/js/select2-active.min.js"></script>
-    <!--! END: Vendors JS !-->
     <!--! BEGIN: Apps Init  !-->
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/leads-init.min.js"></script>
@@ -238,7 +231,7 @@
     <!--! BEGIN: Theme Customizer  !-->
     <script src="/assets/js/theme-customizer-init.min.js"></script>
     <!--! END: Theme Customizer !-->
-
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         window.addEventListener("load", async () => {
             await getDashboards();
