@@ -38,15 +38,13 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
 //Direktorat
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4) {
     document.write(`<li class="nxl-item nxl-hasmenu">
-                        <a href="javascript:void(0);" class="nxl-link">
+                        <a href="/directorats" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bookmark"></i></span>
-                            <span class="nxl-mtext">Direktorat</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            Direktorat Master
                         </a>
-                        <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="/directorats">Direktorat Master</a></li>
-                         </ul>
                     </li>`);
 }
+
 //Struktur
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`<li class="nxl-item nxl-hasmenu">
@@ -132,7 +130,7 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
 
 //foto
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4 || cookie["roles_id"] == 6) {
-    document.write(` <li class="nxl-item nxl-hasmenu">
+    document.write(`<li class="nxl-item nxl-hasmenu">
                         <a href="/ph" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bookmark"></i></span>
                             Foto
@@ -193,11 +191,11 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
                         <ul class="nxl-submenu">
                             `);
 }
-
-if (cookie["roles_id"] == 1) {
-    document.write(`
-                            <li class="nxl-item"><a class="nxl-link" href="/dashboard">Dashboard</a></li>
-                           `);
+//data
+if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
+    document.write(`<li class="nxl-item"><a class="nxl-link" href="/metabase">Dashboard</a></li>`);
+    document.write(`<li class="nxl-item"><a class="nxl-link" href="/slidefront">Menu</a></li>`);
+    document.write(`<li class="nxl-item"><a class="nxl-link" href="/slidefrontsubmenu">Sub Menu</a></li>`);
 }
 
 //e-pustaka kategori
@@ -207,17 +205,10 @@ if (cookie["roles_id"] == 3 || cookie["roles_id"] == 4 || cookie["roles_id"] == 
                            `);
 }
 
+//data set dan slide
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`
-                            <li class="nxl-item"><a class="nxl-link" href="/narationfront">Narasi</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="/metabase">Api Metabase</a></li>
-                           `);
-}
-//data set dan slide
-if (cookie["roles_id"] == 1) {
-    document.write(`
                             <li class="nxl-item"><a class="nxl-link" href="/datafront">Data Set</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="/slidefront">Slide</a></li>
                             `);
 }
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4 || cookie["roles_id"] == 6) {
@@ -239,7 +230,7 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
                         `);
 }
 //kdeks master
-if (cookie["roles_id"] == 1) {
+if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`
                             <li class="nxl-item"><a class="nxl-link" href="/master">Master</a></li>
                             

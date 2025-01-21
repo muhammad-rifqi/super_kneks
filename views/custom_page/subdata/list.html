@@ -42,18 +42,21 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <p>
-                            <button class="btn btn-primary" onclick="window.location.href = '/tg_add'"> Tambah Tagging
-                                Berita </button>
+                            <button class="btn btn-primary"
+                                onclick="window.location.href = '/slidefrontsubmenuadd'">Tambah
+                                Sub Menu </button>
                         </p>
                         <div class="card stretch stretch-full">
                             <div class="card-body p-3">
                                 <div class="table-responsive">
-                                    <table id="tagging" class="display" style="width: 100%;">
+                                    <table id="subslide" class="display" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Tagging</th>
-                                                <th>Actions</th>
+                                                <th>ID Menu </th>
+                                                <th>Nama Pendek</th>
+                                                <th>Nama Panjang</th>
+                                                <th>Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -100,20 +103,22 @@
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function () {
-            // 2. Inisialisasi DataTable
-            $('#tagging').DataTable({
+            $('#subslide').DataTable({
                 "ajax": {
-                    "url": "/tagging",
+                    "url": "/sub_slides",
                     "dataSrc": ""
                 },
                 "columns": [
                     { "data": "id" },
-                    { "data": "tagging" },
+                    { "data": "id_slide" },
+                    { "data": "short_name" },
+                    { "data": "long_name" },
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return `<p><button class='edit-btn-tagging btn btn-warning' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-edit"></i></button>
-                                    <button class='delete-btn-tagging btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-trash"></i></button></p>`;
+                            return `<p>
+                                        <button class='edit-btn btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-trash"></i></button>
+                                    </p>`;
                         }
                     }
                 ],
@@ -128,14 +133,7 @@
                 ],
             });
 
-            // 3. Event Listener untuk Tombol Edit
-            $('#tagging').on('click', '.edit-btn-tagging', function () {
-                var id = $(this).data('id');
-                window.location.href = '/tg_edit/' + id;
-            });
-
-            // 4. Event Listener untuk Tombol Hapus
-            $('#tagging').on('click', '.delete-btn-tagging', function () {
+            $('#subslide').on('click', '.edit-btn', function () {
                 var id = $(this).data('id');
                 swal({
                     title: "Are you sure?",
@@ -146,7 +144,7 @@
                 })
                     .then((willOut) => {
                         if (willOut) {
-                            window.location = '/deletetagging/' + id;
+                            window.location = '/delete_subslide/' + id;
                         } else {
                             console.log('NaN')
                         }
