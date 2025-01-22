@@ -479,7 +479,7 @@ apps.get('/data_detail/:id', (req, res) => {
     res.sendFile(path.resolve('./views/custom_page/data/view.html'));
 });
 
-apps.get('/narationfront', (req, res) => {
+apps.get('/narationfront/:id/:name', (req, res) => {
     res.sendFile(path.resolve('./views/custom_page/data/naration.html'));
 });
 
@@ -487,12 +487,24 @@ apps.get('/edit_narationfront/:id', (req, res) => {
     res.sendFile(path.resolve('./views/custom_page/data/naration_edit.html'));
 });
 
-apps.get('/narationfront_add', (req, res) => {
+apps.get('/narationfront_add/:id/:name', (req, res) => {
     res.sendFile(path.resolve('./views/custom_page/data/naration_add.html'));
 });
 
 apps.get('/metabase', (req, res) => {
     res.sendFile(path.resolve('./views/custom_page/data/metabase.html'));
+});
+
+apps.get('/metabaseadd', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/data/metabaseadd.html'));
+});
+
+apps.get('/slidefrontsubmenu', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/subdata/list.html'));
+});
+
+apps.get('/slidefrontsubmenuadd', (req, res) => {
+    res.sendFile(path.resolve('./views/custom_page/subdata/add.html'));
 });
 
 // :::::::::::::::::::::::::::: Opini ::::::::::::::::::::::::::::::::::::::::
@@ -929,7 +941,15 @@ apps.get('/delete_custom_page_welcome/:id/:foto', db.delete_custom_page_welcome)
 
 //::::::::::::::: Api & Query CUSTOM PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-apps.get('/narations', db.naration);
+apps.get('/sub_slides', db.sub_slides);
+
+apps.post('/insert_subslides', db.insert_subslides);
+
+apps.get('/delete_subslide/:id', db.delete_slides);
+
+apps.get('/detail_subslides/:id', db.detailsub_slides);
+
+apps.get('/narations/:id', db.naration);
 
 apps.get('/narations_detail/:id', db.naration_detail);
 
@@ -1017,7 +1037,7 @@ apps.get('/master_delete/:id', db.deletemaster);
 
 //::::::::::::::::: End Of KDEKS ::::::::::::::::::::::::::
 
-apps.post('/insertusers', db.user_register);
+apps.post('/insertreg', db.user_register);
 
 apps.post('/do_login', db.do_login);
 
