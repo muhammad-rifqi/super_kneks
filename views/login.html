@@ -69,7 +69,7 @@
   })
 
   function getImageLogin() {
-    fetch('/custom_page').then(response => response.json()).then((rows) => {
+    fetch('/login_banners').then(response => response.json()).then((rows) => {
       if (rows[0]?.path == undefined || rows[0]?.path == "") {
         // document.getElementById("gbrs").setAttribute('src', '/style/image/gbr-login.png');
         document.getElementById("gbrs").innerHTML=`<p>Loading....</p>`;
