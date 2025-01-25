@@ -16,13 +16,6 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/tagify.min.css" />
-    <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
-    <script type="text/javascript">
-        bkLib.onDomLoaded(function () {
-            new nicEditor({ maxHeight: 100 }).panelInstance('editor3');
-            new nicEditor({ maxHeight: 100 }).panelInstance('editor4');
-        });
-    </script>
 </head>
 
 <body>
@@ -47,33 +40,56 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form action="/insertopini" method="post">
+                        <form action="/insertapimeta" method="post">
                             <div class="card stretch stretch-full">
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
                                         <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Tambah OPINI :</span>
+                                            <span class="d-block mb-2">Tambah Data Dashboard :</span>
                                             <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
                                                 Tambah
-                                                Data OPINI Di Bawah Ini</span>
+                                                Data Dashboard Di Bawah Ini</span>
                                         </h5>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Judul [ID]</label>
-                                            <input class="form-control" type="text" name="title" required>
+                                            <label class="form-label">Menu</label>
+                                            <select class="form-control" name="data_type" id="data_types"
+                                                onchange="getDatasubType(this.value)" required>
+
+                                            </select>
                                         </div>
+
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Judul [EN]</label>
-                                            <input class="form-control" type="text" name="title_en" required>
+                                            <label class="form-label">Sub Menu</label>
+                                            <select class="form-control" name="sub_statistic" id="short_names" required>
+                                            </select>
                                         </div>
+
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Keterangan [ID]</label>
-                                            <textarea class="form-control" name="content" id="editor3"></textarea>
+                                            <label class="form-label">Masukan Nama Pendek [ID] </label>
+                                            <input class="form-control" type="text" name="shorts_name" required>
                                         </div>
+
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Keterangan [EN]</label>
-                                            <textarea class="form-control" name="content_en" id="editor4"></textarea>
+                                            <label class="form-label">Masukan Nama Pendek [EN] </label>
+                                            <input class="form-control" type="text" name="shorts_name_en" required>
+                                        </div>
+
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Masukan Nama Panjang [ID] </label>
+                                            <input class="form-control" type="text" name="long_name" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Masukan Nama Panjang [EN] </label>
+                                            <input class="form-control" type="text" name="long_name_en" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Masukan Link Data</label>
+                                            <input class="form-control" type="text" name="api" id="api" required>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
@@ -91,23 +107,30 @@
                                             </select>
                                         </div>
 
+
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">KDEKS</label>
-                                            <select class="form-control" name="kdeks" id="provinces" required>
-                                                <option value="0"></option>
+                                            <select class="form-control" name="kdeks" id="provinces" multiple required>
+                                               
                                             </select>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Identitas Web</label>
-                                            <input type="radio" name="web_identity" value="kneks" checked>kneks
-                                            <input type="radio" name="web_identity" value="kdeks">kdeks
+                                            <label class="form-label">Publish </label>
+                                            <input type="checkbox" name="publish" value="1" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Dataset</label>
+                                            <select class="form-control" name="dataset" id="mySelect3"  multiple required>
+                                            </select>
                                         </div>
 
                                         <div class="col-lg-12 mb-4 text-left">
                                             <label class="form-label"></label>
-                                            <button class="btn btn-primary" type="submit">Simpan</button>
+                                            <input class="btn btn-primary" type="submit" value="Simpan">
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -145,54 +168,98 @@
     <script>
         $(document).ready(function () {
             $('#mySelect').select2();
+            $('#mySelect3').select2();
+            $('#provinces').select2();
         });
     </script>
-    <script>
-        window.addEventListener("load", async () => {
-            const inputElm = document.querySelector('input.tagify');
-            new Tagify(inputElm);
-            await fetch('/tagging')
-                .then(res => res.json())
-                .then((rrr) => {
-                    let ttt = "";
-                    rrr.forEach(items => {
-                        ttt += `${items?.tagging},`;
-                    });
-                    document.getElementById("tag").innerHTML = ttt;
-                    document.getElementById("tagify").value = ttt;
-                })
-
-            await getCategoryHotIssueId();
-            await getProvinces();
-        })
-
-
-        function getCategoryHotIssueId() {
-            fetch('/hotissuecategory')
-                .then(res => res.json())
-                .then((qqq) => {
-                    qqq.forEach(items => {
-                        const aaa = document.createElement('option')
-                        aaa.value = `${items?.id}`;
-                        aaa.text = `${items?.title}`;
-                        document.getElementById("mySelect").append(aaa);
-                    });
-                })
-        }
-
-        function getProvinces() {
-            fetch('/provinces')
-                .then(response => response.json())
-                .then((data) => {
-                    data.forEach(element => {
-                        const ddd = document.createElement('option')
-                        ddd.value = `${element?.id}`;
-                        ddd.text = `${element?.province_name}`;
-                        document.getElementById("provinces").append(ddd);
-                    });
-                })
-        }
-    </script>
 </body>
+<script>
+    window.addEventListener("load", async () => {
+        const inputElm = document.querySelector('input.tagify');
+        new Tagify(inputElm);
+        await getDataType();
+        await getCategoryHotIssueId();
+        await getTagging();
+        await getProvinces();
+        await getDataSet();
+    })
+    function getDataType() {
+        fetch('/statistics')
+            .then(data => data.json())
+            .then((rows) => {
+                var eee = `<option value="0">Pilih</option>`;
+                rows.forEach((element) => {
+                    eee += `<option value="${element?.id}-${element?.title}">${element?.title}</option>`;
+                })
+                document.getElementById("data_types").innerHTML = eee;
+            })
+    }
+
+    function getDatasubType(e) {
+        fetch('/detail_substatistic/' + e.split('-')[0])
+            .then(datas => datas.json())
+            .then((rowst) => {
+                rowst.forEach((elements) => {
+                    const dddd = document.createElement('option')
+                    dddd.value = `${elements?.short_name}`;
+                    dddd.text = `${elements?.short_name}`;
+                    document.getElementById("short_names").append(dddd);
+                })
+            })
+    }
+
+    function getCategoryHotIssueId() {
+        fetch('/hotissuecategory')
+            .then(res => res.json())
+            .then((qqq) => {
+                qqq.forEach(items => {
+                    const aaa = document.createElement('option')
+                    aaa.value = `${items?.id}`;
+                    aaa.text = `${items?.title}`;
+                    document.getElementById("mySelect").append(aaa);
+                });
+            })
+    }
+
+    function getTagging() {
+        fetch('/tagging')
+            .then(res => res.json())
+            .then((rrr) => {
+                let ttt = "";
+                rrr.forEach(items => {
+                    ttt += `${items?.tagging},`;
+                });
+                document.getElementById("tag").innerHTML = ttt;
+                document.getElementById("tagify").value = ttt;
+            })
+
+    }
+
+    function getProvinces() {
+        fetch('/provinces')
+            .then(response => response.json())
+            .then((data) => {
+                data.forEach(element => {
+                    const ddd = document.createElement('option')
+                    ddd.value = `${element?.id}`;
+                    ddd.text = `${element?.province_name}`;
+                    document.getElementById("provinces").append(ddd);
+                });
+            })
+    }
+
+    function getDataSet() {
+        fetch('/sourcesdata')
+            .then(res => res.json())
+            .then((qqq) => {
+                qqq.forEach(items => {
+                    const aaa = document.createElement('option')
+                    aaa.value = `${items?.id}`;
+                    aaa.text = `${items?.dataset}`;
+                    document.getElementById("mySelect3").append(aaa);
+                });
+            })
+    }    
+</script>
 
 </html>

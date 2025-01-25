@@ -15,7 +15,6 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/tagify.min.css" />
     <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function () {
@@ -47,72 +46,59 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form action="/insertopini" method="post">
+                        <form action="/updatescopes" method="post">
+                            <input type="hidden" name="id" id="id" value="">
                             <div class="card stretch stretch-full">
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
                                         <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Tambah OPINI :</span>
+                                            <span class="d-block mb-2">Edit Skup:</span>
                                             <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
-                                                Tambah
-                                                Data OPINI Di Bawah Ini</span>
+                                                Edit
+                                                Data Skup Di Bawah Ini</span>
                                         </h5>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Judul [ID]</label>
-                                            <input class="form-control" type="text" name="title" required>
+                                            <input class="form-control" type="text" name="title" id="title" required>
                                         </div>
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Judul [EN]</label>
-                                            <input class="form-control" type="text" name="title_en" required>
+                                            <input class="form-control" type="text" name="title_en" id="title_en"
+                                                required>
                                         </div>
+
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Keterangan [ID]</label>
-                                            <textarea class="form-control" name="content" id="editor3"></textarea>
+                                            <textarea class="form-control" name="description" id="editor3"
+                                                required><p id="val3"></p></textarea>
                                         </div>
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Keterangan [EN]</label>
-                                            <textarea class="form-control" name="content_en" id="editor4"></textarea>
-                                        </div>
-
-                                        <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Tagging</label>
-                                            <span id="tag">
-
-                                            </span>
-                                            <input name="taggings" type="text" class="tagify" id="tagify" required>
+                                            <label class="form-label">Keterangan [EN] </label>
+                                            <textarea class="form-control" name="description_en" id="editor4"
+                                                required><p id="val4"></p></textarea>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Direktorat</label>
-                                            <select class="form-control" name="directorat" id="mySelect" multiple
-                                                required>
-                                            </select>
+                                            <label class="form-label">Gambar Previews</label>
+                                            <p id="previews"></p>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">KDEKS</label>
-                                            <select class="form-control" name="kdeks" id="provinces" required>
-                                                <option value="0"></option>
-                                            </select>
-                                        </div>
-
-                                        <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Identitas Web</label>
-                                            <input type="radio" name="web_identity" value="kneks" checked>kneks
-                                            <input type="radio" name="web_identity" value="kdeks">kdeks
+                                            <label class="form-label">URL Gambar</label>
+                                            <input  type="text" class="form-control" name="images" id="images" />
                                         </div>
 
                                         <div class="col-lg-12 mb-4 text-left">
                                             <label class="form-label"></label>
-                                            <button class="btn btn-primary" type="submit">Simpan</button>
+                                            <input class="btn btn-primary" type="submit" value="Simpan">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </form>
                     </div>
+                    </form>
                 </div>
             </div>
             <!-- [ Main Content ] end -->
@@ -135,63 +121,30 @@
     </main>
 
     <script src="/assets/vendors/js/vendors.min.js"></script>
-    <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/vendors/js/select2.min.js"></script>
     <script src="/assets/vendors/js/select2-active.min.js"></script>
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/theme-customizer-init.min.js"></script>
-    <script src="/assets/vendors/js/tagify.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
-        $(document).ready(function () {
-            $('#mySelect').select2();
-        });
-    </script>
-    <script>
         window.addEventListener("load", async () => {
-            const inputElm = document.querySelector('input.tagify');
-            new Tagify(inputElm);
-            await fetch('/tagging')
-                .then(res => res.json())
-                .then((rrr) => {
-                    let ttt = "";
-                    rrr.forEach(items => {
-                        ttt += `${items?.tagging},`;
-                    });
-                    document.getElementById("tag").innerHTML = ttt;
-                    document.getElementById("tagify").value = ttt;
-                })
-
-            await getCategoryHotIssueId();
-            await getProvinces();
+            await getUrlById();
         })
 
-
-        function getCategoryHotIssueId() {
-            fetch('/hotissuecategory')
-                .then(res => res.json())
-                .then((qqq) => {
-                    qqq.forEach(items => {
-                        const aaa = document.createElement('option')
-                        aaa.value = `${items?.id}`;
-                        aaa.text = `${items?.title}`;
-                        document.getElementById("mySelect").append(aaa);
-                    });
+        function getUrlById() {
+            const URLS = new URL(window.location.href);
+            fetch('/detailscopes/' + URLS.pathname.split('/')[2])
+                .then(data => data.json())
+                .then((rows) => {
+                    document.getElementById("id").value = rows[0]?.id;
+                    document.getElementById("title").value = rows[0]?.title;
+                    document.getElementById("title_en").value = rows[0]?.title_en;
+                    document.getElementById("val3").innerHTML = rows[0]?.description;
+                    document.getElementById("val4").innerHTML = rows[0]?.description_en;
+                    document.getElementById("previews").innerHTML = `<img src="https://webdev.kneks.go.id/images/lingkup/${rows[0]?.image}" width="180"/>`;
                 })
         }
 
-        function getProvinces() {
-            fetch('/provinces')
-                .then(response => response.json())
-                .then((data) => {
-                    data.forEach(element => {
-                        const ddd = document.createElement('option')
-                        ddd.value = `${element?.id}`;
-                        ddd.text = `${element?.province_name}`;
-                        document.getElementById("provinces").append(ddd);
-                    });
-                })
-        }
     </script>
 </body>
 

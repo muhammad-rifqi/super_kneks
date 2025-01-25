@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zxx">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="keyword" content="" />
+    <meta name="author" content="theme_ocean" />
+    <title>KNEKS BACKEND || Dashboard</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
+</head>
+
+<body>
+    <!--! ================================================================ !-->
+    <!--! [Start] Navigation Manu !-->
+    <!--! ================================================================ !-->
+    <script src="/nav.js"></script>
+    <!--! ================================================================ !-->
+    <!--! [End]  Navigation Manu !-->
+    <!--! ================================================================ !-->
+    <!--! ================================================================ !-->
+    <!--! [Start] Header !-->
+    <!--! ================================================================ !-->
+    <script src="/header.js"></script>
+    <!--! ================================================================ !-->
+    <!--! [Start] Main Content !-->
+    <!--! ================================================================ !-->
+    <main class="nxl-container">
+        <div class="nxl-content">
+            <!-- [ page-header ] start -->
+            <script src="/breadchumb.js"></script>
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form action="/updateagenda" method="post">
+                            <input type="hidden" id="id" name="id" value="">
+                            <div class="card stretch stretch-full">
+                                <div class="card-body lead-status">
+                                    <div class="mb-5 d-flex align-items-center justify-content-between">
+                                        <h5 class="fw-bold mb-0 me-4">
+                                            <span class="d-block mb-2">Ubah Agenda :</span>
+                                            <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
+                                                Ubah
+                                                Data Adenda Di Bawah Ini</span>
+                                        </h5>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Judul [ID] </label>
+                                            <input class="form-control" type="text" name="title" id="title" required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Judul [EN]</label>
+                                            <input class="form-control" type="text" name="title_en" id="title_en"
+                                                required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Link URL</label>
+                                            <input class="form-control" type="text" name="url" id="url" required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Tanggal & Waktu Agenda</label>
+                                            <input class="form-control" type="datetime-local" name="agenda_datetime"
+                                                id="agenda_datetime" required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Tempat</label>
+                                            <input class="form-control" type="text" name="place" id="place" required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Penyelenggara</label>
+                                            <input class="form-control" type="text" name="organizer" id="organizer"
+                                                required>
+                                        </div>
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Link Zoom</label>
+                                            <input class="form-control" type="text" name="link" id="link" required>
+                                        </div>
+
+                                        <!-- // ////////////////////////////////////////////////////////////////  -->
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Projek </label>
+                                            <input class="form-control" type="text" name="project" id="project"
+                                                required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Keterangan</label>
+                                            <input class="form-control" type="text" name="description" id="description"
+                                                required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Agenda Selesai</label>
+                                            <input class="form-control" type="datetime-local" name="agenda_endtime"
+                                                id="agenda_endtime" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Pengelola</label>
+                                            <input class="form-control" type="text" name="manager" id="manager"
+                                                required>
+                                        </div>
+
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Kontributor</label>
+                                            <input class="form-control" type="text" name="contributor" id="contributor"
+                                                required>
+                                        </div>
+
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Indikator</label>
+                                            <input class="form-control" type="text" name="indicator" id="indicator"
+                                                required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Impact</label>
+                                            <input class="form-control" type="text" name="impact" id="impact" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Pembuka </label>
+                                            <select class="form-control" name="opening" id="opening" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Peserta </label>
+                                            <select class="form-control" name="participants" id="participants" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Area </label>
+                                            <select class="form-control" name="area" id="area" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Tingkat Konten</label>
+                                            <input class="form-control" type="text" name="loc" id="loc" required>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Peserta Prioritas </label>
+                                            <select class="form-control" name="priority_participants"
+                                                id="priority_participants" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Kbli </label>
+                                            <select class="form-control" name="kbli" id="kbli" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Usia Partisipan </label>
+                                            <select class="form-control" name="age" id="age" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Genders </label>
+                                            <select class="form-control" name="gender" id="gender" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Provinsi </label>
+                                            <select class="form-control" name="province" id="province" required>
+                                                <option value="0">Pilih</option>
+                                            </select>
+                                        </div>
+
+
+                                        <!-- // ////////////////////////////////////////////////////////////////  -->
+
+
+                                        <div class="col-lg-12 mb-4 text-left">
+                                            <label class="form-label"></label>
+                                            <input class="btn btn-primary" type="submit" value="Simpan">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- [ Main Content ] end -->
+        </div>
+        <!-- [ Footer ] start -->
+        <!-- <footer class="footer">
+            <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+                <span>Copyright ©</span>
+                <script>
+                    document.write(new Date().getFullYear());
+                </script>
+            </p>
+            <div class="d-flex align-items-center gap-4">
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+                <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+            </div>
+        </footer> -->
+        <!-- [ Footer ] end -->
+    </main>
+
+    <script src="/assets/vendors/js/vendors.min.js"></script>
+    <script src="/assets/js/common-init.min.js"></script>
+    <script src="/assets/js/theme-customizer-init.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script>
+        window.addEventListener("load", async () => {
+            let provs;
+            let kblis;
+            let pesertas;
+            let pembukas;
+            let genders;
+            let usias;
+            let areas;
+            let prioritast;
+
+            await getUrlById();
+            await prov();
+            await kbli();
+            await peserta();
+            await pembuka();
+            await gender();
+            await usia();
+            await area();
+            await prioritas();
+        })
+
+        function getUrlById() {
+            const URLS = new URL(window.location.href);
+            fetch('/agendadetails/' + URLS.pathname.split('/')[2])
+                .then(data => data.json())
+                .then((rows) => {
+                    document.getElementById("id").value = rows[0]?.id;
+                    document.getElementById("title").value = rows[0]?.title;
+                    document.getElementById("title_en").value = rows[0]?.title_en;
+                    document.getElementById("url").value = rows[0]?.url;
+                    document.getElementById("place").value = rows[0]?.place;
+                    document.getElementById("organizer").value = rows[0]?.organizer;
+                    document.getElementById("link").value = rows[0]?.link;
+                    document.getElementById("agenda_datetime").value = rows[0]?.agenda_datetime.split('.')[0] ?? "null";
+                    document.getElementById("project").value = rows[0]?.project;
+                    document.getElementById("description").value = rows[0]?.description;
+                    document.getElementById("agenda_endtime").value = rows[0]?.agenda_endtime.split('.')[0] ?? "null";
+                    document.getElementById("manager").value = rows[0]?.manager;
+                    document.getElementById("contributor").value = rows[0]?.contributor;
+                    document.getElementById("indicator").value = rows[0]?.indicator;
+                    document.getElementById("impact").value = rows[0]?.impact;
+                    document.getElementById("loc").value = rows[0]?.loc;
+                    provs = rows[0]?.province;
+                    kblis = rows[0]?.kbli;
+                    pesertas = rows[0]?.participants;
+                    pembukas = rows[0]?.opening;
+                    genders = rows[0]?.gender;
+                    usias = rows[0]?.age;
+                    areas = rows[0]?.area;
+                    prioritast = rows[0]?.priority_participants;
+                })
+        }
+
+        function prov() {
+            fetch('/provinces')
+                .then(response => response.json())
+                .then((data) => {
+                    data.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.province_name == provs) {
+                            ddd.value = `${element?.province_name}`;
+                            ddd.text = `${element?.province_name}`;
+                            ddd.selected = true;
+                        } else {
+                            ddd.value = `${element?.province_name}`;
+                            ddd.text = `${element?.province_name}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("province").append(ddd);
+                    });
+                })
+        }
+
+        function kbli() {
+            fetch('/kbli')
+                .then(response => response.json())
+                .then((data) => {
+                    data.forEach(element => {
+                        const dd = document.createElement('option')
+                        if (element?.kbli === kblis) {
+                            dd.value = `${element?.kbli}`;
+                            dd.text = `${element?.kbli}`;
+                            dd.selected = true;
+                        } else {
+                            dd.value = `${element?.kbli}`;
+                            dd.text = `${element?.kbli}`;
+                            dd.selected = false;
+                        }
+                        document.getElementById("kbli").append(dd);
+                    });
+                })
+        }
+
+        function peserta() {
+            fetch('/peserta')
+                .then(res => res.json())
+                .then((b) => {
+                    b.forEach(items => {
+                        const dddd = document.createElement('option')
+                        if (items?.jumlah === pesertas) {
+                            dddd.value = `${items?.jumlah}`;
+                            dddd.text = `${items?.jumlah}`;
+                            dddd.selected = true;
+                        } else {
+                            dddd.value = `${items?.jumlah}`;
+                            dddd.text = `${items?.jumlah}`;
+                            dddd.selected = false;
+                        }
+                        document.getElementById("participants").append(dddd);
+                    });
+                })
+        }
+
+        function pembuka() {
+            fetch('/pembuka')
+                .then(responses => responses.json())
+                .then((r) => {
+                    r.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.pembuka === pembukas) {
+
+                            ddd.value = `${element?.pembuka}`;
+                            ddd.text = `${element?.pembuka}`;
+                            ddd.selected = true;
+                        } else {
+                            ddd.value = `${element?.pembuka}`;
+                            ddd.text = `${element?.pembuka}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("opening").append(ddd);
+                    });
+                })
+        }
+
+        function gender() {
+            fetch('/gender')
+                .then(responses => responses.json())
+                .then((r) => {
+                    r.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.gender == genders) {
+                            ddd.value = `${element?.gender}`;
+                            ddd.text = `${element?.gender}`;
+                            ddd.selected = true;
+                        } else {
+                            ddd.value = `${element?.gender}`;
+                            ddd.text = `${element?.gender}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("gender").append(ddd);
+                    });
+                })
+        }
+
+        function usia() {
+            fetch('/usia')
+                .then(responses => responses.json())
+                .then((r) => {
+                    r.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.gender == genders) {
+                            ddd.value = `${element?.usia}`;
+                            ddd.text = `${element?.usia}`;
+                            ddd.selected = false;
+                        } else {
+                            ddd.value = `${element?.usia}`;
+                            ddd.text = `${element?.usia}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("age").append(ddd);
+                    });
+                })
+        }
+
+        function area() {
+            fetch('/area')
+                .then(responses => responses.json())
+                .then((r) => {
+                    r.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.area == areas) {
+                            ddd.value = `${element?.area}`;
+                            ddd.text = `${element?.area}`;
+                            ddd.selected = true;
+                        } else {
+                            ddd.value = `${element?.area}`;
+                            ddd.text = `${element?.area}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("area").append(ddd);
+                    });
+                })
+        }
+
+        function prioritas() {
+            fetch('/prioritas')
+                .then(responses => responses.json())
+                .then((r) => {
+                    r.forEach(element => {
+                        const ddd = document.createElement('option')
+                        if (element?.prioritas == prioritast) {
+                            ddd.value = `${element?.prioritas}`;
+                            ddd.text = `${element?.prioritas}`;
+                            ddd.selected = true;
+                        } else {
+                            ddd.value = `${element?.area}`;
+                            ddd.text = `${element?.area}`;
+                            ddd.selected = false;
+                        }
+                        document.getElementById("priority_participants").append(ddd);
+                    });
+                })
+        }
+    </script>
+</body>
+</html>

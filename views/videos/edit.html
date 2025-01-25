@@ -14,8 +14,8 @@
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/tagify.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/tagify.min.css" />
     <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
         bkLib.onDomLoaded(function () {
@@ -47,17 +47,15 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form action="/updatefileupload" method="post" enctype="multipart/form-data">
-                            <input type="hidden" id="max_id" name="MAX_FILE_SIZE" value="2548000" />
+                        <form action="/updatevideo" method="post">
                             <input type="hidden" name="id" id="id" value="">
                             <div class="card stretch stretch-full">
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
                                         <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Ubah Berkas :</span>
+                                            <span class="d-block mb-2">Ubah Video :</span>
                                             <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
-                                                Ubah
-                                                Data Berkas Di Bawah Ini</span>
+                                                Ubah Video Di Bawah Ini</span>
                                         </h5>
                                     </div>
                                     <div class="row">
@@ -71,13 +69,6 @@
                                                 required>
                                         </div>
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Kategori Berkas</label>
-                                            <select class="form-control" name="file_category_id" id="file_category_id"
-                                                required>
-                                                <option value="0"> Pilih </option>
-                                            </select>
-                                        </div>
-                                        <div class="col-lg-12 mb-4">
                                             <label class="form-label">Keterangan [ID]</label>
                                             <textarea class="form-control" name="content" id="editor3"></textarea>
                                         </div>
@@ -87,30 +78,35 @@
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Link Berkas</label>
-                                            <p id="previews"></p>
+                                            <label class="form-label">Masukan ID Video : </label>
+                                            <input class="form-control" name="video" id="videos" type="text" value=""
+                                                required>
+                                            <p>** : contoh => https://www.youtube.com/watch?v=<font color="red">
+                                                    <b>MKDjCD0eWDo</b>
+                                                </font></b> </p>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Upload Berkas</label>
-                                            <input class="form-control" name="file_data" id="file_data" type="file"
-                                                accept="application/pdf" onchange="upload_check()"> )* Max Upload 2.5 MB
-                                        </div>
-
-                                        <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Publish</label>
-                                            <input name="is_publish" id="is_publish" type="checkbox" value="1" required>
-                                            Publish
+                                            <label class="form-label">Durasi</label>
+                                            <input class="form-control" type="time" name="duration" id="durations"
+                                                step="1">
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Tanggal Publish</label>
-                                            <input class="form-control" name="date" id="date" type="datetime-local"
-                                                required>
+                                            <input class="form-control" name="video_datetime" id="video_datetimes"
+                                                type="datetime-local" required>
                                         </div>
 
+                                        <!-- <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Tagging</label>
+                                            <span id="listtag">
+
+                                            </span>
+                                        </div> -->
+
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Tagging</label>
+                                            <label class="form-label"> Ganti/Ubah Tagging</label>
                                             <span id="tag">
 
                                             </span>
@@ -118,19 +114,20 @@
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Direktorat</label>
+                                            <label class="form-label">Pilih Direktorat</label>
                                             <select class="form-control" name="directorat" id="mySelect" multiple
                                                 required>
                                             </select>
                                         </div>
 
+                                        
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">KDEKS</label>
                                             <select class="form-control" name="kdeks" id="provinces" required>
                                                 <option value="0"></option>
                                             </select>
                                         </div>
-                                        
+
                                         <div class="col-lg-12 mb-4 text-left">
                                             <label class="form-label"></label>
                                             <input class="btn btn-primary" type="submit" value="Simpan">
@@ -138,8 +135,8 @@
                                     </div>
                                 </div>
                             </div>
+                        </form>
                     </div>
-                    </form>
                 </div>
             </div>
             <!-- [ Main Content ] end -->
@@ -162,11 +159,11 @@
     </main>
 
     <script src="/assets/vendors/js/vendors.min.js"></script>
-    <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/vendors/js/select2.min.js"></script>
     <script src="/assets/vendors/js/select2-active.min.js"></script>
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/theme-customizer-init.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
     <script src="/assets/vendors/js/tagify.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
@@ -178,50 +175,42 @@
         window.addEventListener("load", async () => {
             const inputElm = document.querySelector('input.tagify');
             new Tagify(inputElm);
-            let file_category_id;
             await getUrlById();
-            await getCategory();
             await getTagging();
             await getCategoryHotIssueId();
             await getProvinces();
-            await upload_check();
         })
 
         function getUrlById() {
             const URLS = new URL(window.location.href);
-            fetch('/filesdetails/' + URLS.pathname.split('/')[2])
+            fetch('/videodetail/' + URLS.pathname.split('/')[2])
                 .then(data => data.json())
                 .then((rows) => {
+                    // var uuu = rows[0]?.directorat;
+                    // const array = uuu.replace(/[{}]/g, '').split(',');
+                    // const toarray = array.map(item => item.replace(/"/g, ''));
+                    // const cleanedString = rows[0]?.directorat.slice(1, -1);
+                    // const arrayWithNumbers = cleanedString.split(',');
+                    // const finalArray = arrayWithNumbers.map(item => item.substring(item.indexOf('-') + 1));
+                    // const finalArray = arrayWithNumbers.map(item => {
+                    //     const parts = item.split('-');
+                    //     return {
+                    //         number: parts[0],
+                    //         text: parts[1]
+                    //     };
+                    // });
+                    // console.log(finalArray);
                     document.getElementById("id").value = rows[0]?.id;
                     document.getElementById("title").value = rows[0]?.title;
                     document.getElementById("title_en").value = rows[0]?.title_en;
-                    nicEditors.findEditor("editor3").setContent(rows[0]?.content);
-                    nicEditors.findEditor("editor4").setContent(rows[0]?.content_en);
                     // document.getElementById("val3").innerHTML = rows[0]?.content;
                     // document.getElementById("val4").innerHTML = rows[0]?.content_en;
-                    file_category_id = rows[0]?.report_category_id;
-                    if (rows?.is_publish == 1) {
-                        document.getElementById("is_publish").setAttribute('checked', true);
-                    } else {
-                        document.getElementById("is_publish").setAttribute('checked', false);
-                    }
-                    document.getElementById("date").value = rows[0]?.date.split('.')[0];
-                    document.getElementById("previews").innerHTML = `${rows[0]?.file}`;
-                })
-        }
-
-        function getCategory() {
-            fetch('/files_category')
-                .then(response => response.json())
-                .then((data) => {
-                    data.forEach(element => {
-                        const choosed = (element?.id == file_category_id) ? true : false;
-                        const ddd = document.createElement('option')
-                        ddd.value = `${element?.id}`;
-                        ddd.text = `${element?.title}`;
-                        ddd.selected = choosed
-                        document.getElementById("file_category_id").append(ddd);
-                    });
+                    nicEditors.findEditor("editor3").setContent(rows[0]?.content);
+                    nicEditors.findEditor("editor4").setContent(rows[0]?.content_en);
+                    document.getElementById("videos").value = rows[0]?.video;
+                    document.getElementById("durations").value = rows[0]?.duration;
+                    document.getElementById("video_datetimes").value = rows[0]?.news_datetime.split('.')[0];
+                    // document.getElementById("directorat_val").innerHTML = finalArray.toString().replace('\"','').replace('"','');
                 })
         }
 
@@ -229,12 +218,13 @@
             fetch('/tagging')
                 .then(res => res.json())
                 .then((rrr) => {
-                    let ttt = "";
+                    let tttt = "";
                     rrr.forEach(items => {
-                        ttt += `${items?.tagging},`;
+                        // ttt += `&nbsp;<input type="checkbox" id="cek${items?.id}" name="options" value="${items?.tagging}" onchange="handleClick(${items?.id})"> &nbsp; ${items?.tagging} &nbsp;`;
+                        tttt += `${items?.tagging},`;
                     });
-                    document.getElementById("tag").innerHTML = ttt;
-                    document.getElementById("tagify").value = ttt;
+                    document.getElementById("tag").innerHTML = tttt;
+                    document.getElementById("tagify").value = tttt;
                 })
         }
 
@@ -263,18 +253,6 @@
                     });
                 })
         }
-
-        function upload_check() {
-            var upl = document.getElementById("file_data");
-            var max = document.getElementById("max_id").value;
-            if (upl.files[0].size > max) {
-                alert("File too big!");
-                upl.value = "";
-                return false;
-            }
-
-            return true;
-        };
 
     </script>
 </body>

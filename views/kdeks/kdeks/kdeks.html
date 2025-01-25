@@ -29,6 +29,7 @@
             margin: 10px 0;
         }
     </style>
+</head>
 
 <body>
     <script src="/nav.js"></script>
@@ -40,18 +41,19 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
+                        <p>
+                            <button class="btn btn-primary" onclick="window.location.href='/kdeks_add'"> Tambah Kdeks</button>
+                          </p>
                         <div class="card stretch stretch-full">
                             <div class="card-body p-3">
                                 <div class="table-responsive">
-                                    <table id="ipaddress" class="display" style="width: 100%;">
+                                    <table id="abouts" class="display" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th>ID</th>
-                                                <th>Email</th>
-                                                <th>Persetujuan</th>
-                                                <th>Persetujuan Oleh</th>
-                                                <th>Tanggal Persetujuan</th>
-                                                <th>IP</th>
+                                                <th>Judul [ID]</th>
+                                                <th>Judul [EN]</th>
+                                                <th>Tag</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -85,7 +87,6 @@
     <!-- jQuery -->
     <!-- <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script> -->
     <script src="/assets/vendors/js/vendors.min.js"></script>
-    <script src="/assets/js/common-init.min.js"></script>
     <!-- DataTables -->
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
@@ -94,31 +95,27 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-
     
     <script src="/assets/js/theme-customizer-init.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#ipaddress').DataTable({
+            // 2. Inisialisasi DataTable
+            $('#abouts').DataTable({
                 "ajax": {
-                    "url": "/users_ipaddress",
+                    "url": "/api_kdeks",
                     "dataSrc": ""
                 },
                 "columns": [
                     { "data": "id" },
-                    { "data": "email" },
-                    { "data": "approve" },
-                    { "data": "approve_by" },
-                    { "data": "approve_date" },
-                    { "data": "ip" },
+                    { "data": "title" },
+                    { "data": "title_en" },
+                    { "data": "tag" },
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return `<p>
-                                        <button class='whitelist-btn-users btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Approve Ip Address</button>
-                                        <button class='whitelist-btn-ip_address btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Delete Ip Address</button>
-                                    </p>`;
+                            return `<p><button class='edit-btn-kdeks btn btn-warning' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-edit"></i></button>
+                                    <button class='delete-btn-kdeks btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-trash"></i></button></p>`;
                         }
                     }
                 ],
@@ -133,36 +130,25 @@
                 ],
             });
 
-            $('#ipaddress').on('click', '.whitelist-btn-users', function () {
+            // 3. Event Listener untuk Tombol Edit
+            $('#abouts').on('click', '.edit-btn-kdeks', function () {
                 var id = $(this).data('id');
-                swal({
-                    title: "Are you sure?",
-                    text: "To Approve this IP Address ??",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                    .then((willOut) => {
-                        if (willOut) {
-                            window.location = '/approveipaddress/'+id;
-                        } else {
-                            console.log('NaN')
-                        }
-                    });
+                window.location.href='/kdeks_edit/'+id;
             });
 
-            $('#ipaddress').on('click', '.whitelist-btn-ip_address', function () {
+            // 4. Event Listener untuk Tombol Hapus
+            $('#abouts').on('click', '.delete-btn-kdeks', function () {
                 var id = $(this).data('id');
                 swal({
                     title: "Are you sure?",
-                    text: "To Delete this IP Address ??",
+                    text: "To Delete this Data ??",
                     icon: "warning",
                     buttons: true,
                     dangerMode: true,
                 })
                     .then((willOut) => {
                         if (willOut) {
-                            window.location = '/deleteipaddress/' + id;
+                            window.location = '/kdeks_delete/'+id;
                         } else {
                             console.log('NaN')
                         }
