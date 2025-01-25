@@ -8,7 +8,6 @@ const axios = require('axios');
 let fileslinux = '/var/www/html/webdev.rifhandi.com/public_html/webdevkneks/public/uploads/';
 let site_url = "https://webdev.rifhandi.com";
 //::::::::::::::::::::::::::::::Start Of LOGIN LOGOUT :::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 const do_login = async (req, res) => {
     const email = req?.body?.email;
     const password = req?.body?.password;
@@ -38,11 +37,12 @@ const do_login = async (req, res) => {
 const user_register = async (req, res) => {
     const passwords = md5(req?.body?.password);
     const sql = await executeQuery("insert into users(name,email,password) values($1,$2,$3)",
-        [req.body.username, req.body.email, passwords]);
+        [req.body.username.replace(/\s/g, ''), req.body.email, passwords]);
     if (sql) {
-        res.redirect('/');
+        // res.redirect('/');
+        res.status(200).json({ "success": true });
     } else {
-        res.redirect('/');
+        res.status(200).json({ "success": false });
     }
 }
 
@@ -56,43 +56,7 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
-const api_login = async (req, res) => {
-    const email = req?.body?.email;
-    const password = md5(req?.body?.password);
-    const sql = await executeQuery("SELECT * FROM users where email = $1 AND password = $2 ", [email, password])
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-//::::::::::::::::::::::::::::::Start Of Dashboard :::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-const dashboards = async (req, res) => {
-
-    const news_mounts = await executeQuery("SELECT * FROM news");
-    const jumlah1 = news_mounts.length;
-    const videos_mounts = await executeQuery("SELECT * FROM news_videos");
-    const jumlah2 = videos_mounts.length;
-    const photos_mounts = await executeQuery("SELECT * FROM news_photos");
-    const jumlah3 = photos_mounts.length;
-    const files_mounts = await executeQuery("SELECT * FROM reports");
-    const jumlah4 = files_mounts.length;
-
-    const mounted = {
-        "news": jumlah1,
-        "videos": jumlah2,
-        "photos": jumlah3,
-        "files": jumlah4,
-    }
-
-    res.status(200).json(mounted)
-}
-
-//::::::::::::::::::::::::::::::End Of Dashboard :::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 //::::::::::::::::::::::::::::::Start Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const abouts = async (req, res) => {
@@ -928,74 +892,6 @@ const questbook = async (req, res) => {
 }
 
 //::::::::::::::::::::::::::::::End Of Contacts :::::::::::::::::::::::::::::::::::::::::::::::::::::
-//::::::::::::::::::::::::::::::Start Of Banner :::::::::::::::::::::::::::::::::::::::::::::::::::::
-const banners = async (req, res) => {
-    const sql = await executeQuery('SELECT * FROM  banners');
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const detailbanner = async (req, res) => {
-    const id_banners = req.params.id;
-    const sql = await executeQuery('SELECT *  FROM  banners where id=$1', [id_banners]);
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const deletebanner = async (req, res) => {
-    const id_banners = req.params.id;
-    const sql = await executeQuery('DELETE FROM  banners where id = $1 ', [id_banners]);
-    if (sql) {
-        res.redirect('/b');
-    } else {
-        console.log(sql);
-        res.redirect('/b');
-    }
-}
-
-const insertbanners = async (req, res) => {
-    if (req.file) {
-        const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery('INSERT INTO banners (title,title_en,content,content_en,image, is_publish)values($1,$2,$3,$4,$5,$6) ', [req.body.title, req.body.title_en, req.body.content, req.body.content_en, filesimage, '1']);
-        if (sql) {
-            res.redirect('/b');
-        } else {
-            console.log(sql)
-            res.redirect('/b');
-        }
-    } else {
-        res.redirect('/b');
-    }
-}
-
-const updatebanners = async (req, res) => {
-    const id_banners = req.body.id;
-    if (req.file) {
-        const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery('UPDATE banners set title=$1, title_en=$2, content=$3, content_en=$4, image=$5 where  id = $6 ', [req.body.title, req.body.title_en, req.body.content, req.body.content_en, filesimage, id_banners]);
-        if (sql) {
-            res.redirect('/b');
-        } else {
-            console.log(sql);
-            res.redirect('/b');
-        }
-    } else {
-        const sql = await executeQuery('UPDATE banners set title=$1, title_en=$2, content=$3, content_en=$4 where  id = $5 ', [req.body.title, req.body.title_en, req.body.content, req.body.content_en, id_banners]);
-        if (sql) {
-            res.redirect('/b');
-        } else {
-            console.log(sql);
-            res.redirect('/b');
-        }
-    }
-}
-//::::::::::::::::::::::::::::::End Of Banner :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of Agenda :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const agendas = async (req, res) => {
     const sql = await executeQuery('SELECT * FROM  agendas');
@@ -1182,8 +1078,8 @@ const insertfileupload = async (req, res) => {
     const timeupdate = date + ' ' + time;
     const file_date = req.body.date;
     const fileuploads = site_url + "/uploads/filesupload/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("insert into reports(title,title_en,content,content_en,file,is_publish,date,created_at,updated_at,report_category_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, timeupdate, timeupdate, req.body.file_category_id]);
+    const sql = await executeQuery("insert into reports(title,title_en,content,content_en,file,is_publish,date,created_at,updated_at,report_category_id) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, timeupdate, timeupdate, req.body.taggings, req.body.directorat, req.body.file_category_id]);
     if (sql) {
         res.redirect('/f');
     } else {
@@ -1201,8 +1097,8 @@ const updatefileupload = async (req, res) => {
     const timeupdate = date + ' ' + time;
     const file_date = req.body.date;
     if (!req.file || req.file == undefined || req.file == "") {
-        const sql = await executeQuery("update reports set title=$1,title_en=$2,content=$3,content_en=$4,is_publish=$5,date=$6,created_at=$7,updated_at=$8,report_category_id=$9 where id = $10",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, timeupdate, timeupdate, req.body.file_category_id, req.body.id]);
+        const sql = await executeQuery("update reports set title=$1,title_en=$2,content=$3,content_en=$4,is_publish=$5,date=$6,created_at=$7,updated_at=$8,report_category_id=$9,tagging=$10,directorat=$11 where id = $12",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, timeupdate, timeupdate, req.body.file_category_id, req.body.taggings, req.body.directorat, req.body.id]);
         if (sql) {
             res.redirect('/f');
         } else {
@@ -1738,8 +1634,8 @@ const insertphoto = async (req, res) => {
     const time_datetime = date + ' ' + time;
     const photos_datetime = req.body.photo_datetime.replace("T", " ");
     const photoupload = site_url + "/uploads/photo/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("insert into news_photos(title,title_en,content,content_en,photo,news_datetime,created_at,updated_at,deleted_at,tag) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photoupload, photos_datetime, time_datetime, time_datetime, null, req.body.taggings])
+    const sql = await executeQuery("insert into news_photos(title,title_en,content,content_en,photo,news_datetime,created_at,updated_at,deleted_at,tag,directorat) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photoupload, photos_datetime, time_datetime, time_datetime, null, req.body.taggings, req.body.directorat])
     if (sql) {
         res.redirect('/ph');
     } else {
@@ -1785,7 +1681,6 @@ const deletephoto = async (req, res) => {
 }
 
 const updatephoto = async (req, res) => {
-
     const today = new Date();
     const month = (today.getMonth() + 1);
     const mmm = month.length < 2 ? "0" + month : month;
@@ -1794,8 +1689,8 @@ const updatephoto = async (req, res) => {
     const timeupdate = date + ' ' + time;
     const news_datetime = req.body.news_datetime.replace("T", " ");
     if (!req.file || req.file == undefined || req.file == "") {
-        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,news_datetime=$5,created_at=$6,updated_at=$7,deleted_at=$8 , tag=$9 where id = $10",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, news_datetime, timeupdate, timeupdate, null, req.body.taggings, req.body.id]);
+        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,news_datetime=$5,created_at=$6,updated_at=$7,deleted_at=$8 , tag=$9, directorat = $10 where id = $11",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, news_datetime, timeupdate, timeupdate, null, req.body.taggings, req.body.directorat, req.body.id]);
         if (sql) {
             res.redirect('/ph');
         } else {
@@ -1804,8 +1699,8 @@ const updatephoto = async (req, res) => {
         }
     } else {
         const fileuploads = site_url + "/uploads/photo/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photo=$5, news_datetime=$6,created_at=$7,updated_at=$8,deleted_at=$9, tag = $10 where id = $11",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, news_datetime, timeupdate, timeupdate, null, req.body.taggings, req.body.id]);
+        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photo=$5, news_datetime=$6,created_at=$7,updated_at=$8,deleted_at=$9, tag = $10 , directorat = $11 where id = $12",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, news_datetime, timeupdate, timeupdate, null, req.body.taggings, req.body.directorat, req.body.id]);
         if (sql) {
             res.redirect('/ph');
         } else {
@@ -1824,8 +1719,8 @@ const insertvideo = async (req, res) => {
     const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     const time_datetime = date + ' ' + time;
     const videos_datetime = req.body.video_datetime.replace("T", " ");
-    const sql = await executeQuery("insert into news_videos(title,title_en,content,content_en,video,duration,news_datetime,created_at,updated_at,deleted_at,tag) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, time_datetime, time_datetime, null, req.body.taggings]);
+    const sql = await executeQuery("insert into news_videos(title,title_en,content,content_en,video,duration,news_datetime,created_at,updated_at,deleted_at,tag,directorat) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, time_datetime, time_datetime, null, req.body.taggings, req.body.directorat]);
     if (sql) {
         res.redirect('/v');
     } else {
@@ -1863,8 +1758,8 @@ const updatevideos = async (req, res) => {
     const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     const time_datetime = date + ' ' + time;
     const videos_datetime = req.body.video_datetime.replace("T", " ");
-    const sql = await executeQuery("update news_videos set title=$1,title_en=$2,content=$3,content_en=$4,video=$5,duration=$6,news_datetime=$7,created_at=$8,updated_at=$9, tag=$10 where id = $11",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, time_datetime, time_datetime, req.body.taggings, req.body.id]);
+    const sql = await executeQuery("update news_videos set title=$1,title_en=$2,content=$3,content_en=$4,video=$5,duration=$6,news_datetime=$7,created_at=$8,updated_at=$9, tag=$10,directorat=$11 where id = $12",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, time_datetime, time_datetime, req.body.taggings, req.body.directorat, req.body.id]);
     if (sql) {
         res.redirect('/v');
     } else {
@@ -2240,29 +2135,10 @@ const deletetagging = async (req, res) => {
     }
 }
 
-const custom_page = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM custom_page where flag = 'login'");
-    const array = [];
-    sql.forEach((element, index) => {
-        const rrr = {
-            "id": element?.id,
-            "name": element?.name,
-            "path": element?.path,
-            "imgs": element?.path?.split('/')[5],
-        }
-        array.push(rrr);
-    })
 
-    if (array?.length > 0) {
-        res.status(200).json(array)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const detail_custom_page = async (req, res) => {
-    const id_custom = req.params.id;
-    const sql = await executeQuery('SELECT * FROM custom_page where id = $1 ', [id_custom]);
+//::::::::::::::::::::::::::::::::::::::::::::::: Start Of Slideshow :::::::::::::::::::::::::::::::::::::::::::::::::::::
+const slideshows = async (req, res) => {
+    const sql = await executeQuery('SELECT * FROM  slideshow');
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -2270,24 +2146,73 @@ const detail_custom_page = async (req, res) => {
     }
 }
 
-const insertcustompage = async (req, res) => {
-    const filesimage = site_url + "/uploads/custompage/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery('insert into custom_page(name,path) values ($1,$2)', [req.body.names, filesimage]);
+const detailslideshow = async (req, res) => {
+    const id_slideshow = req.params.id;
+    const sql = await executeQuery('SELECT *  FROM  slideshow where id=$1', [id_slideshow]);
     if (sql?.length > 0) {
-        res.redirect('/customfront');
+        res.status(200).json(sql)
     } else {
-        res.redirect('/customfront');
+        res.status(200).json({ "success": false })
     }
 }
 
-const custom_page_slogo = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM custom_page where flag = 's_logo'");
+const deleteslideshow = async (req, res) => {
+    const id_slideshows = req.params.id;
+    const sql = await executeQuery('DELETE FROM  slideshow where id = $1 ', [id_slideshows]);
+    if (sql) {
+        res.redirect('/b');
+    } else {
+        console.log(sql);
+        res.redirect('/b');
+    }
+}
+
+const insertslideshow = async (req, res) => {
+    if (req.file) {
+        const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery('INSERT INTO slideshow (title,title_en,image, date_created,status, content,content)values($1,$2,$3,$4,$5,$6,$7) ', [req.body.title, req.body.title_en, filesimage, req.body.tanggal, req.body.status, req.body.content, req.body.content_en]);
+        if (sql) {
+            res.redirect('/b');
+        } else {
+            res.redirect('/b');
+        }
+    } else {
+        res.redirect('/b');
+    }
+}
+
+const updateslideshow = async (req, res) => {
+    const id_slidshowss = req.body.id;
+    if (req.file) {
+        const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery('UPDATE slideshow set title=$1, title_en=$2, image=$3,content = $4 ,content_en = $5 , date_created=$6, status=$7  where  id = $8 ', [req.body.title, req.body.title_en, filesimage, req.body.tanggal, req.body.status, id_slidshowss]);
+        if (sql) {
+            res.redirect('/b');
+        } else {
+            res.redirect('/b');
+        }
+    } else {
+        const sql = await executeQuery('UPDATE slideshow set title=$1, title_en=$2, date_created=$3, status=$4  where  id = $5 ', [req.body.title, req.body.title_en, req.body.tanggal, req.body.status, id_slidshowss]);
+        if (sql) {
+            res.redirect('/b');
+        } else {
+            console.log(sql);
+            res.redirect('/b');
+        }
+    }
+}
+//:::::::::::::::::::::::::::::::::::::::::::: End Of SlideShow :::::::::::::::::::::::::::::::::::::::::::::::::::::
+//:::::::::::::::::::::::::::::::::::::::::::: Login Banner ::::::::::::::::::::::::::::::::::::::::::::::::
+const login_banners = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM banner where flag = 'login'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
             "id": element?.id,
             "name": element?.name,
             "path": element?.path,
+            "date_created": element?.date_created,
+            "status": element?.status,
             "imgs": element?.path?.split('/')[5],
         }
         array.push(rrr);
@@ -2300,24 +2225,84 @@ const custom_page_slogo = async (req, res) => {
     }
 }
 
-const insertcustompage_slogo = async (req, res) => {
-    const filesimage = site_url + "/uploads/custompage/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery('insert into custom_page(name,path,flag) values ($1,$2,$3)', [req.body.names, filesimage, req.body.flag]);
+const detail_login_banners = async (req, res) => {
+    const id_login = req.params.id;
+    const sql = await executeQuery('SELECT * FROM banner where id = $1 ', [id_login]);
     if (sql?.length > 0) {
-        res.redirect('/s_logo');
+        res.status(200).json(sql)
     } else {
-        res.redirect('/s_logo');
+        res.status(200).json({ "success": false })
     }
 }
 
-const custom_page_welcome = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM custom_page where flag = 'welcome'");
+const insertloginbanner = async (req, res) => {
+    const filesimage = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into banner(name,path,flag,date_created,status) values ($1,$2,$3,$4,$5)', [req.body.names, filesimage, req.body.flag, req.body.tanggal, req.body.status]);
+    if (sql) {
+        res.redirect('/login_banner');
+    } else {
+        res.redirect('/login_banner');
+    }
+}
+
+const updateloginbanners = async (req, res) => {
+    if (!req.file || req.file == undefined || req.file == "") {
+        const sql = await executeQuery("UPDATE banner set  name=$1, date_created=$2, status=$3 where id = $4",
+            [req.body.names, req.body.tanggal, req.body.status, req.body.id_login_banner]);
+        if (sql) {
+            res.redirect('/login_banner');
+        } else {
+            res.redirect('/login_banner');
+        }
+    } else {
+        const fileuploads = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery("UPDATE banner set  name=$1, path=$2, date_created=$3, status=$4 where id = $5",
+            [req.body.names, fileuploads, req.body.tanggal, req.body.status, req.body.id_login_banner]);
+        if (sql) {
+            res.redirect('/login_banner');
+        } else {
+            res.redirect('/login_banner');
+        }
+    }
+}
+
+const delete_login_banner = async (req, res) => {
+    const id_login = req.params.id;
+    const image = req.params.foto;
+    if (fs.existsSync(fileslinux + 'banner/' + image)) {
+        fs.unlink(fileslinux + 'banner/' + image, async function (err) {
+            if (err) return console.log(err);
+            const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_login]);
+            if (sql) {
+                res.redirect('/login_banner');
+            } else {
+                res.redirect('/login_banner');
+                console.log(sql);
+            }
+        });
+        console.log("ada")
+    } else {
+        const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_login]);
+        if (sql?.length > 0) {
+            res.redirect('/login_banner');
+        } else {
+            res.redirect('/login_banner');
+        }
+    }
+}
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::: End Login Banner :::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::: Start Struktur Logo Banner :::::::::::::::::::::::::::::::::::::::::::
+const slogo = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM banner where flag = 's_logo'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
             "id": element?.id,
             "name": element?.name,
             "path": element?.path,
+            "date_created": element?.date_created,
+            "status": element?.status,
             "imgs": element?.path?.split('/')[5],
         }
         array.push(rrr);
@@ -2330,48 +2315,54 @@ const custom_page_welcome = async (req, res) => {
     }
 }
 
-const insertcustompage_welcome = async (req, res) => {
-    const filesimage = site_url + "/uploads/custompage/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery('insert into custom_page(name,path,flag) values ($1,$2,$3)', [req.body.names, filesimage, req.body.flag]);
+const detail_slogo = async (req, res) => {
+    const id_slogo = req.params.id;
+    const sql = await executeQuery('SELECT * FROM banner where id = $1 ', [id_slogo]);
     if (sql?.length > 0) {
-        res.redirect('/welcomebanner');
+        res.status(200).json(sql)
     } else {
-        res.redirect('/welcomebanner');
+        res.status(200).json({ "success": false })
     }
 }
 
-const delete_custom_page = async (req, res) => {
-    const id_custom = req.params.id;
-    const image = req.params.foto;
-    if (fs.existsSync(fileslinux + 'custompage/' + image)) {
-        fs.unlink(fileslinux + 'custompage/' + image, async function (err) {
-            if (err) return console.log(err);
-            const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
-            if (sql) {
-                res.redirect('/customfront');
-            } else {
-                res.redirect('/customfront');
-                console.log(sql);
-            }
-        });
-        console.log("ada")
+const inserts_slogo = async (req, res) => {
+    const filesimage = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into banner(name,path,flag,date_created,status) values ($1,$2,$3,$4,$5)', [req.body.names, filesimage, req.body.flag, req.body.tanggal, req.body.status]);
+    if (sql?.length > 0) {
+        res.redirect('/s_logo');
     } else {
-        const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
-        if (sql?.length > 0) {
-            res.redirect('/customfront');
+        res.redirect('/s_logo');
+    }
+}
+
+const updates_slogo = async (req, res) => {
+    if (!req.file || req.file == undefined || req.file == "") {
+        const sql = await executeQuery("UPDATE banner set  name=$1, date_created=$2, status=$3 where id = $4",
+            [req.body.names, req.body.tanggal, req.body.status, req.body.id_s_logo_banner]);
+        if (sql) {
+            res.redirect('/s_logo');
         } else {
-            res.redirect('/customfront');
+            res.redirect('/s_logo');
+        }
+    } else {
+        const fileuploads = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery("UPDATE banner set  name=$1, path=$2, date_created=$3, status=$4 where id = $5",
+            [req.body.names, fileuploads, req.body.tanggal, req.body.status, req.body.id_s_logo_banner]);
+        if (sql) {
+            res.redirect('/s_logo');
+        } else {
+            res.redirect('/s_logo');
         }
     }
 }
 
-const delete_custom_page_slogo = async (req, res) => {
-    const id_custom = req.params.id;
+const delete_slogos = async (req, res) => {
+    const id_logo = req.params.id;
     const image = req.params.foto;
-    if (fs.existsSync(fileslinux + 'custompage/' + image)) {
-        fs.unlink(fileslinux + 'custompage/' + image, async function (err) {
+    if (fs.existsSync(fileslinux + 'banner/' + image)) {
+        fs.unlink(fileslinux + 'banner/' + image, async function (err) {
             if (err) return console.log(err);
-            const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+            const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_logo]);
             if (sql) {
                 res.redirect('/s_logo');
             } else {
@@ -2381,7 +2372,7 @@ const delete_custom_page_slogo = async (req, res) => {
         });
         console.log("ada")
     } else {
-        const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+        const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_logo]);
         if (sql?.length > 0) {
             res.redirect('/s_logo');
         } else {
@@ -2389,14 +2380,77 @@ const delete_custom_page_slogo = async (req, res) => {
         }
     }
 }
+//::::::::::::::::::::::::::::::::::::::::::::::::::: End Of Struktur Logo :::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::: Start Of Welcome Banner ::::::::::::::::::::::::::::::::::::::
+const welcome_pages = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome'");
+    const array = [];
+    sql.forEach((element, index) => {
+        const rrr = {
+            "id": element?.id,
+            "name": element?.name,
+            "path": element?.path,
+            "date_created": element?.date_created,
+            "status": element?.status,
+            "imgs": element?.path?.split('/')[5],
+        }
+        array.push(rrr);
+    })
 
-const delete_custom_page_welcome = async (req, res) => {
-    const id_custom = req.params.id;
+    if (array?.length > 0) {
+        res.status(200).json(array)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const insert_welcome_pages = async (req, res) => {
+    const filesimage = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into banner(name,path,flag,date_created,status) values ($1,$2,$3,$4,$5)', [req.body.names, filesimage, req.body.flag, req.body.tanggal, req.body.status]);
+    if (sql) {
+        res.redirect('/welcomebanner');
+    } else {
+        res.redirect('/welcomebanner');
+    }
+}
+const detail_welcome_pages = async (req, res) => {
+    const id_welc = req.params.id;
+    const sql = await executeQuery('SELECT * FROM banner where id = $1 ', [id_welc]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const update_welcome_pages = async (req, res) => {
+    if (!req.file || req.file == undefined || req.file == "") {
+        const sql = await executeQuery("UPDATE banner set  name=$1, date_created=$2, status=$3 where id = $4",
+            [req.body.names, req.body.tanggal, req.body.status, req.body.id_welcome]);
+        if (sql) {
+            res.redirect('/welcomebanner');
+        } else {
+            res.redirect('/welcomebanner');
+        }
+    } else {
+        const fileuploads = site_url + "/uploads/banner/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery("UPDATE banner set  name=$1, path=$2, date_created=$3, status=$4 where id = $5",
+            [req.body.names, fileuploads, req.body.tanggal, req.body.status, req.body.id_welcome]);
+        if (sql) {
+            res.redirect('/welcomebanner');
+        } else {
+            res.redirect('/welcomebanner');
+        }
+    }
+}
+
+const delete_welcome_page = async (req, res) => {
+    const id_welc = req.params.id;
     const image = req.params.foto;
-    if (fs.existsSync(fileslinux + 'custompage/' + image)) {
-        fs.unlink(fileslinux + 'custompage/' + image, async function (err) {
+    if (fs.existsSync(fileslinux + 'banner/' + image)) {
+        fs.unlink(fileslinux + 'banner/' + image, async function (err) {
             if (err) return console.log(err);
-            const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+            const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_welc]);
             if (sql) {
                 res.redirect('/welcomebanner');
             } else {
@@ -2406,7 +2460,7 @@ const delete_custom_page_welcome = async (req, res) => {
         });
         console.log("ada")
     } else {
-        const sql = await executeQuery('DELETE FROM custom_page where id = $1 ', [id_custom]);
+        const sql = await executeQuery('DELETE FROM banner where id = $1 ', [id_welc]);
         if (sql?.length > 0) {
             res.redirect('/welcomebanner');
         } else {
@@ -2414,9 +2468,7 @@ const delete_custom_page_welcome = async (req, res) => {
         }
     }
 }
-
-//:::::::::::::::::::::::::::::: End Zona Khas  :::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
+//:::::::::::::::::::::::::::::: End Of Welcome Banner  :::::::::::::::::::::::::::::::::::::::::::::::::::::::
 const sub_statistic = async (req, res) => {
     const sql = await executeQuery('SELECT * FROM sub_statistic');
     if (sql?.length > 0) {
@@ -2427,7 +2479,7 @@ const sub_statistic = async (req, res) => {
 }
 const detailsub_substatistic = async (req, res) => {
     const id_ss = req.params.id;
-    const sql = await executeQuery('SELECT * FROM sub_statistic where id = $1', [id_ss]);
+    const sql = await executeQuery('SELECT * FROM sub_statistic where id_statistic = $1', [id_ss]);
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -2435,13 +2487,13 @@ const detailsub_substatistic = async (req, res) => {
     }
 }
 const insert_substatistic = async (req, res) => {
-    // const ddd = req.body.data_type.split('-');
-    const sql = await executeQuery("INSERT INTO sub_statistic (id_statistic,short_name,long_name,short_name_en,long_name_en)values($1,$2,$3,$4,$5)",
-        [req.body.menu_id, req.body.short_name, req.body.long_name, req.body.short_name_en, req.body.long_name_en]);
+    const ddd = req.body.menu_id.split('-');
+    const sql = await executeQuery("INSERT INTO sub_statistic (id_statistic,short_name,long_name,short_name_en,long_name_en,statistic_name)values($1,$2,$3,$4,$5,$6)",
+        [ddd[0], req.body.short_name, req.body.long_name, req.body.short_name_en, req.body.long_name_en, ddd[1]]);
     if (sql) {
-        res.redirect('/slidefrontsubmenu');
+        res.redirect('/submenu_data');
     } else {
-        res.redirect('/slidefrontsubmenu');
+        res.redirect('/submenu_data');
     }
 }
 
@@ -2449,51 +2501,9 @@ const delete_substatistic = async (req, res) => {
     const id_meta = req.params.id;
     const sql = await executeQuery('DELETE FROM sub_statistic where id = $1', [id_meta]);
     if (sql?.length > 0) {
-        res.redirect('/slidefrontsubmenu');
+        res.redirect('/submenu_data');
     } else {
-        res.redirect('/slidefrontsubmenu');
-    }
-}
-
-const naration = async (req, res) => {
-    const id_mt = req.params.id;
-    const sql = await executeQuery('SELECT * FROM naration where statistic_id = $1 ', [id_mt]);
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const naration_detail = async (req, res) => {
-    const id_nar = req.params.id;
-    const sql = await executeQuery('SELECT * FROM naration where id = $1', [id_nar]);
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const insertnarations = async (req, res) => {
-    // const ddd = req.body.data_type.split('-');
-    const sql = await executeQuery("INSERT INTO naration (statistic_id,statistic_name,description,description_en)values($1,$2,$3,$4)",
-        [req.body.data_type, req.body.data_type_name, req.body.description, req.body.description_en]);
-    if (sql) {
-        res.redirect('/narationfront/' + req.body.data_type + '/' + req.body.data_type_name);
-    } else {
-        res.redirect('/narationfront/' + req.body.data_type + '/' + req.body.data_type_name);
-    }
-}
-
-const updatenarations = async (req, res) => {
-    // const ddd = req.body.data_type.split('-');
-    const sql = await executeQuery("UPDATE naration set statistic_id= $1 , statistic_name = $2, description = $3, description_en = $4 where id = $5",
-        [req.body.data_type, req.body.data_type_name, req.body.description, req.body.description_en, req.body.id]);
-    if (sql) {
-        res.redirect('/narationfront/' + req.body.data_type + '/' + req.body.data_type_name);
-    } else {
-        res.redirect('/narationfront/' + req.body.data_type + '/' + req.body.data_type_name);
+        res.redirect('/submenu_data');
     }
 }
 
@@ -2509,7 +2519,7 @@ const metabase = async (req, res) => {
 
 const detail_metabase = async (req, res) => {
     const id_nar = req.params.id;
-    const sql = await executeQuery('SELECT * FROM api_meta where naration_id = $1', [id_nar]);
+    const sql = await executeQuery('SELECT * FROM api_meta where id = $1', [id_nar]);
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -2521,19 +2531,44 @@ const metabase_delete = async (req, res) => {
     const id_meta = req.params.id;
     const sql = await executeQuery('DELETE FROM api_meta where id = $1', [id_meta]);
     if (sql?.length > 0) {
-        res.redirect('/metabase');
+        res.redirect('/dashboard');
     } else {
-        res.redirect('/metabase');
+        res.redirect('/dashboard');
     }
 }
 
 const insertapimeta = async (req, res) => {
+    const arraydir = req.body.directorat.toString().replace(/[{}]/g, '').split(',');
+    const directr = arraydir.map(item => item.replace(/"/g, ''));
+    const arraykdeks = req.body.kdeks.toString().replace(/[{}]/g, '').split(',');
+    const kdeksdir = arraykdeks.map(item => item.replace(/"/g, ''));
+    const arraykdataset = req.body.dataset.toString().replace(/[{}]/g, '').split(',');
+    const datasetdir = arraykdataset.map(item => item.replace(/"/g, ''));
     const ddd = req.body.data_type.split('-');
-    const sql = await executeQuery('INSERT INTO api_meta (api,statistic_id,statistic_name,short_name,long_name) values ($1,$2,$3,$4,$5)', [req.body.api, ddd[0], ddd[1], req.body.shorts_name, req.body.long_name]);
+    const sql = await executeQuery('INSERT INTO api_meta (api,statistic_id,statistic_name,sub_statistic,short_name,long_name,short_name_en,long_name_en,tagging,directorat,kdeks,publish,dataset) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)', [req.body.api, ddd[0], ddd[1], req.body.sub_statistic, req.body.shorts_name, req.body.long_name, req.body.shorts_name_en, req.body.long_name_en, req.body.taggings, directr, kdeksdir, req.body.publish, datasetdir]);
     if (sql?.length > 0) {
-        res.redirect('/metabase');
+        res.redirect('/dashboard');
     } else {
-        res.redirect('/metabase');
+        res.redirect('/dashboard');
+    }
+}
+
+
+const emptyapimeta = async (req, res) => {
+    const sql = await executeQuery('UPDATE api_meta set naration = $1, month = $2 where id = $3', ['', '', req.body.id]);
+    if (sql) {
+        res.status(200).json({ "message": true });
+    } else {
+        res.status(200).json({ "message": false });
+    }
+}
+
+const updateapimeta = async (req, res) => {
+    const sql = await executeQuery('UPDATE api_meta set naration = $1, month = $2 where id = $3', [req.body.naration, req.body.month, req.body.id]);
+    if (sql) {
+        res.status(200).json({ "message": true });
+    } else {
+        res.status(200).json({ "message": false });
     }
 }
 
@@ -2547,13 +2582,13 @@ const statistics = async (req, res) => {
 }
 
 const insertstatistic = async (req, res) => {
-    const sql = await executeQuery("insert into statistic(title,title_en,amount,date_created) values($1,$2,$3,$4)",
-        [req.body.title, req.body.title_en, 0, '2025-01-01 : 00:00:00']);
+    const sql = await executeQuery("insert into statistic(title,title_en,long_title,long_title_en,amount,date_created) values($1,$2,$3,$4,$5,$6)",
+        [req.body.title, req.body.title_en, req.body.long_title, req.body.long_title_en, 0, '2025-01-01 : 00:00:00']);
     if (sql) {
-        res.redirect('/slidefront');
+        res.redirect('/menu_data');
     } else {
         console.log(sql)
-        res.redirect('/slidefront');
+        res.redirect('/menu_data');
     }
 }
 
@@ -2561,12 +2596,55 @@ const deletestatistic = async (req, res) => {
     const id_stat = req.params.id;
     const sql = await executeQuery('DELETE FROM statistic where id = $1 ', [id_stat]);
     if (sql) {
-        res.redirect('/slidefront');
+        res.redirect('/menu_data');
     } else {
-        res.redirect('/slidefront');
+        res.redirect('/menu_data');
     }
 }
 
+const statistic_slides = async (req, res) => {
+    const sql = await executeQuery('SELECT * FROM statistic_slide');
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const insertstatisticslide = async (req, res) => {
+    const filesimage = site_url + "/uploads/data/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery('insert into statistic_slide(title,title_en,amount,date_created,image,link,publish) values ($1,$2,$3,$4,$5,$6,$7)', [req.body.title, req.body.title_en, req.body.amount, req.body.date_created, filesimage, req.body.link, req.body.publish]);
+    if (sql) {
+        res.redirect('/sliderdata');
+    } else {
+        res.redirect('/sliderdata');
+    }
+}
+
+const delete_statistic_slides = async (req, res) => {
+    const id_statistic_slide = req.params.id;
+    const image = req.params.photo;
+    if (fs.existsSync(fileslinux + 'data/' + image)) {
+        fs.unlink(fileslinux + 'data/' + image, async function (err) {
+            if (err) return console.log(err);
+            const sql = await executeQuery('DELETE FROM statistic_slide where id = $1 ', [id_statistic_slide]);
+            if (sql) {
+                res.redirect('/sliderdata');
+            } else {
+                res.redirect('/sliderdata');
+                console.log(sql);
+            }
+        });
+        console.log("ada")
+    } else {
+        const sql = await executeQuery('DELETE FROM statistic_slide where id = $1 ', [id_statistic_slide]);
+        if (sql?.length > 0) {
+            res.redirect('/sliderdata');
+        } else {
+            res.redirect('/sliderdata');
+        }
+    }
+}
 
 const sourcesdata = async (req, res) => {
     const sql = await executeQuery('SELECT * FROM sourcedata');
@@ -2599,16 +2677,16 @@ const sourcesdatadetail = async (req, res) => {
 }
 
 const insertsourcesdata = async (req, res) => {
-    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created) values($1,$2,$3) RETURNING id",
-        [req.body.dataset, req.body.source, '2025-01-01 00:00:00']);
+    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en) values($1,$2,$3,$4) RETURNING id",
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en]);
     if (sql) {
-        await executeQuery("insert into sourcedata_detail(id_sourcedata,description,judul,produsen_data,tanggal,periode_tanggal) values($1,$2,$3,$4,$5,$6)",
-            [sql[0].id, 'description', req.body.judul, req.body.produsen_data, req.body.tanggal, req.body.periode_tanggal]);
+        await executeQuery("insert into sourcedata_detail(id_sourcedata,description,produsen_data,tanggal_update,api_data) values($1,$2,$3,$4,$5)",
+            [sql[0].id, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database]);
 
-        res.redirect('/datafront');
+        res.redirect('/dataset');
     } else {
         console.log(sql)
-        res.redirect('/datafront');
+        res.redirect('/dataset');
     }
 }
 
@@ -2617,9 +2695,9 @@ const deletesourcesdata = async (req, res) => {
     const sql = await executeQuery('DELETE FROM sourcedata where id = $1 ', [id_stat]);
     if (sql) {
         await executeQuery('DELETE FROM sourcedata_detail where id_sourcedata = $1 ', [id_stat]);
-        res.redirect('/datafront');
+        res.redirect('/dataset');
     } else {
-        res.redirect('/datafront');
+        res.redirect('/dataset');
     }
 }
 
@@ -2655,8 +2733,8 @@ const opini_detail = async (req, res) => {
 }
 
 const insertopini = async (req, res) => {
-    const sql = await executeQuery("insert into opini(title,title_en,content,content_en,web_identity) values($1,$2,$3,$4,$5)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.web_identity]);
+    const sql = await executeQuery("insert into opini(title,title_en,content,content_en,web_identity,tagging,directorat) values($1,$2,$3,$4,$5,$6,$7)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.web_identity, req.body.taggings, req.body.directorat]);
     if (sql) {
         res.redirect('/opini');
     } else {
@@ -2678,8 +2756,8 @@ const deleteopini = async (req, res) => {
 
 
 const updateopini = async (req, res) => {
-    const sql = await executeQuery("UPDATE opini SET title=$1,title_en=$2,content=$3,content_en=$4 where id = $5",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.id]);
+    const sql = await executeQuery("UPDATE opini SET title=$1,title_en=$2,content=$3,content_en=$4,tagging=$5,directorat=$6 where id = $7",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.taggings, req.body.directorat, req.body.id]);
     if (sql) {
         res.redirect('/opini');
     } else {
@@ -2839,9 +2917,12 @@ const submenu_detail = async (req, res) => {
 module.exports = {
     do_login,
     do_logout,
-    api_login,
     user_register,
-    dashboards,
+    slideshows,
+    insertslideshow,
+    updateslideshow,
+    detailslideshow,
+    deleteslideshow,
     categories,
     photodetail,
     deletephoto,
@@ -2927,11 +3008,6 @@ module.exports = {
     contacts,
     updatecontacts,
     questbook,
-    banners,
-    deletebanner,
-    detailbanner,
-    updatebanners,
-    insertbanners,
     agendas,
     agenda_graph,
     agendadetails,
@@ -2979,28 +3055,34 @@ module.exports = {
     detailtagging,
     deletetagging,
     updatetagging,
-    custom_page,
-    detail_custom_page,
-    insertcustompage,
-    custom_page_slogo,
-    insertcustompage_slogo,
-    custom_page_welcome,
-    insertcustompage_welcome,
-    delete_custom_page,
-    delete_custom_page_slogo,
-    delete_custom_page_welcome,
+    login_banners,
+    detail_login_banners,
+    insertloginbanner,
+    updateloginbanners,
+    delete_login_banner,
+    welcome_pages,
+    insert_welcome_pages,
+    detail_welcome_pages,
+    update_welcome_pages,
+    delete_welcome_page,
+    slogo,
+    inserts_slogo,
+    detail_slogo,
+    updates_slogo,
+    delete_slogos,
     sub_statistic,
     detailsub_substatistic,
     insert_substatistic,
     delete_substatistic,
-    naration,
-    naration_detail,
-    insertnarations,
-    updatenarations,
+    statistic_slides,
+    insertstatisticslide,
+    delete_statistic_slides,
     metabase,
     detail_metabase,
     metabase_delete,
     insertapimeta,
+    emptyapimeta,
+    updateapimeta,
     statistics,
     deletestatistic,
     insertstatistic,

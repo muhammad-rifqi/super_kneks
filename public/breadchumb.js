@@ -3,28 +3,33 @@ const path =  URLS.pathname.split('/')[1];
 let breadcrumb1;
 let breadcrumb2;
 //------------------------------Start Of Data----------------------
-if(path == 'dashboard'){
+if(path == 'dashboard' || path == 'home'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Dashboard";
 }
-if(path == 'narationfront' || path == 'narationfront_add' || path == 'edit_narationfront'){
+if(path == 'narations'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Narasi";
 }
-if(path == 'metabase' || path == 'metabaseadd'){
+if(path == 'dashboard' || path == 'dashboard_add'){
     breadcrumb1 = "Data";
-    breadcrumb2 = "Metabase";
+    breadcrumb2 = "Dashboard";
 }
-if(path == 'datafront' || path == 'data_add' || path == 'data_detail'){
+if(path == 'dataset' || path == 'dataset_add' || path == 'dataset_detail'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Dataset";
 }
-if(path == 'slidefront' || path == 'slide_add' ){
+if(path == 'sliderdata' || path == 'sliderdata_add'){
     breadcrumb1 = "Data";
-    breadcrumb2 = "Slider";
+    breadcrumb2 = "Slider Data";
 }
 
-if(path == 'slidefrontsubmenu' || path == 'slidefrontsubmenuadd'){
+if(path == 'menu_data' || path == 'menudata_add'){
+    breadcrumb1 = "Data";
+    breadcrumb2 = "Menu Data";
+}
+
+if(path == 'submenu_data' || path == 'submenudata_add'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Sub Menu";
 }
@@ -48,7 +53,7 @@ if(path == 'nc' || path == 'nc_add' || path == 'nc_edit'){
 }
 //------------------------------- End Of Berita Kategori -----------------------------
 //------------------------------Start Of Struktur----------------------
-if(path == 's' || path == 's_add' || path == 's_edit' || path == 's_logo' || path == 'custom_add_s_logo'){
+if(path == 's' || path == 's_add' || path == 's_edit' || path == 's_logo' || path == 's_logo_add'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Struktur Organisasi";
 }
@@ -232,7 +237,7 @@ if(path == 'submenu' || path == 'submenu_add' || path == 'submenu_edit'){
 }
 //-----------------------End Of Whitelist-----------------------------
 //------------------------ Whitelist----------------------
-if(path == 'customfront' || path == 'custom_add' || path == 'welcomebanner' || path == 'custom_add_welcome'){
+if(path == 'login_banner' || path == 'login_banner_add' || path == 'welcomebanner' || path == 'welcomebanner_add'){
     breadcrumb1 = "Data";
     breadcrumb2 = "Ubah Halaman";
 }
