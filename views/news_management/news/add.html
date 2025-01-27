@@ -73,7 +73,7 @@
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Kategori Berita</label>
                                             <select class="form-control" name="category_id" id="cat_news" required>
-                                                <option value="0">Pilih</option>
+                                                <option value="0">--</option>
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mb-4">
@@ -101,8 +101,8 @@
 
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Publish</label>
-                                            <input name="is_publish" id="publish" type="checkbox" value="1" required>
-                                            Publish
+                                            <input name="is_publish" id="publish" type="radio" value="1" checked> publish
+                                            <input name="is_publish" id="publish" type="radio" value="0"> not publish
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
@@ -128,7 +128,7 @@
 
                                         <div class="col-lg-12 mb-4">
                                             <label class="form-label">Direktorat</label>
-                                            <select class="form-control" name="hot_category_id" id="mySelect" multiple placeholder="Silahkan Pilih" required>
+                                            <select class="form-control" name="directorat_id" id="mySelect" multiple placeholder="Silahkan Pilih" required>
                                             </select>
                                         </div>
 
@@ -188,8 +188,8 @@
             const inputElm = document.querySelector('input.tagify');
             new Tagify(inputElm);
             await getTagging();
-            await getCategoryHotIssue();
-            await getCategoryHotIssueId();
+            await getCategoryNews();
+            await getCategoryDirectorat();
             await getProvinces();
             await upload_check();
         })
@@ -207,7 +207,7 @@
                 })
         }
 
-        function getCategoryHotIssue() {
+        function getCategoryNews() {
             fetch('/categories')
                 .then(response => response.json())
                 .then((data) => {
@@ -220,8 +220,8 @@
                 })
         }
 
-        function getCategoryHotIssueId() {
-            fetch('/hotissuecategory')
+        function getCategoryDirectorat() {
+            fetch('/directorat_fe')
                 .then(res => res.json())
                 .then((qqq) => {
                     qqq.forEach(items => {

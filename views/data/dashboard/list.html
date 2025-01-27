@@ -133,7 +133,7 @@
         $(document).ready(function () {
             var table = $('#dashboard_data').DataTable({
                 "ajax": {
-                    "url": "/api_metabase",
+                    "url": "/api_dashboard",
                     "dataSrc": ""
                 },
                 "columns": [
@@ -193,7 +193,7 @@
                 })
                     .then((willOut) => {
                         if (willOut) {
-                            window.location = " /api_metabase_delete/" + ids;
+                            window.location = " /api_dashboard_delete/" + ids;
                         } else {
                             console.log('NaN')
                         }
@@ -213,12 +213,12 @@
 
     <script>
         window.addEventListener("load", async() => {
-           await getStatistics()
-           await getSubStatistics();
+           await getMenu()
+           await getSubMenu();
         })
 
-        function getStatistics() {
-            fetch('/statistics')
+        function getMenu() {
+            fetch('/data_menu')
                 .then(data => data.json())
                 .then((rows) => {
                     rows.forEach(element => {
@@ -230,8 +230,8 @@
                 })
         }
 
-        function getSubStatistics() {
-            fetch('/sub_statistic')
+        function getSubMenu() {
+            fetch('/data_submenu')
                 .then(dt => dt.json())
                 .then((row) => {
                     row.forEach(element => {

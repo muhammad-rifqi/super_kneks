@@ -280,6 +280,10 @@ apps.get('/hic_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/hot_issue_management/hot_issue_category/edit.html'));
 })
 
+apps.get('/hic_add', (req, res) => {
+    res.sendFile(path.resolve('./views/hot_issue_management/hot_issue_category/add.html'));
+})
+
 apps.get('/hisc', (req, res) => {
     res.sendFile(path.resolve('./views/hot_issue_management/hot_issue_sub_category/list.html'));
 })
@@ -366,12 +370,20 @@ apps.get('/menudata_add', (req, res) => {
     res.sendFile(path.resolve('./views/data/menu/add.html'));
 })
 
+apps.get('/menudata_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/data/menu/edit.html'));
+})
+
 apps.get('/sliderdata', (req, res) => {
     res.sendFile(path.resolve('./views/data/slider/data.html'));
 })
 
 apps.get('/sliderdata_add', (req, res) => {
     res.sendFile(path.resolve('./views/data/slider/add_data.html'));
+})
+
+apps.get('/sliderdata_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/data/slider/edit.html'));
 })
 
 apps.get('/dataset', (req, res) => {
@@ -404,6 +416,10 @@ apps.get('/submenu_data', (req, res) => {
 
 apps.get('/submenudata_add', (req, res) => {
     res.sendFile(path.resolve('./views/data/submenu/add.html'));
+});
+
+apps.get('/submenudata_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/data/submenu/edit.html'));
 });
 //:::::::::::::::::::::::::::::::::::::::: End Of Data :::::::::::::::::::::::::::::::::::::::::::::::::
 // ::::::::::::::::::::::::::::::::::::::::::::::: Start Of Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -638,11 +654,11 @@ apps.get('/api_sejarah_province/:id', db.history_province);
 
 apps.get('/api_about_province/:id', db.about_province);
 
-apps.get('/api_metabase', db.metabase);
+apps.get('/api_dashboard', db.data_dashboard);
 
-apps.get('/api_metabase_detail/:id', db.detail_metabase);
+apps.get('/api_dashboard_detail/:id', db.detail_data_dashboard);
 
-apps.get('/api_metabase_delete/:id', db.metabase_delete);
+apps.get('/api_dashboard_delete/:id', db.data_dashboard_delete);
 
 apps.get('/api_opini', db.opini);
 
@@ -790,9 +806,9 @@ apps.post('/updatestructure', structure_path.single('photo'), db.updatestructure
 
 //::::::::::::::: Api & Query DB HOT ISSUE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-apps.get('/hotissue', db.hotissue);
-
 apps.get('/directorat', db.directorat);
+
+apps.get('/directorat_fe', db.directorats_fe);
 
 apps.get('/directorat_path/:id', db.directorat_path);
 
@@ -814,6 +830,11 @@ apps.post('/directorats_devisi_add', db.directorat_devisi_add);
 
 apps.get('/directorat_devisi_delete/:id', db.directorats_devisi_delete);
 
+apps.get('/directorat_detail/:id', db.directorat_details);
+
+//:::::::::::::::::::::::::::: Hot Issue ::::::::::::::::::::::::::::::::::::::::::::::::::
+apps.get('/hotissue', db.hotissue);
+
 apps.get('/hotissuedetail/:id', db.hotissue_detail);
 
 apps.post('/inserthotissue', hotissue_path.single('photo'), db.inserthotissue);
@@ -822,24 +843,29 @@ apps.get('/deletehotissue/:id/:foto', db.deletehotissue);
 
 apps.post('/updatehotissue', hotissue_path.single('photo'), db.updatehotissue);
 
+//:::::::::::::::::::::::::::: Hot Issue Category ::::::::::::::::::::::::::::::::::::::::::::::::::
+
 apps.get('/hotissuecategory', db.hotissuecategory);
+
+apps.get('/detailhotissuecategory/:id', db.detailhotissuecategory);
+
+apps.post('/inserthotissuecategory', db.inserthotissuecategory);
 
 apps.post('/updatehotissuecategory', db.updatehotissuecategory);
 
 apps.get('/deletehotissuecategory/:id', db.deletehotissuecategory);
 
-apps.get('/deletehotissuesubcategory/:id', db.deletehotissuesubcategory);
+//::::::::::::::::::::::::::::::: Sub Category Issue :::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/hotissuesubcategory', db.hotissuesubcategory);
 
 apps.get('/detailhotissuesubcategory/:id', db.detailhotissuesubcategory);
 
-apps.get('/detailhotissuecategory/:id', db.detailhotissuecategory);
-
 apps.post('/inserthotissubcategory', db.inserthotissubcategory);
 
 apps.post('/updatehotissuesubcategory', db.updatehotissuesubcategory);
 
+apps.get('/deletehotissuesubcategory/:id', db.deletehotissuesubcategory);
 //::::::::::::::: Api & Query DB INSTITUTION ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/institutions', db.institutions);
@@ -1016,31 +1042,45 @@ apps.get('/delete_welcome_page/:id/:foto', db.delete_welcome_page);
 
 //::::::::::::::: Api & Query CUSTOM PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-apps.get('/sub_statistic', db.sub_statistic);
+apps.get('/data_submenu', db.data_submenus);
 
-apps.post('/insert_substatistic', db.insert_substatistic);
+apps.post('/insert_submenu', db.insert_submenus);
 
-apps.get('/delete_substatistic/:id', db.delete_substatistic);
+apps.post('/update_submenu', db.update_submenus);
 
-apps.get('/detail_substatistic/:id', db.detailsub_substatistic);
+apps.get('/delete_submenu/:id', db.delete_submenus);
 
-apps.post('/insertapimeta', db.insertapimeta);
+apps.get('/detail_submenu/:id', db.detail_submenus);
 
-apps.post('/emptyapimeta', db.emptyapimeta);
+apps.get('/detail_submenus_edit/:id', db.detail_submenus_edit);
 
-apps.post('/updateapimeta', db.updateapimeta);
+apps.post('/insertapidashboard', db.insertapidashboards);
 
-apps.get('/statistics', db.statistics);
+apps.post('/emptyapidashboards', db.emptyapidashboard);
 
-apps.get('/delete_statistics/:id', db.deletestatistic);
+apps.post('/updateapidashboards', db.updateapidashboard);
 
-apps.post('/insertstatistics', db.insertstatistic);
+apps.get('/data_menu', db.data_menus);
 
-apps.get('/statistic_slide', db.statistic_slides);
+apps.get('/detail_data_menus/:id', db.detail_data_menus);
 
-apps.post('/insertstatisticsslide', data_slide_path.single('image'), db.insertstatisticslide);
+apps.get('/delete_data_menu/:id', db.deletedatamenus);
 
-apps.get('/statistic_slide_delete/:id/:photo', db.delete_statistic_slides);
+apps.post('/insert_data_menu', db.insertdatamenus);
+
+apps.post('/update_data_menu', db.updatedatamenus);
+
+apps.get('/slider_data', db.sliders_data);
+
+apps.get('/slider_data_fe', db.sliders_data_fe);
+
+apps.post('/insertsliderdata', data_slide_path.single('image'), db.insertsliderdata);
+
+apps.get('/detail_slider_data/:id', db.detail_sliders_data);
+
+apps.post('/updatesliderdata', data_slide_path.single('image'), db.updateslidersdata);
+
+apps.get('/delete_slider_data/:id/:photo', db.delete_slider_data);
 
 apps.get('/sourcesdata', db.sourcesdata);
 
