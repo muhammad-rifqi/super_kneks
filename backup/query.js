@@ -3,9 +3,12 @@ const { executeQuery } = require('./postgres');
 const fs = require('fs');
 const axios = require('axios');
 
+
 // let fileswindows = 'D:/kneksbe/webdevkneks/public/uploads/';
 let fileslinux = '/var/www/html/webdev.rifhandi.com/public_html/webdevkneks/public/uploads/';
 let site_url = "https://webdev.rifhandi.com";
+// const decodeHex = (encodedStr) => Buffer.from(encodedStr, 'hex').toString('utf8');
+// const encodeHex = (str) => Buffer.from(str).toString('hex');
 //::::::::::::::::::::::::::::::Start Of LOGIN LOGOUT :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const do_login = async (req, res) => {
     const email = req?.body?.email;
@@ -55,6 +58,7 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
+
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 //::::::::::::::::::::::::::::::Start Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -67,98 +71,6 @@ const abouts = async (req, res) => {
     }
 }
 
-const abouts_kdeks = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM abouts where id = '7' and web_identity = 'kdeks' and tag = 'about'");
-    res.status(200).json(sql)
-}
-
-const history_kdeks = async (req, res) => {
-    //9
-    const sql = await executeQuery("SELECT * FROM abouts where id = '9' and web_identity = 'kdeks' and tag = 'history'");
-    res.status(200).json(sql)
-}
-
-const about_province = async (req, res) => {
-    const id_province = req.params.id;
-    const arr = [];
-    const sql = await executeQuery("SELECT *  FROM  abouts where id_province = $1 AND web_identity = 'kdeks' and tag = 'about' ", [id_province]);
-    if (sql?.length > 0) {
-        const rows = {
-            "id": sql[0]?.id,
-            "title": sql[0]?.title,
-            "title_en": sql[0]?.title_en,
-            "tag": sql[0]?.tag,
-            "content": sql[0]?.content,
-            "created_at": sql[0]?.created_at,
-            "web_identity": sql[0]?.web_identity,
-            "id_province": sql[0]?.id_province,
-            "images": sql[0]?.images,
-            "updated_at": sql[0]?.updated_at,
-            "deleted_at": sql[0]?.deleted_at,
-        }
-        arr.push(rows);
-        res.status(200).json(arr)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const history_province = async (req, res) => {
-    const id_province = req.params.id;
-    const arr = [];
-    const sql = await executeQuery("SELECT *  FROM  abouts where id_province = $1 AND web_identity = 'kdeks' and tag = 'history' ", [id_province]);
-    if (sql?.length > 0) {
-        const rows = {
-            "id": sql[0]?.id,
-            "title": sql[0]?.title,
-            "title_en": sql[0]?.title_en,
-            "tag": sql[0]?.tag,
-            "content": sql[0]?.content,
-            "created_at": sql[0]?.created_at,
-            "web_identity": sql[0]?.web_identity,
-            "id_province": sql[0]?.id_province,
-            "images": sql[0]?.images,
-            "updated_at": sql[0]?.updated_at,
-            "deleted_at": sql[0]?.deleted_at,
-        }
-        arr.push(rows);
-        res.status(200).json(arr)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
-
-const kdeks = async (req, res) => {
-    //rifqi
-    const role_id_users = req.cookies.roles_id;
-    const roles_prov = req.cookies.id_province;
-    if (role_id_users == 1 || role_id_users == 2) {
-        const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks'");
-        if (sql?.length > 0) {
-            res.status(200).json(sql)
-        } else {
-            res.status(200).json({ "success": false })
-        }
-    } else {
-        const sql = await executeQuery("SELECT * FROM abouts where id_province = $1", [roles_prov]);
-        if (sql?.length > 0) {
-            res.status(200).json(sql)
-        } else {
-            res.status(200).json({ "success": false })
-        }
-    }
-}
-
-const deleteabout = async (req, res) => {
-    const id_abouts = req.params.id;
-    const sql = await executeQuery("DELETE FROM  abouts where id = $1", [id_abouts]);
-    if (sql) {
-        res.redirect('/tk');
-    } else {
-        console.log(sql)
-        res.redirect('/tk');
-    }
-}
 
 const detailabout = async (req, res) => {
     const id_abouts = req.params.id;
@@ -181,20 +93,185 @@ const updateabouts = async (req, res) => {
 
 }
 
-const insertkdeks = async (req, res) => {
-    const sql = await executeQuery("INSERT into abouts (title,title_en,tag,content,content_en,web_identity,id_province)values($1,$2,$3,$4,$4,$5,$6) ", [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.web_identity, req.body.id_province]);
+const deleteabout = async (req, res) => {
+    const id_abouts = req.params.id;
+    const sql = await executeQuery("DELETE FROM  abouts where web_identity = 'kdeks'");
     if (sql) {
-        res.redirect('/kdeks');
+        res.redirect('/tk');
     } else {
-        res.redirect('/kdeks');
+        res.redirect('/tk');
+    }
+}
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::: KDEKS ABOUTS :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+const abouts_kdeks_list = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks'");
+    res.status(200).json(sql)
+}
+
+
+const abouts_kdeks = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks' and tag = 'about'");
+    res.status(200).json(sql)
+}
+
+const history_kdeks = async (req, res) => {
+    //9
+    const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks' and tag = 'history'");
+    res.status(200).json(sql)
+}
+
+//::::::::::::::::::::::::::::::::::::::::::::::::::: END KDEKS ABOUT :::::::::::::::::::::::::::::::::::::::::::::::
+
+const kdeks = async (req, res) => {
+    //rifqi
+    const role_id_users = req.cookies.roles_id;
+    const roles_prov = req.cookies.id_province;
+    if (role_id_users == 1 || role_id_users == 2) {
+        const sql = await executeQuery("SELECT * FROM kdeks");
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json({ "success": false })
+        }
+    } else {
+        const sql = await executeQuery("SELECT * FROM kdeks where id_province = $1", [roles_prov]);
+        if (sql?.length > 0) {
+            res.status(200).json(sql)
+        } else {
+            res.status(200).json({ "success": false })
+        }
+    }
+}
+
+const detailkdeks = async (req, res) => {
+    const id_kdeks = req.params.id;
+    const sql = await executeQuery('SELECT *  FROM  kdeks where id = $1', [id_kdeks]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const insertkdeks = async (req, res) => {
+    const fileuploads = site_url + "/uploads/kdeks/" + req.file.originalname.replace(" ", "");
+    const sql = await executeQuery("INSERT into kdeks (title,title_en,abouts,abouts_en, web_identity, historys,historys_en,images,id_province)values($1,$2,$3,$4,$5,$6,$7,$8,$9) ", [req.body.title, req.body.title_en, req.body.abouts,  req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, fileuploads, req.body.id_province]);
+    if (sql) {
+        res.redirect('/master');
+    } else {
+        res.redirect('/master');
     }
 }
 
 const updatekdeks = async (req, res) => {
-    const sql = await executeQuery("UPDATE abouts set title= $1, title_en= $2, tag= $3, content= $4, content_en= $5, id_province = $6 , web_identity = $7 , tag = $8 where id = $9  ", [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.id_province, req.body.web_identity, req.body.tag, req.body.id]);
+    if (!req.file || req.file == "" || req.file == undefined) {
+        const sql = await executeQuery("UPDATE kdeks set title= $1, title_en= $2, abouts= $3, abouts_en= $4, web_identity = $5 , historys = $6 ,historys_en = $7 ,id_province = $8 where id = $9  ", [req.body.title, req.body.title_en, req.body.abouts, req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, req.body.id_province, req.body.id]);
+        if (sql) {
+            res.redirect('/master');
+        } else {
+            res.redirect('/master');
+        }
+    }else{
+        const fileuploads = site_url + "/uploads/kdeks/" + req.file.originalname.replace(" ", "");
+        const sql = await executeQuery("UPDATE kdeks set title= $1, title_en= $2, abouts= $3, abouts_en= $4, web_identity = $5 , historys = $6 ,historys_en = $7 ,images = $8, id_province = $9 where id = $10  ", [req.body.title, req.body.title_en, req.body.abouts, req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, fileuploads, req.body.id_province, req.body.id]);
+        if (sql) {
+            res.redirect('/master');
+        } else {
+            res.redirect('/master');
+        }
+    }    
+}
+
+const deletekdeks = async (req, res) => {
+    const id_kdeks = req.params.id;
+    const foto_kdeks = req.params.foto;
+
+    if (fs.existsSync(fileslinux + 'kdeks/' + foto_kdeks)) {
+        fs.unlink(fileslinux + 'kdeks/' + foto_kdeks, async function (err) {
+            if (err) return console.log(err);
+            const sql = await executeQuery("DELETE FROM  kdeks where id=$1", [id_kdeks]);
+            if (sql) {
+                res.redirect('/master');
+            } else {
+                res.redirect('/master');
+            }
+        });
+    } else {
+        const sql = await executeQuery("DELETE FROM  kdeks where id=$1", [id_kdeks]);
+        if (sql) {
+            res.redirect('/master');
+        } else {
+            res.redirect('/master');
+        }
+    }
+
+}
+
+const about_province_kdeks = async (req, res) => {
+    const id_province = req.params.id;
+    const arr = [];
+    const sql = await executeQuery("SELECT *  FROM  kdeks where id_province = $1 AND web_identity = 'kdeks'", [id_province]);
+    if (sql?.length > 0) {
+        const rows = {
+            "id": sql[0]?.id,
+            "title": sql[0]?.title,
+            "title_en": sql[0]?.title_en,
+            "abouts": sql[0]?.abouts,
+            "abouts_en": sql[0]?.abouts_en,
+            "historys": sql[0]?.historys,
+            "historys_en": sql[0]?.historys_en,
+            "web_identity": sql[0]?.web_identity,
+            "id_province": sql[0]?.id_province,
+            "images": sql[0]?.images,
+        }
+        arr.push(rows);
+        res.status(200).json(arr)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const history_province_kdeks = async (req, res) => {
+    const id_province = req.params.id;
+    const arr = [];
+    const sql = await executeQuery("SELECT *  FROM  kdeks where id_province = $1 AND web_identity = 'kdeks' ", [id_province]);
+    if (sql?.length > 0) {
+        const rows = {
+            "id": sql[0]?.id,
+            "title": sql[0]?.title,
+            "title_en": sql[0]?.title_en,
+            "abouts": sql[0]?.abouts,
+            "abouts_en": sql[0]?.abouts_en,
+            "historys": sql[0]?.historys,
+            "historys_en": sql[0]?.historys_en,
+            "web_identity": sql[0]?.web_identity,
+            "id_province": sql[0]?.id_province,
+            "images": sql[0]?.images,
+        }
+        arr.push(rows);
+        res.status(200).json(arr)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const updateaboutskdeks = async (req, res) => {
+    const sql = await executeQuery('UPDATE abouts set title = $1 , title_en = $2, tag = $3 , content = $4 , content_en = $5 where id = $6', [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.id]);
     if (sql) {
         res.redirect('/kdeks');
     } else {
+        console.log(sql)
+        res.redirect('/kdeks');
+    }
+}
+
+const deleteaboutkdeks = async (req, res) => {
+    const sql = await executeQuery('DELETE FROM abouts where id = $1', [req.params.id]);
+    if (sql) {
+        res.redirect('/kdeks');
+    } else {
+        console.log(sql)
         res.redirect('/kdeks');
     }
 }
@@ -456,7 +533,7 @@ const delete_banners_direactorats = async (req, res) => {
     if (fs.existsSync(fileslinux + 'directorat/images/' + foto_dirct)) {
         fs.unlink(fileslinux + 'directorat/images/' + foto_dirct, async function (err) {
             if (err) return console.log(err);
-            const sql = await executeQuery('UPDATE directorats set images = $1 where id = $2 ', ['NULL', id_dirct]);
+            const sql = await executeQuery('UPDATE directorats set directiorat_banner = $1 where id = $2 ', ['NULL', id_dirct]);
             if (sql) {
                 res.redirect('/directorats_detail/' + id_dirct);
             } else {
@@ -465,7 +542,7 @@ const delete_banners_direactorats = async (req, res) => {
             }
         });
     } else {
-        const sql = await executeQuery('UPDATE directorats set images = $1 where id = $2 ', ['NULL', id_dirct]);
+        const sql = await executeQuery('UPDATE directorats set directiorat_banner = $1 where id = $2 ', ['NULL', id_dirct]);
         if (sql) {
             res.redirect('/directorats_detail/' + id_dirct);
         } else {
@@ -1759,16 +1836,6 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
-    }
-}
-
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -1949,33 +2016,33 @@ const provinces_detail = async (req, res) => {
     }
 }
 
-const insertmaster = async (req, res) => {
+const insertprovinces = async (req, res) => {
     const sql = await executeQuery('INSERT INTO province(province_name)values($1)', [req.body.provinces]);
     if (sql?.length > 0) {
-        res.redirect('/master');
+        res.redirect('/province');
     } else {
-        res.redirect('/master');
+        res.redirect('/province');
     }
 }
 
-const updatemaster = async (req, res) => {
+const updateprovinces = async (req, res) => {
     const sql = await executeQuery('UPDATE province set province_name=$1 where id = $2', [req.body.province_name, req.body.id]);
     if (sql?.length > 0) {
-        res.redirect('/master');
+        res.redirect('/province');
     } else {
-        res.redirect('/master');
+        res.redirect('/province');
     }
 }
 
-const deletemaster = async (req, res) => {
+const deleteprovinces = async (req, res) => {
     const idp = req.params.id;
     const sql = await executeQuery("delete from province where id = $1",
         [idp]);
     if (sql) {
-        res.redirect('/master');
+        res.redirect('/province');
     } else {
         console.log(sql)
-        res.redirect('/master');
+        res.redirect('/province');
     }
 }
 
@@ -2325,7 +2392,7 @@ const delete_slogos = async (req, res) => {
 //::::::::::::::::::::::::::::::::::::::::::::::::::: End Of Struktur Logo :::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::::::::::::::: Start Of Welcome Banner ::::::::::::::::::::::::::::::::::::::
 const welcome_pages = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome'");
+    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome' and status = 'aktif'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
@@ -2973,14 +3040,19 @@ module.exports = {
     news_details_kdeks,
     abouts,
     abouts_kdeks,
+    abouts_kdeks_list,
     history_kdeks,
-    history_province,
-    about_province,
+    history_province_kdeks,
+    about_province_kdeks,
     deleteabout,
     detailabout,
     updateabouts,
     insertkdeks,
+    detailkdeks,
     updatekdeks,
+    deletekdeks,
+    updateaboutskdeks,
+    deleteaboutkdeks,
     structure,
     kdeks,
     deletestructure,
@@ -3054,7 +3126,6 @@ module.exports = {
     users_new,
     users_whitelist,
     users_ipaddress,
-    deleteipaddress,
     approveusers,
     approveipaddress,
     userroles,
@@ -3070,9 +3141,9 @@ module.exports = {
     insertzonakhas,
     provinces,
     provinces_detail,
-    insertmaster,
-    updatemaster,
-    deletemaster,
+    insertprovinces,
+    updateprovinces,
+    deleteprovinces,
     detail_khas_zone,
     tagging,
     inserttagging,

@@ -156,7 +156,7 @@ const detailkdeks = async (req, res) => {
 
 const insertkdeks = async (req, res) => {
     const fileuploads = site_url + "/uploads/kdeks/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("INSERT into kdeks (title,title_en,abouts,abouts_en, web_identity, historys,historys_en,images,id_province)values($1,$2,$3,$4,$5,$6,$7,$8,$9) ", [req.body.title, req.body.title_en, req.body.abouts,  req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, fileuploads, req.body.id_province]);
+    const sql = await executeQuery("INSERT into kdeks (title,title_en,abouts,abouts_en, web_identity, historys,historys_en,images,id_province)values($1,$2,$3,$4,$5,$6,$7,$8,$9) ", [req.body.title, req.body.title_en, req.body.abouts, req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, fileuploads, req.body.id_province]);
     if (sql) {
         res.redirect('/master');
     } else {
@@ -172,7 +172,7 @@ const updatekdeks = async (req, res) => {
         } else {
             res.redirect('/master');
         }
-    }else{
+    } else {
         const fileuploads = site_url + "/uploads/kdeks/" + req.file.originalname.replace(" ", "");
         const sql = await executeQuery("UPDATE kdeks set title= $1, title_en= $2, abouts= $3, abouts_en= $4, web_identity = $5 , historys = $6 ,historys_en = $7 ,images = $8, id_province = $9 where id = $10  ", [req.body.title, req.body.title_en, req.body.abouts, req.body.abouts_en, req.body.web_identity, req.body.historys, req.body.historys_en, fileuploads, req.body.id_province, req.body.id]);
         if (sql) {
@@ -180,7 +180,7 @@ const updatekdeks = async (req, res) => {
         } else {
             res.redirect('/master');
         }
-    }    
+    }
 }
 
 const deletekdeks = async (req, res) => {
@@ -402,14 +402,66 @@ const directorats_fe = async (req, res) => {
     }
 }
 
-const directorat_details = async (req, res) => {
-    const pppd = req.params.id;
-    const sql = await executeQuery('SELECT * FROM  directorats where id = $1 ', [pppd]);
+const directorats_fe_news = async (req, res) => {
+    const id_dirs = req.params.id;
+    const sql = await executeQuery("SELECT * FROM news where directorat LIKE '%" + id_dirs + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
-        res.status(200).json({ "success": false })
+        res.status(200).json([])
     }
+}
+
+const directorats_fe_photos = async (req, res) => {
+    const id_dirs = req.params.id;
+    const sql = await executeQuery("SELECT * FROM news_photos where directorat LIKE '%" + id_dirs + "%' order by id ASC");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorats_fe_videos = async (req, res) => {
+    const id_dirs = req.params.id;
+    const sql = await executeQuery("SELECT * FROM news_videos where directorat LIKE '%" + id_dirs + "%' order by id ASC");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorat_details = async (req, res) => {
+    const pppd = req.params.id;
+    const result = await executeQuery('SELECT * FROM  directorats where id = $1 ', [pppd]);
+    let promises = result.map(async (item) => {
+        return new Promise(async (resolve, reject) => {
+            let r = await executeQuery("SELECT * FROM devisi WHERE directorats_id = $1", [item.id]);
+            let detail = r;
+            let row = {
+                "id": item.id,
+                "title": item.title,
+                "title_en": item.title_en,
+                "description": item.description,
+                "description_en": item.description_en,
+                "web_identity": item.web_identity,
+                "images": item.images,
+                "directiorat_banner": item.directiorat_banner,
+                "id_province": item.id_province,
+                "province_name": item.province_name,
+                "detail": detail
+            };
+            resolve(row);
+        });
+    });
+    Promise.all(promises)
+        .then((rows) => {
+            res.status(200).json(rows);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
 }
 
 const directorat_devisi = async (req, res) => {
@@ -1145,7 +1197,7 @@ const insertfileupload = async (req, res) => {
     const fileuploads = site_url + "/uploads/filesupload/" + req.file.originalname.replace(" ", "");
     const bbb = req.body.file_category_id.split('-');
     const sql = await executeQuery("insert into files(title,title_en,content,content_en,file,is_publish,date,report_category_id,report_category_name,writer,publisher,synopsis,isbn,number_of_pages,width,height,tagging,directorat,id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1] , req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks]);
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks]);
     if (sql) {
         res.redirect('/f');
     } else {
@@ -1159,7 +1211,7 @@ const updatefileupload = async (req, res) => {
     const bbb = req.body.file_category_id.split('-');
     if (!req.file || req.file == undefined || req.file == "") {
         const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4,is_publish=$5,date=$6,report_category_id=$7,report_category_name=$8,writer=$9,publisher=$10,synopsis=$11,isbn=$12,number_of_pages=$13,width=$14,height=$15,tagging=$16,directorat=$17 where id = $18",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer,req.body.publisher,req.body.synopsis,req.body.isbn,req.body.number_of_pages,req.body.width,req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
         if (sql) {
             res.redirect('/f');
         } else {
@@ -1168,7 +1220,7 @@ const updatefileupload = async (req, res) => {
     } else {
         const fileuploads = site_url + "/uploads/filesupload/" + req.file.originalname.replace(" ", "");
         const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4, file=$5, is_publish=$6,date=$7,report_category_id=$8,report_category_name=$9,writer=$10,publisher=$11,synopsis=$12,isbn=$13,number_of_pages=$14,width=$15,height=$16,tagging=$17,directorat=$18 where id = $19",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer,req.body.publisher,req.body.synopsis,req.body.isbn,req.body.number_of_pages,req.body.width,req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
         if (sql) {
             res.redirect('/f');
         } else {
@@ -1835,6 +1887,16 @@ const users_ipaddress = async (req, res) => {
         res.status(200).json({ "success": false })
     }
 };
+
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
 
 const approveusers = async (req, res) => {
 
@@ -3077,6 +3139,9 @@ module.exports = {
     directorats_devisi_delete,
     directorats_fe,
     directorat_details,
+    directorats_fe_news,
+    directorats_fe_photos,
+    directorats_fe_videos,
     deletehotissuesubcategory,
     detailhotissuesubcategory,
     updatehotissue,
@@ -3126,6 +3191,7 @@ module.exports = {
     users_new,
     users_whitelist,
     users_ipaddress,
+    deleteipaddress,
     approveusers,
     approveipaddress,
     userroles,
