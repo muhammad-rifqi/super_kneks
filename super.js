@@ -123,6 +123,16 @@ let data_slide = multer.diskStorage(
     }
 );
 let data_slide_path = multer({ storage: data_slide });
+//:::::::::::::::::::::::::: Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+let kdeks_logo = multer.diskStorage(
+    {
+        destination: './public/uploads/kdeks/provinsi/',
+        filename: function (req, file, cb) {
+            cb(null, file.originalname.replace(" ", ""));
+        }
+    }
+);
+let kdeks_logo_province = multer({ storage: kdeks_logo });
 //::::::::::::::: Start Of Page ::::::::::::::::::::::::::::::::::
 
 apps.get('/', (req, res) => {
@@ -325,15 +335,15 @@ apps.get('/v_edit/:id', (req, res) => {
 //:::::::::::::::::::::::::::::::::::::::: End Of Video ::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::Start Of Agenda ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 apps.get('/a', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/agenda/list.html'));
+    res.sendFile(path.resolve('./views/agenda/list.html'));
 })
 
 apps.get('/a_add', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/agenda/add.html'));
+    res.sendFile(path.resolve('./views/agenda/add.html'));
 })
 
 apps.get('/a_edit/:id', (req, res) => {
-    res.sendFile(path.resolve('./views/one_data_center/agenda/edit.html'));
+    res.sendFile(path.resolve('./views/agenda/edit.html'));
 })
 // ::::::::::::::::::::::::::::::::::: End Of Agenda :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::::::::::: Start Of E-Pustaka :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -427,17 +437,11 @@ apps.get('/kdeks', (req, res) => {
     res.sendFile(path.resolve('./views/kdeks/kdeks/kdeks.html'));
 })
 
-apps.get('/kdeks_add', (req, res) => {
-    res.sendFile(path.resolve('./views/kdeks/kdeks/kdeks_add.html'));
-})
-
 apps.get('/kdeks_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/kdeks/kdeks/kdeks_edit.html'));
 })
-
 //::::::::::::::::::::::::::::::::::::::::::::::::::End Of Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::::::::::::::Start Of Master  Kdeks ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
 apps.get('/master', (req, res) => {
     res.sendFile(path.resolve('./views/kdeks/master/master.html'));
 })
@@ -450,6 +454,19 @@ apps.get('/master_edit/:id', (req, res) => {
     res.sendFile(path.resolve('./views/kdeks/master/master_edit.html'));
 })
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::End Of Master Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::Start Of Province Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::
+apps.get('/province', (req, res) => {
+    res.sendFile(path.resolve('./views/kdeks/province/list.html'));
+})
+
+apps.get('/province_add', (req, res) => {
+    res.sendFile(path.resolve('./views/kdeks/province/add.html'));
+})
+
+apps.get('/province_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/kdeks/province/edit.html'));
+})
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::End Of Province Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::
 // :::::::::::::::::::::::::::::::::::::::::::::::::::: Start Of Zona Khas :::::::::::::::::::::::::::::::::::::::::::::::::::::::
 apps.get('/zk', (req, res) => {
     res.sendFile(path.resolve('./views/zona_khas/list.html'));
@@ -634,25 +651,48 @@ apps.get('/register', (req, res) => {
 
 apps.get('/api/newspaging', db.pagingnews);
 
-apps.get('/api_news', db.news_kdeks);
-
-apps.get('/api_news_detail/:id', db.news_details_kdeks);
-
-apps.get('/api_newscategory', db.news_categories_kdeks);
-
-apps.get('/api_detailnewscategory/:id', db.news_detailnewscategory_kdeks);
-
 apps.get('/abouts', db.abouts);
-
-apps.get('/api_about', db.abouts_kdeks);
-
-apps.get('/api_history', db.history_kdeks);
 
 apps.get('/detailabouts/:id', db.detailabout);
 
-apps.get('/api_sejarah_province/:id', db.history_province);
+apps.post('/updateabout', db.updateabouts);
 
-apps.get('/api_about_province/:id', db.about_province);
+apps.get('/deleteabouts/:id', db.deleteabout);
+
+// :::::::::::::::::::::::::::::::::::::: KDEKS :::::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/api_news_kdeks', db.news_kdeks);
+
+apps.get('/api_news_detail_kdeks/:id', db.news_details_kdeks);
+
+apps.get('/api_newscategory_kdeks', db.news_categories_kdeks);
+
+apps.get('/api_detailnewscategory_kdeks/:id', db.news_detailnewscategory_kdeks);
+
+apps.get('/api_about_kdeks', db.abouts_kdeks);
+
+apps.get('/api_history_kdeks', db.history_kdeks);
+
+apps.get('/api_history_province_kdeks/:id', db.history_province_kdeks);
+
+apps.get('/api_about_province_kdeks/:id', db.about_province_kdeks);
+
+apps.get('/api_kdeks', db.kdeks);
+
+apps.get('/detail_kdeks/:id', db.detailkdeks);
+
+apps.post('/insertkdeks', kdeks_logo_province.single('photo'), db.insertkdeks);
+
+apps.post('/updatekdeks' , kdeks_logo_province.single('photo') , db.updatekdeks);
+
+apps.get('/kdeks_delete/:id/:foto', db.deletekdeks);
+
+apps.get('/api_kdeks_list', db.abouts_kdeks_list);
+
+apps.post('/updateaboutkdeks', db.updateaboutskdeks);
+
+apps.get('/delete_about_kdeks/:id', db.deleteaboutkdeks);
+//::::::::::::::::::::::::::: KDEKS :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/api_dashboard', db.data_dashboard);
 
@@ -675,8 +715,6 @@ apps.get('/api_menu_detail/:id', db.menu_detail);
 apps.get('/api_submenu', db.submenu);
 
 apps.get('/api_submenu_detail/:id', db.submenu_detail);
-
-apps.get('/api_kdeks', db.kdeks);
 
 apps.get('/kneks/api', db.api_kneks);
 
@@ -770,8 +808,6 @@ apps.get('/approveusers/:id', db.approveusers);
 
 apps.get('/approveipaddress/:id', db.approveipaddress);
 
-apps.get('/deleteipaddress/:id', db.deleteipaddress);
-
 apps.post('/insertusers', db.insertusers);
 
 apps.post('/updateusers', db.updateusers);
@@ -783,15 +819,6 @@ apps.get('/updatepassword', db.updatepassword);
 apps.post('/changespassword', db.changespassword);
 
 //::::::::::::::: Api & Query DB ABOUTS ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
-apps.post('/updatetentangkami', db.updateabouts);
-
-apps.get('/deleteabouts/:id', db.deleteabout);
-
-apps.post('/insertkdeks', db.insertkdeks);
-
-apps.post('/updatekdeks', db.updatekdeks);
-
 //::::::::::::::: Api & Query DB STRUCTURE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/structure', db.structure);
@@ -1119,11 +1146,11 @@ apps.post('/updatesubmenu', db.updatesubmenu);
 
 //::::::::::::::: Api & Query CUSTOM DATA NARATION PAGE ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-apps.post('/insertmaster', db.insertmaster);
+apps.post('/insertprovince', db.insertprovinces);
 
-apps.post('/updatemaster', db.updatemaster);
+apps.post('/updateprovince', db.updateprovinces);
 
-apps.get('/master_delete/:id', db.deletemaster);
+apps.get('/province_delete/:id', db.deleteprovinces);
 
 //::::::::::::::::: End Of KDEKS ::::::::::::::::::::::::::
 
