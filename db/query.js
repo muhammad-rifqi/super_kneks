@@ -12,26 +12,21 @@ let site_url = "https://webdev.rifhandi.com";
 //::::::::::::::::::::::::::::::Start Of LOGIN LOGOUT :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const do_login = async (req, res) => {
     const email = req?.body?.email;
-    const password = req?.body?.password;
-    if (email == 'superadmin@kneks.go.id' && password == '12345') {
-        const pass = md5(req?.body?.password)
-        const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = 'Y'", ['superadmin@kneks.go.id', pass ]);
-        if (sql?.length > 0) {
-            u_id = sql[0]?.id;
-            const isLogin = true;
-            res.cookie("islogin", isLogin);
-            res.cookie("id", sql[0]?.id);
-            res.cookie("name", sql[0]?.name);
-            res.cookie("roles_id", sql[0]?.role_id);
-            res.cookie("id_province", sql[0]?.id_province);
-            res.cookie("directorat_id", sql[0]?.directorat_id);
-            // res.redirect("/dashboard");
-            res.status(200).json({ "success": "true" })
-        } else {
-            // res.redirect("/");
-            res.status(200).json({ "success": "false", "data": sql })
-        }
+    const pass = md5(req?.body?.password)
+    const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND role_id = $3", [email, pass, 1]);
+    if (sql?.length > 0) {
+        u_id = sql[0]?.id;
+        const isLogin = true;
+        res.cookie("islogin", isLogin);
+        res.cookie("id", sql[0]?.id);
+        res.cookie("name", sql[0]?.name);
+        res.cookie("roles_id", sql[0]?.role_id);
+        res.cookie("id_province", sql[0]?.id_province);
+        res.cookie("directorat_id", sql[0]?.directorat_id);
+        // res.redirect("/dashboard");
+        res.status(200).json({ "success": "true" })
     } else {
+        // res.redirect("/");
         res.status(200).json({ "success": "false", "data": "email or password not found" })
     }
 }
