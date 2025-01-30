@@ -12,8 +12,6 @@
     <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" type="text/css" href="/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" type="text/css" href="/assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2.min.css">
-    <link rel="stylesheet" type="text/css" href="/assets/vendors/css/select2-theme.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/css/theme.min.css" />
     <script type="text/javascript" src="//js.nicedit.com/nicEdit-latest.js"></script>
     <script type="text/javascript">
@@ -46,46 +44,44 @@
             <div class="main-content">
                 <div class="row">
                     <div class="col-lg-12">
-                        <form action="/directorats_update" method="post">
+                        <form action="/es_updateabout" method="post">
                             <input type="hidden" name="id" id="id" value="">
                             <div class="card stretch stretch-full">
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
                                         <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Ubah Direktorat :</span>
+                                            <span class="d-block mb-2">Ubah Ekonomi Syariah:</span>
                                             <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
                                                 Ubah
-                                                Data Direktorat Di Bawah Ini</span>
+                                                Data Ekonomi Syariah Di Bawah Ini</span>
                                         </h5>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Judul [ID] </label>
+                                            <label class="form-label">Judul [ID]</label>
                                             <input class="form-control" type="text" name="title" id="title" required>
                                         </div>
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Judul [EN] </label>
+                                            <label class="form-label">Judul [EN]</label>
                                             <input class="form-control" type="text" name="title_en" id="title_en"
                                                 required>
                                         </div>
 
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Keterangan [ID] </label>
-                                            <textarea class="form-control" name="description" id="editor3"></textarea>
+                                            <label class="form-label">Keterangan [ID]</label>
+                                            <textarea class="form-control" name="content" id="editor3"
+                                                ></textarea>
                                         </div>
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label">Keterangan [EN] </label>
-                                            <textarea class="form-control" name="description_en"
-                                                id="editor4"></textarea>
+                                            <label class="form-label">Keterangan [EN]</label>
+                                            <textarea class="form-control" name="content_en" id="editor4"
+                                                ></textarea>
                                         </div>
 
-                                        <!-- <div class="col-lg-12 mb-4">
-                                            <label class="form-label">KDEKS</label>
-                                            <select class="form-control" name="daerah" id="daerah" required>
-                                                <option value="0">--</option>
-                                            </select>
-                                        </div> -->
-
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label">Tag</label>
+                                            <input  type="text" class="form-control" name="tag" id="tag" />
+                                        </div>
 
                                         <div class="col-lg-12 mb-4 text-left">
                                             <label class="form-label"></label>
@@ -118,54 +114,27 @@
     </main>
 
     <script src="/assets/vendors/js/vendors.min.js"></script>
-    <script src="/assets/vendors/js/select2.min.js"></script>
-    <script src="/assets/vendors/js/select2-active.min.js"></script>
     <script src="/assets/js/common-init.min.js"></script>
     <script src="/assets/js/theme-customizer-init.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         window.addEventListener("load", async () => {
-            let hot_category_id;
-            let prov_id;
             await getUrlById();
-            await prov();
         })
 
         function getUrlById() {
             const URLS = new URL(window.location.href);
-            fetch('/directorat_detail/' + URLS.pathname.split('/')[2])
+            fetch('/es_detailabouts/' + URLS.pathname.split('/')[2])
                 .then(data => data.json())
                 .then((rows) => {
-                    prov_id = rows[0]?.id_province;
                     document.getElementById("id").value = rows[0]?.id;
                     document.getElementById("title").value = rows[0]?.title;
                     document.getElementById("title_en").value = rows[0]?.title_en;
-                    nicEditors.findEditor("editor3").setContent(rows[0]?.description);
-                    nicEditors.findEditor("editor4").setContent(rows[0]?.description_en);
-                    hot_category_id = rows[0]?.hot_category_id;
+                    nicEditors.findEditor( "editor3" ).setContent( rows[0]?.content );
+                    nicEditors.findEditor( "editor4" ).setContent( rows[0]?.content_en );
+                    document.getElementById("tag").value = rows[0]?.tag;
                 })
         }
-
-        // function prov() {
-        //     fetch('/provinces')
-        //         .then(response => response.json())
-        //         .then((data) => {
-        //             data.forEach(element => {
-        //                 if (element?.id == prov_id) {
-        //                     const ddd = document.createElement('option')
-        //                     ddd.value = `${element?.id}-${element?.province_name}`;
-        //                     ddd.text = `${element?.province_name}`;
-        //                     ddd.selected = true;
-        //                     document.getElementById("daerah").append(ddd);
-        //                 } else {
-        //                     const ddd = document.createElement('option')
-        //                     ddd.value = `${element?.id}-${element?.province_name}`;
-        //                     ddd.text = `${element?.province_name}`;
-        //                     document.getElementById("daerah").append(ddd);
-        //                 }
-        //             });
-        //         })
-        // }
 
     </script>
 </body>

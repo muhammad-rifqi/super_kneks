@@ -45,9 +45,9 @@
             <div class="input-field mb-4"><i class="fas fa-user"></i><input type="text" placeholder="Masukkan Email"
                 id="email" name="email" value="" required></div>
             <div class="input-field mb-4"><i class="fas fa-lock"></i><input type="password"
-                placeholder="Masukkan Password" id="password" name="password" value="" required><span class="toggle-password"><i
-                  id="texts" onclick="changeToText()" class="fas fa-eye"></i></span><span class="toggle-password"><i
-                  onclick="changeToPassword()" id="passwords" class="fas fa-eye-slash"
+                placeholder="Masukkan Password" id="password" name="password" value="" required><span
+                class="toggle-password"><i id="texts" onclick="changeToText()" class="fas fa-eye"></i></span><span
+                class="toggle-password"><i onclick="changeToPassword()" id="passwords" class="fas fa-eye-slash"
                   style="display: none;"></i></span></div><input type="submit" class="btn-login solid" value="Login">
             <div class="text-center"></div>
           </form>
@@ -72,10 +72,10 @@
     fetch('/login_banners').then(response => response.json()).then((rows) => {
       if (rows[0]?.path == undefined || rows[0]?.path == "") {
         // document.getElementById("gbrs").setAttribute('src', '/style/image/gbr-login.png');
-        document.getElementById("gbrs").innerHTML=`<img src="/style/image/gbr-login.png" alt="imgLogin" width="60%">`;
+        document.getElementById("gbrs").innerHTML = `<img src="/style/image/gbr-login.png" alt="imgLogin" width="60%">`;
       } else {
         // document.getElementById("gbrs").setAttribute('src', rows[0]?.path);
-        document.getElementById("gbrs").innerHTML=`<img src="${rows[0]?.path}" alt="imgLogin" width="60%">`;
+        document.getElementById("gbrs").innerHTML = `<img src="${rows[0]?.path}" alt="imgLogin" width="60%">`;
       }
     })
   }
@@ -116,18 +116,12 @@
         method: "POST",
         headers: { "Access-Control-Allow-Origin": "*", "Content-type": "application/json" },
         // body: JSON.stringify({ email: em, password: pw, ip_address : ips_address }),
-        body: JSON.stringify({ email: em, password: pw}),
+        body: JSON.stringify({ email: em, password: pw }),
       })
         .then(response => response.json())
         .then((data) => {
           if (data?.success == "true") {
-            swal({
-              title: "Login Success",
-              text: `Silahkan Masuk ${em} Ke Dashboard Untuk Mengola Data Anda`,
-              icon: "success",
-            }).then(function () {
-              window.location.href = "/home";
-            });
+            window.location.href = "/home";
           } else {
             swal({
               title: "Login Failed",

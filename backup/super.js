@@ -808,6 +808,8 @@ apps.get('/approveusers/:id', db.approveusers);
 
 apps.get('/approveipaddress/:id', db.approveipaddress);
 
+apps.get('/deleteipaddress/:id', db.deleteipaddress);
+
 apps.post('/insertusers', db.insertusers);
 
 apps.post('/updateusers', db.updateusers);
@@ -836,6 +838,12 @@ apps.post('/updatestructure', structure_path.single('photo'), db.updatestructure
 apps.get('/directorat', db.directorat);
 
 apps.get('/directorat_fe', db.directorats_fe);
+
+apps.get('/directorats_fe_news/:id', db.directorats_fe_news);
+
+apps.get('/directorats_fe_photos/:id', db.directorats_fe_photos);
+
+apps.get('/directorats_fe_videos/:id', db.directorats_fe_videos);
 
 apps.get('/directorat_path/:id', db.directorat_path);
 
