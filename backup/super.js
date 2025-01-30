@@ -200,8 +200,16 @@ apps.get('/directorats_detail/:id', (req, res) => {
     res.sendFile(path.resolve('./views/directorat/detail.html'));
 })
 
-apps.get('/directorats_devisi/:id', (req, res) => {
-    res.sendFile(path.resolve('./views/directorat/devisi.html'));
+apps.get('/devision', (req, res) => {
+    res.sendFile(path.resolve('./views/divisi/devisi.html'));
+})
+
+apps.get('/devision_add', (req, res) => {
+    res.sendFile(path.resolve('./views/divisi/add.html'));
+})
+
+apps.get('/devision_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/divisi/edit.html'));
 })
 //:::::::::::::::::::::::::: End Of Direktorat ::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::: Start Of Struktur  ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -536,10 +544,18 @@ apps.get('/tk_edit/:id', (req, res) => {
 apps.get('/es', (req, res) => {
     res.sendFile(path.resolve('./views/profile/ekonomi_syariah/ekonomi_syariah.html'));
 })
+
+apps.get('/es_edit/:id', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/ekonomi_syariah/edit.html'));
+})
 //:::::::::::::::::::::::::::::::::::::::::: End Of Ekonomi Syariah :::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::::::::::::::: Start Of Institusi ::::::::::::::::::::::::::::::::::::::::::::::
 apps.get('/i', (req, res) => {
     res.sendFile(path.resolve('./views/profile/institution/list.html'));
+})
+
+apps.get('/i_add', (req, res) => {
+    res.sendFile(path.resolve('./views/profile/institution/add.html'));
 })
 
 apps.get('/i_edit/:id', (req, res) => {
@@ -646,6 +662,12 @@ apps.get('/submenu_edit/:id', (req, res) => {
 apps.get('/register', (req, res) => {
     res.sendFile(path.resolve('./views/register.html'));
 })
+// ::::::::::::::::::::::::::: Ekonomi Syariah :::::::::::::::::::::::::::::::::::::::::::::
+apps.get('/es_abouts', db.es_abouts);
+
+apps.get('/es_detailabouts/:id', db.es_detailabouts);
+
+apps.post('/es_updateabout', db.es_updateabouts);
 
 // :::::::::::::::::::::::::: Api Frontend ::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -683,7 +705,7 @@ apps.get('/detail_kdeks/:id', db.detailkdeks);
 
 apps.post('/insertkdeks', kdeks_logo_province.single('photo'), db.insertkdeks);
 
-apps.post('/updatekdeks' , kdeks_logo_province.single('photo') , db.updatekdeks);
+apps.post('/updatekdeks', kdeks_logo_province.single('photo'), db.updatekdeks);
 
 apps.get('/kdeks_delete/:id/:foto', db.deletekdeks);
 
@@ -806,9 +828,9 @@ apps.get('/roles', db.userroles);
 
 apps.get('/approveusers/:id', db.approveusers);
 
-apps.get('/approveipaddress/:id', db.approveipaddress);
-
 apps.get('/deleteipaddress/:id', db.deleteipaddress);
+
+apps.get('/approveipaddress/:id', db.approveipaddress);
 
 apps.post('/insertusers', db.insertusers);
 
@@ -845,6 +867,18 @@ apps.get('/directorats_fe_photos/:id', db.directorats_fe_photos);
 
 apps.get('/directorats_fe_videos/:id', db.directorats_fe_videos);
 
+apps.get('/directorats_fe_opini/:id', db.directorats_fe_opini);
+
+apps.get('/directorats_fe_files/:id', db.directorats_fe_files);
+
+apps.get('/kdeks_fe_news/:id', db.kdeks_fe_news);
+
+apps.get('/kdeks_fe_photos/:id', db.kdeks_fe_photos);
+
+apps.get('/kdeks_fe_files/:id', db.kdeks_fe_files);
+
+apps.get('/kdeks_fe_opini/:id', db.kdeks_fe_opini);
+
 apps.get('/directorat_path/:id', db.directorat_path);
 
 apps.post('/insertdirectorats', db.insertdirectorats);
@@ -859,13 +893,19 @@ apps.get('/images_direactorat_delete/:id/:foto', db.delete_images_direactorats);
 
 apps.get('/banners_direactorat_delete/:id/:foto', db.delete_banners_direactorats);
 
-apps.get('/directorat_devisi/:id', db.directorat_devisi);
+apps.get('/directorat_detail/:id', db.directorat_details);
+
+//::::::::::::::::::::::::::::: DIVISI ::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+apps.get('/directorat_devisi', db.directorat_devisi);
 
 apps.post('/directorats_devisi_add', db.directorat_devisi_add);
 
-apps.get('/directorat_devisi_delete/:id', db.directorats_devisi_delete);
+apps.get('/directorats_devisi_detail/:id', db.directorat_devisi_detail);
 
-apps.get('/directorat_detail/:id', db.directorat_details);
+apps.get('/division_delete/:id', db.directorats_devisi_delete);
+
+apps.post('/directorats_devisi_edit', db.directorat_devisi_update);
 
 //:::::::::::::::::::::::::::: Hot Issue ::::::::::::::::::::::::::::::::::::::::::::::::::
 apps.get('/hotissue', db.hotissue);

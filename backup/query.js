@@ -12,26 +12,21 @@ let site_url = "https://webdev.rifhandi.com";
 //::::::::::::::::::::::::::::::Start Of LOGIN LOGOUT :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const do_login = async (req, res) => {
     const email = req?.body?.email;
-    const password = req?.body?.password;
-    if (email == 'superadmin@kneks.go.id' && password == '12345') {
-        const pass = md5(req?.body?.password)
-        const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = 'Y'", ['superadmin@kneks.go.id', pass ]);
-        if (sql?.length > 0) {
-            u_id = sql[0]?.id;
-            const isLogin = true;
-            res.cookie("islogin", isLogin);
-            res.cookie("id", sql[0]?.id);
-            res.cookie("name", sql[0]?.name);
-            res.cookie("roles_id", sql[0]?.role_id);
-            res.cookie("id_province", sql[0]?.id_province);
-            res.cookie("directorat_id", sql[0]?.directorat_id);
-            // res.redirect("/dashboard");
-            res.status(200).json({ "success": "true" })
-        } else {
-            // res.redirect("/");
-            res.status(200).json({ "success": "false", "data": sql })
-        }
+    const pass = md5(req?.body?.password)
+    const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND role_id = $3", [email, pass, 1]);
+    if (sql?.length > 0) {
+        u_id = sql[0]?.id;
+        const isLogin = true;
+        res.cookie("islogin", isLogin);
+        res.cookie("id", sql[0]?.id);
+        res.cookie("name", sql[0]?.name);
+        res.cookie("roles_id", sql[0]?.role_id);
+        res.cookie("id_province", sql[0]?.id_province);
+        res.cookie("directorat_id", sql[0]?.directorat_id);
+        // res.redirect("/dashboard");
+        res.status(200).json({ "success": "true" })
     } else {
+        // res.redirect("/");
         res.status(200).json({ "success": "false", "data": "email or password not found" })
     }
 }
@@ -58,9 +53,43 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
-
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
+//:::::::::::::::::::::::::::::: Ekonomi Syraiah ::::::::::::::::::::::::::::::::::::::::::::::::
+const es_abouts = async (req, res) => {
+    const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'ekonomi_syariah'");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
 
+
+const es_detailabouts = async (req, res) => {
+    const id_abouts = req.params.id;
+    const sql = await executeQuery('SELECT *  FROM  abouts where id = $1', [id_abouts]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json({ "success": false })
+    }
+}
+
+const es_updateabouts = async (req, res) => {
+    const sql = await executeQuery('UPDATE abouts set title = $1 , title_en = $2, tag = $3 , content = $4 , content_en = $5 where id = $6', [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.id]);
+    if (sql) {
+        res.redirect('/es');
+    } else {
+        console.log(sql)
+        res.redirect('/es');
+    }
+
+}
+
+
+
+
+//:::::::::::::::::::::::::::::::::: End Of Ekonomi Syariah ::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const abouts = async (req, res) => {
     const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kneks'");
@@ -376,6 +405,7 @@ const updatestructure = async (req, res) => {
 const directorat = async (req, res) => {
     // const sql = await executeQuery('SELECT * FROM `hot_issues` LEFT JOIN `hot_subcategories`on hot_issues.hot_subcategory_id = hot_subcategories.id LEFT JOIN hot_categories on hot_subcategories.hot_category_id = hot_categories.id GROUP BY hot_categories.id');
     const role_id_users = req.cookies.roles_id;
+    const directorat_id = req.cookies.directorat_id;
     if (role_id_users == 1 || role_id_users == 2) {
         const sql = await executeQuery('SELECT * FROM directorats');
         if (sql?.length > 0) {
@@ -384,7 +414,7 @@ const directorat = async (req, res) => {
             res.status(200).json([])
         }
     } else {
-        const sql = await executeQuery("SELECT * FROM directorats where id = $1", [role_id_users]);
+        const sql = await executeQuery("SELECT * FROM directorats where id = $1", [directorat_id]);
         if (sql?.length > 0) {
             res.status(200).json(sql)
         } else {
@@ -425,6 +455,66 @@ const directorats_fe_photos = async (req, res) => {
 const directorats_fe_videos = async (req, res) => {
     const id_dirs = req.params.id;
     const sql = await executeQuery("SELECT * FROM news_videos where directorat LIKE '%" + id_dirs + "%' order by id ASC");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorats_fe_opini = async (req, res) => {
+    const id_dirs = req.params.id;
+    const sql = await executeQuery("SELECT * FROM opini where directorat LIKE '%" + id_dirs + "%' order by id ASC");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorats_fe_files = async (req, res) => {
+    const id_dirs = req.params.id;
+    const sql = await executeQuery("SELECT * FROM files where directorat LIKE '%" + id_dirs + "%' order by id ASC");
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const kdeks_fe_news = async (req, res) => {
+    const id_kdk = req.params.id;
+    const sql = await executeQuery("SELECT * FROM news where id_province = $1", [id_kdk]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const kdeks_fe_photos = async (req, res) => {
+    const id_kdk = req.params.id;
+    const sql = await executeQuery("SELECT * FROM news_photos where id_province = $1 ", [id_kdk]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const kdeks_fe_opini = async (req, res) => {
+    const id_kdk = req.params.id;
+    const sql = await executeQuery("SELECT * FROM opini where id_province = $1", [id_kdk]);
+    if (sql?.length > 0) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const kdeks_fe_files = async (req, res) => {
+    const id_kdk = req.params.id;
+    const sql = await executeQuery("SELECT * FROM files where id_province = $1", [id_kdk]);
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -473,20 +563,50 @@ const directorat_devisi = async (req, res) => {
     }
 }
 
+const directorat_devisi_add = async (req, res) => {
+    const sql = await executeQuery("insert into devisi(title,description,directorats_id)values($1,$2,$3)",
+        [req.body.title, req.body.description, req.body.directorats_id]);
+    if (sql) {
+        res.redirect('/devision');
+    } else {
+        res.redirect('/devision');
+    }
+}
+
 const directorats_devisi_delete = async (req, res) => {
     const iddev = req.params.id;
     const sql = await executeQuery('DELETE FROM  devisi where id=$1', [iddev]);
     if (sql) {
-        res.redirect('/directorats_devisi/' + iddev);
+        res.redirect('/devision');
     } else {
-        console.log(sql)
-        res.redirect('/directorats_devisi/' + iddev);
+        res.redirect('/devision');
+    }
+}
+
+const directorat_devisi_detail = async (req, res) => {
+    const iddev = req.params.id;
+    const sql = await executeQuery('SELECT *  FROM  devisi where id = $1', [iddev]);
+    if (sql) {
+        res.status(200).json(sql)
+    } else {
+        res.status(200).json([])
+    }
+}
+
+const directorat_devisi_update = async (req, res) => {
+    const sql = await executeQuery("update devisi set title = $1, description = $2, directorats_id = $3 where id = $4",
+        [req.body.title, req.body.description, req.body.directorats_id, req.body.id]);
+    if (sql) {
+        res.redirect('/devision');
+    } else {
+        res.redirect('/devision');
     }
 }
 
 const insertdirectorats = async (req, res) => {
-    const a = req.body.daerah.split('-');
-    const sql = await executeQuery('INSERT INTO directorats(title,title_en,description,description_en,id_province,province_name)values($1,$2,$3,$4,$5,$6)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1]]);
+    // const a = req.body.daerah.split('-');
+    // const sql = await executeQuery('INSERT INTO directorats(title,title_en,description,description_en,id_province,province_name)values($1,$2,$3,$4,$5,$6)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1]]);
+    const sql = await executeQuery('INSERT INTO directorats(title,title_en,description,description_en)values($1,$2,$3,$4)', [req.body.title, req.body.title_en, req.body.description, req.body.description_en]);
     if (sql?.length > 0) {
         res.redirect('/directorats');
     } else {
@@ -506,9 +626,11 @@ const directorat_path = async (req, res) => {
 }
 
 const update_directorats = async (req, res) => {
-    const a = req.body.daerah.split('-');
-    const sql = await executeQuery("update directorats set title=$1,title_en=$2,description=$3,description_en=$4,id_province=$5,province_name=$6 where id = $7",
-        [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1], req.body.id]);
+    // const a = req.body.daerah.split('-');
+    // const sql = await executeQuery("update directorats set title=$1,title_en=$2,description=$3,description_en=$4,id_province=$5,province_name=$6 where id = $7",
+    //     [req.body.title, req.body.title_en, req.body.description, req.body.description_en, a[0], a[1], req.body.id]);
+    const sql = await executeQuery("update directorats set title=$1,title_en=$2,description=$3,description_en=$4 where id = $7",
+        [req.body.title, req.body.title_en, req.body.description, req.body.description_en, req.body.id]);
 
     if (sql) {
         res.redirect('/directorats');
@@ -538,17 +660,6 @@ const directorats_uploads = async (req, res) => {
         res.redirect('/directorats_detail/' + req.body.id);
     } else {
         res.redirect('/directorats_detail/' + req.body.id);
-    }
-}
-
-
-const directorat_devisi_add = async (req, res) => {
-    const sql = await executeQuery("insert into devisi(title,description,directorats_id)values($1,$2,$3)",
-        [req.body.title, req.body.description, req.body.id]);
-    if (sql) {
-        res.redirect('/directorats_devisi/' + req.body.id);
-    } else {
-        res.redirect('/directorats_devisi/' + req.body.id);
     }
 }
 
@@ -3100,6 +3211,9 @@ module.exports = {
     news_categories_kdeks,
     news_detailnewscategory_kdeks,
     news_details_kdeks,
+    es_abouts,
+    es_detailabouts,
+    es_updateabouts,
     abouts,
     abouts_kdeks,
     abouts_kdeks_list,
@@ -3136,12 +3250,20 @@ module.exports = {
     directorats_uploads,
     directorat_devisi_add,
     directorat_devisi,
+    directorat_devisi_detail,
+    directorat_devisi_update,
     directorats_devisi_delete,
     directorats_fe,
     directorat_details,
     directorats_fe_news,
     directorats_fe_photos,
     directorats_fe_videos,
+    directorats_fe_opini,
+    directorats_fe_files,
+    kdeks_fe_news,
+    kdeks_fe_photos,
+    kdeks_fe_files,
+    kdeks_fe_opini,
     deletehotissuesubcategory,
     detailhotissuesubcategory,
     updatehotissue,
@@ -3191,8 +3313,8 @@ module.exports = {
     users_new,
     users_whitelist,
     users_ipaddress,
-    deleteipaddress,
     approveusers,
+    deleteipaddress,
     approveipaddress,
     userroles,
     insertusers,

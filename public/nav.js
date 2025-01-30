@@ -36,7 +36,8 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
                     </li>`);
 }
 //Direktorat
-if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4) {
+// if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4) {
+if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`<li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bookmark"></i></span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
@@ -285,10 +286,10 @@ if (cookie["roles_id"] == 1) {
 }
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`
-                            <li class="nxl-item"><a class="nxl-link" href="/new_user">User Baru</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/whitelist">Persetujuan User Baru</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/ip_address">Persetujuan Whitelist IP</a></li>
                            `);
+    //    <li class="nxl-item"><a class="nxl-link" href="/new_user">User Baru</a></li>
 }
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4 || cookie["roles_id"] == 6 || cookie["roles_id"] == 7) {
     document.write(`
