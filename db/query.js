@@ -1999,6 +1999,16 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -3304,6 +3314,7 @@ module.exports = {
     users_whitelist,
     users_ipaddress,
     approveusers,
+    deleteipaddress,
     approveipaddress,
     userroles,
     insertusers,
