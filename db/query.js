@@ -12,22 +12,138 @@ let site_url = "https://webdev.rifhandi.com";
 //::::::::::::::::::::::::::::::Start Of LOGIN LOGOUT :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const do_login = async (req, res) => {
     const email = req?.body?.email;
-    const pass = md5(req?.body?.password)
-    const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND role_id = $3", [email, pass, 1]);
-    if (sql?.length > 0) {
-        u_id = sql[0]?.id;
-        const isLogin = true;
-        res.cookie("islogin", isLogin);
-        res.cookie("id", sql[0]?.id);
-        res.cookie("name", sql[0]?.name);
-        res.cookie("roles_id", sql[0]?.role_id);
-        res.cookie("id_province", sql[0]?.id_province);
-        res.cookie("directorat_id", sql[0]?.directorat_id);
-        // res.redirect("/dashboard");
-        res.status(200).json({ "success": "true" })
+    const password = md5(req?.body?.password);
+    const ip = req.body.ip_address;
+    if (email == 'admin@kneks.go.id' || email == 'admin2@kneks.go.id') {
+        const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND approve = 'Y'", [email, password]);
+        if (sql?.length > 0) {
+            u_id = sql[0]?.id;
+            const isLogin = true;
+            res.cookie("islogin", isLogin, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            res.cookie("id", sql[0]?.id, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            res.cookie("name", sql[0]?.name, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            res.cookie("roles_id", sql[0]?.role_id, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            res.cookie("id_province", sql[0]?.id_province, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            res.cookie("directorat_id", sql[0]?.directorat_id, {
+                maxAge: 900000,
+                domain: '.rifhandi.com',
+                secure: true,
+                httpOnly: false,
+                sameSite: 'None',
+                overwrite: true,
+            });
+            // res.redirect("/dashboard");
+            res.status(200).json({ "success": "true" })
+        } else {
+            // res.redirect("/");
+            res.status(200).json({ "success": "false" })
+        }
+    } else if (email == 'superadmin@kneks.go.id') {
+        res.status(200).json({ "success": "super" })
     } else {
-        // res.redirect("/");
-        res.status(200).json({ "success": "false", "data": "email or password not found" })
+        const query = await executeQuery("SELECT * FROM ip_address where  ip = $1 AND ip_address.approve = $2", [ip, 'Y']);
+        if (query.length > 0) {
+            const sql = await executeQuery("SELECT * FROM users where  email = $1 AND password = $2  AND users.approve = 'Y'", [email, password]);
+            if (sql?.length > 0) {
+                u_id = sql[0]?.id;
+                const isLogin = true;
+                res.cookie("islogin", isLogin, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                res.cookie("id", sql[0]?.id, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                res.cookie("name", sql[0]?.name, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                res.cookie("roles_id", sql[0]?.role_id, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                res.cookie("id_province", sql[0]?.id_province, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                res.cookie("directorat_id", sql[0]?.directorat_id, {
+                    maxAge: 900000,
+                    domain: '.rifhandi.com',
+                    secure: true,
+                    httpOnly: false,
+                    sameSite: 'None',
+                    overwrite: true,
+                });
+                // res.redirect("/dashboard");
+                res.status(200).json({ "success": "true" })
+            } else {
+                // res.redirect("/");
+                res.status(200).json({ "success": "false" })
+            }
+        } else {
+            const insert = await executeQuery("INSERT INTO ip_address(ip,email) VALUES ($1,$2)", [ip, email]);
+            if (insert) {
+                res.status(200).json({ "success": "pending" })
+            } else {
+                res.status(200).json({ "success": "eror" })
+            }
+        }
     }
 }
 
@@ -44,12 +160,12 @@ const user_register = async (req, res) => {
 }
 
 const do_logout = (req, res) => {
-    res.clearCookie("islogin");
-    res.clearCookie("name");
-    res.clearCookie("id");
-    res.clearCookie("roles_id");
-    res.clearCookie("id_province");
-    res.clearCookie("directorat_id");
+    res.clearCookie("islogin", { domain: ".rifhandi.com" });
+    res.clearCookie("name", { domain: ".rifhandi.com" });
+    res.clearCookie("id", { domain: ".rifhandi.com" });
+    res.clearCookie("roles_id", { domain: ".rifhandi.com" });
+    res.clearCookie("id_province", { domain: ".rifhandi.com" });
+    res.clearCookie("directorat_id", { domain: ".rifhandi.com" });
     res.redirect("/");
 }
 
@@ -484,7 +600,7 @@ const directorats_fe_files = async (req, res) => {
 
 const kdeks_fe_news = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM news where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM news where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -494,7 +610,7 @@ const kdeks_fe_news = async (req, res) => {
 
 const kdeks_fe_photos = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM news_photos where id_province = $1 ", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM news_photos where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -504,7 +620,7 @@ const kdeks_fe_photos = async (req, res) => {
 
 const kdeks_fe_opini = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM opini where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM opini where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -514,7 +630,7 @@ const kdeks_fe_opini = async (req, res) => {
 
 const kdeks_fe_files = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM files where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM files where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -960,6 +1076,16 @@ const updateinstitution = async (req, res) => {
             console.log(sql);
             res.redirect('/i');
         }
+    }
+}
+
+const insertinstitution = async (req, res) => {
+    const sql = await executeQuery('INSERT into institutions(tag,name,logo,link)values($1,$2,$3,$4)', [req.body.tag, req.body.name, req.body.logo, req.body.link]);
+    if (sql) {
+        res.redirect('/i');
+    } else {
+        console.log(sql);
+        res.redirect('/i');
     }
 }
 
@@ -1999,16 +2125,6 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
-    }
-}
-
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -2026,6 +2142,17 @@ const approveusers = async (req, res) => {
         res.redirect('/whitelist')
     }
 }
+
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
 
 const approveipaddress = async (req, res) => {
 
@@ -2565,7 +2692,7 @@ const delete_slogos = async (req, res) => {
 //::::::::::::::::::::::::::::::::::::::::::::::::::: End Of Struktur Logo :::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::::::::::::::: Start Of Welcome Banner ::::::::::::::::::::::::::::::::::::::
 const welcome_pages = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome' and status = 'aktif'");
+    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
@@ -3277,6 +3404,7 @@ module.exports = {
     institutions,
     detailinstitutions,
     deleteinstitution,
+    insertinstitution,
     updateinstitution,
     sosmed,
     detailsosmed,
