@@ -2949,12 +2949,23 @@ const sourcesdatadetail = async (req, res) => {
 }
 
 const insertsourcesdata = async (req, res) => {
-    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en) values($1,$2,$3,$4) RETURNING id",
-        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en]);
+    // const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en) values($1,$2,$3,$4) RETURNING id",
+    //     [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en]);
+    // sql[0].id // id terkahir
+    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en,description,produsen_data,tanggal_update,api_data) values($1,$2,$3,$4,$5,$6,$7,$8)",
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database]);
     if (sql) {
-        await executeQuery("insert into sourcedata_detail(id_sourcedata,description,produsen_data,tanggal_update,api_data) values($1,$2,$3,$4,$5)",
-            [sql[0].id, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database]);
+        res.redirect('/dataset');
+    } else {
+        console.log(sql)
+        res.redirect('/dataset');
+    }
+}
 
+const updatesourcedata = async (req, res) => {
+    const sql = await executeQuery("update sourcedata set dataset=$1,source=$2,date_created=$3,dataset_en=$4,description=$5,produsen_data=$6,tanggal_update=$7,api_data=$8 where id=$9",
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database,req.body.idd]);
+    if (sql) {
         res.redirect('/dataset');
     } else {
         console.log(sql)
@@ -2966,7 +2977,7 @@ const deletesourcesdata = async (req, res) => {
     const id_stat = req.params.id;
     const sql = await executeQuery('DELETE FROM sourcedata where id = $1 ', [id_stat]);
     if (sql) {
-        await executeQuery('DELETE FROM sourcedata_detail where id_sourcedata = $1 ', [id_stat]);
+        // await executeQuery('DELETE FROM sourcedata_detail where id_sourcedata = $1 ', [id_stat]);
         res.redirect('/dataset');
     } else {
         res.redirect('/dataset');
@@ -3393,6 +3404,7 @@ module.exports = {
     deletesourcesdata,
     sourcesdatadetaillist,
     insertsourcesdata,
+    updatesourcedata,
     api_kneks,
     opini,
     opini_detail,
