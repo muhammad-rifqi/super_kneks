@@ -484,7 +484,7 @@ const directorats_fe_files = async (req, res) => {
 
 const kdeks_fe_news = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM news where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM news where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -494,7 +494,7 @@ const kdeks_fe_news = async (req, res) => {
 
 const kdeks_fe_photos = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM news_photos where id_province = $1 ", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM news_photos where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -504,7 +504,7 @@ const kdeks_fe_photos = async (req, res) => {
 
 const kdeks_fe_opini = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM opini where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM opini where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -514,7 +514,7 @@ const kdeks_fe_opini = async (req, res) => {
 
 const kdeks_fe_files = async (req, res) => {
     const id_kdk = req.params.id;
-    const sql = await executeQuery("SELECT * FROM files where id_province = $1", [id_kdk]);
+    const sql = await executeQuery("SELECT * FROM files where id_province LIKE '%" + id_kdk + "%' order by id ASC");
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -960,6 +960,16 @@ const updateinstitution = async (req, res) => {
             console.log(sql);
             res.redirect('/i');
         }
+    }
+}
+
+const insertinstitution = async (req, res) => {
+    const sql = await executeQuery('INSERT into institutions(tag,name,logo,link)values($1,$2,$3,$4)', [req.body.tag, req.body.name, req.body.logo, req.body.link]);
+    if (sql) {
+        res.redirect('/i');
+    } else {
+        console.log(sql);
+        res.redirect('/i');
     }
 }
 
@@ -1999,16 +2009,6 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
-    }
-}
-
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -2026,6 +2026,17 @@ const approveusers = async (req, res) => {
         res.redirect('/whitelist')
     }
 }
+
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
 
 const approveipaddress = async (req, res) => {
 
@@ -2565,7 +2576,7 @@ const delete_slogos = async (req, res) => {
 //::::::::::::::::::::::::::::::::::::::::::::::::::: End Of Struktur Logo :::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::::::::::::::::::::::: Start Of Welcome Banner ::::::::::::::::::::::::::::::::::::::
 const welcome_pages = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome' and status = 'aktif'");
+    const sql = await executeQuery("SELECT * FROM banner where flag = 'welcome'");
     const array = [];
     sql.forEach((element, index) => {
         const rrr = {
@@ -3277,6 +3288,7 @@ module.exports = {
     institutions,
     detailinstitutions,
     deleteinstitution,
+    insertinstitution,
     updateinstitution,
     sosmed,
     detailsosmed,

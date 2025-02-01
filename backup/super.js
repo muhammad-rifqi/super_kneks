@@ -828,9 +828,9 @@ apps.get('/roles', db.userroles);
 
 apps.get('/approveusers/:id', db.approveusers);
 
-apps.get('/deleteipaddress/:id', db.deleteipaddress);
-
 apps.get('/approveipaddress/:id', db.approveipaddress);
+
+apps.get('/deleteipaddress/:id', db.deleteipaddress);
 
 apps.post('/insertusers', db.insertusers);
 
@@ -951,6 +951,7 @@ apps.get('/deleteinstitutions/:id', db.deleteinstitution);
 
 apps.post('/updateinstitution', db.updateinstitution);
 
+apps.post('/insertinstitution', db.insertinstitution);
 //::::::::::::::: Api & Query DB SOSMED ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 apps.get('/sosmed', db.sosmed);
