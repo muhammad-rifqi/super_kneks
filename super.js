@@ -1167,6 +1167,8 @@ apps.get('/deletesourcesdata/:id', db.deletesourcesdata);
 apps.post('/insertsourcesdata', db.insertsourcesdata);
 
 apps.post('/updatesourcedata', db.updatesourcedata);
+
+apps.get('/sourcesdatadetaillist/:id', db.sourcesdatadetail);
 //::::::::::::::::::::::::::: APi Opini ::::::::::::::::::::::::::::::::::::
 
 apps.post('/insertopini', db.insertopini);
