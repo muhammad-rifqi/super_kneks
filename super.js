@@ -822,13 +822,13 @@ apps.get('/users_new', db.users_new);
 
 apps.get('/users_whitelist', db.users_whitelist);
 
+apps.get('/deleteipaddress/:id', db.deleteipaddress);
+
 apps.get('/users_ipaddress', db.users_ipaddress);
 
 apps.get('/roles', db.userroles);
 
 apps.get('/approveusers/:id', db.approveusers);
-
-apps.get('/deleteipaddress/:id', db.deleteipaddress);
 
 apps.get('/approveipaddress/:id', db.approveipaddress);
 
@@ -1137,6 +1137,8 @@ apps.post('/emptyapidashboards', db.emptyapidashboard);
 apps.post('/updateapidashboards', db.updateapidashboard);
 
 apps.get('/data_menu', db.data_menus);
+
+apps.get('/menu_fe', db.dropdown_menu);
 
 apps.get('/detail_data_menus/:id', db.detail_data_menus);
 

@@ -565,8 +565,9 @@ const directorat_devisi = async (req, res) => {
 }
 
 const directorat_devisi_add = async (req, res) => {
-    const sql = await executeQuery("insert into devisi(title,description,directorats_id)values($1,$2,$3)",
-        [req.body.title, req.body.description, req.body.directorats_id]);
+    const bbb = req.body.directorats_id.split('-');
+    const sql = await executeQuery("insert into devisi(title,description,directorats_id,directorats_name)values($1,$2,$3,$4)",
+        [req.body.title, req.body.description, bbb[0], bbb[1]]);
     if (sql) {
         res.redirect('/devision');
     } else {
@@ -595,8 +596,9 @@ const directorat_devisi_detail = async (req, res) => {
 }
 
 const directorat_devisi_update = async (req, res) => {
-    const sql = await executeQuery("update devisi set title = $1, description = $2, directorats_id = $3 where id = $4",
-        [req.body.title, req.body.description, req.body.directorats_id, req.body.id]);
+    const bbb = req.body.directorats_id.split('-');
+    const sql = await executeQuery("update devisi set title = $1, description = $2, directorats_id = $3 , directorats_name = $4 where id = $5",
+        [req.body.title, req.body.description, bbb[0], bbb[1], req.body.id]);
     if (sql) {
         res.redirect('/devision');
     } else {
@@ -2794,6 +2796,32 @@ const data_menus = async (req, res) => {
     }
 }
 
+
+const dropdown_menu = async (req, res) => {
+    const result = await executeQuery("SELECT * FROM menu ORDER BY id ASC ");
+    let promises = result.map(async (item) => {
+        return new Promise(async (resolve, reject) => {
+            let r = await executeQuery("SELECT * FROM menu_sub WHERE menu_id = $1", [item.id]);
+            let sub_menux = r;
+            let row = {
+                "id": item?.id,
+                "menu_name": item?.menu_name,
+                "menu_link": item?.menu_link,
+                "menu_orders": item?.orders,
+                "menu_sub": sub_menux
+            };
+            resolve(row);
+        });
+    });
+    Promise.all(promises)
+        .then((rows) => {
+            res.status(200).json(rows);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
+}
+
 const detail_data_menus = async (req, res) => {
     const id_dm = req.params.id;
     const sql = await executeQuery('SELECT * FROM data_menu where id = $1', [id_dm]);
@@ -2964,7 +2992,7 @@ const insertsourcesdata = async (req, res) => {
 
 const updatesourcedata = async (req, res) => {
     const sql = await executeQuery("update sourcedata set dataset=$1,source=$2,date_created=$3,dataset_en=$4,description=$5,produsen_data=$6,tanggal_update=$7,api_data=$8 where id=$9",
-        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database,req.body.idd]);
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database, req.body.idd]);
     if (sql) {
         res.redirect('/dataset');
     } else {
@@ -2984,15 +3012,6 @@ const deletesourcesdata = async (req, res) => {
     }
 }
 
-const sourcesdatadetaillist = async (req, res) => {
-    const id_source = req.params.id;
-    const sql = await executeQuery("SELECT * FROM sourcedata_detail where id_sourcedata = $1 ", [id_source]);
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
 //:::::::::::::::::::::::::::::::::::::Start Of OPINI :::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -3395,6 +3414,7 @@ module.exports = {
     emptyapidashboard,
     updateapidashboard,
     data_menus,
+    dropdown_menu,
     detail_data_menus,
     deletedatamenus,
     insertdatamenus,
@@ -3402,7 +3422,6 @@ module.exports = {
     sourcesdata,
     sourcesdatadetail,
     deletesourcesdata,
-    sourcesdatadetaillist,
     insertsourcesdata,
     updatesourcedata,
     api_kneks,
