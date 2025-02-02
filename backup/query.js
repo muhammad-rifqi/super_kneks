@@ -53,6 +53,7 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
+
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::::: Ekonomi Syraiah ::::::::::::::::::::::::::::::::::::::::::::::::
 const es_abouts = async (req, res) => {
@@ -564,8 +565,9 @@ const directorat_devisi = async (req, res) => {
 }
 
 const directorat_devisi_add = async (req, res) => {
-    const sql = await executeQuery("insert into devisi(title,description,directorats_id)values($1,$2,$3)",
-        [req.body.title, req.body.description, req.body.directorats_id]);
+    const bbb = req.body.directorats_id.split('-');
+    const sql = await executeQuery("insert into devisi(title,description,directorats_id,directorats_name)values($1,$2,$3,$4)",
+        [req.body.title, req.body.description, bbb[0], bbb[1]]);
     if (sql) {
         res.redirect('/devision');
     } else {
@@ -594,8 +596,9 @@ const directorat_devisi_detail = async (req, res) => {
 }
 
 const directorat_devisi_update = async (req, res) => {
-    const sql = await executeQuery("update devisi set title = $1, description = $2, directorats_id = $3 where id = $4",
-        [req.body.title, req.body.description, req.body.directorats_id, req.body.id]);
+    const bbb = req.body.directorats_id.split('-');
+    const sql = await executeQuery("update devisi set title = $1, description = $2, directorats_id = $3 , directorats_name = $4 where id = $5",
+        [req.body.title, req.body.description, bbb[0], bbb[1], req.body.id]);
     if (sql) {
         res.redirect('/devision');
     } else {
@@ -913,7 +916,7 @@ const deletehotissue = async (req, res) => {
 //::::::::::::::::::::::::::::::End Of ISSUE :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of institutions :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const institutions = async (req, res) => {
-    const sql = await executeQuery('SELECT * FROM  institutions');
+    const sql = await executeQuery('SELECT * FROM  institutions order by id ASC');
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
@@ -1317,8 +1320,8 @@ const insertfileupload = async (req, res) => {
     const file_date = req.body.date;
     const fileuploads = site_url + "/uploads/filesupload/" + req.file.originalname.replace(" ", "");
     const bbb = req.body.file_category_id.split('-');
-    const sql = await executeQuery("insert into files(title,title_en,content,content_en,file,is_publish,date,report_category_id,report_category_name,writer,publisher,synopsis,isbn,number_of_pages,width,height,tagging,directorat,id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks]);
+    const sql = await executeQuery("insert into files(title,title_en,content,content_en,file,is_publish,date,report_category_id,report_category_name,writer,publisher,synopsis,isbn,number_of_pages,width,height,tagging,directorat,id_province,users_id,users_name) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.users_id, req.body.users_name]);
     if (sql) {
         res.redirect('/f');
     } else {
@@ -1331,8 +1334,8 @@ const updatefileupload = async (req, res) => {
     const file_date = req.body.date;
     const bbb = req.body.file_category_id.split('-');
     if (!req.file || req.file == undefined || req.file == "") {
-        const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4,is_publish=$5,date=$6,report_category_id=$7,report_category_name=$8,writer=$9,publisher=$10,synopsis=$11,isbn=$12,number_of_pages=$13,width=$14,height=$15,tagging=$16,directorat=$17 where id = $18",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
+        const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4,is_publish=$5,date=$6,report_category_id=$7,report_category_name=$8,writer=$9,publisher=$10,synopsis=$11,isbn=$12,number_of_pages=$13,width=$14,height=$15,tagging=$16,directorat=$17,id_province=$18,users_id=$19,users_name=$20 where id = $21",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.users_id, req.body.users_name, req.body.id]);
         if (sql) {
             res.redirect('/f');
         } else {
@@ -1340,8 +1343,8 @@ const updatefileupload = async (req, res) => {
         }
     } else {
         const fileuploads = site_url + "/uploads/filesupload/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4, file=$5, is_publish=$6,date=$7,report_category_id=$8,report_category_name=$9,writer=$10,publisher=$11,synopsis=$12,isbn=$13,number_of_pages=$14,width=$15,height=$16,tagging=$17,directorat=$18 where id = $19",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.id]);
+        const sql = await executeQuery("update files set title=$1,title_en=$2,content=$3,content_en=$4, file=$5, is_publish=$6,date=$7,report_category_id=$8,report_category_name=$9,writer=$10,publisher=$11,synopsis=$12,isbn=$13,number_of_pages=$14,width=$15,height=$16,tagging=$17,directorat=$18,id_province=$19,users_id=$20,users_name=$21 where id = $22",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, req.body.is_publish, file_date, bbb[0], bbb[1], req.body.writer, req.body.publisher, req.body.synopsis, req.body.isbn, req.body.number_of_pages, req.body.width, req.body.height, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.users_id, req.body.users_name, req.body.id]);
         if (sql) {
             res.redirect('/f');
         } else {
@@ -1843,8 +1846,8 @@ const categories = async (req, res) => {
 const insertphoto = async (req, res) => {
     const photos_datetime = req.body.photo_datetime.replace("T", " ");
     const photoupload = site_url + "/uploads/photo/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("insert into news_photos(title,title_en,content,content_en,photo,photos_datetime,tag,directorat,id_province,is_publish) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photoupload, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published])
+    const sql = await executeQuery("insert into news_photos(title,title_en,content,content_en,photo,photos_datetime,tag,directorat,id_province,is_publish,users_id,users_name) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photoupload, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.users_id, req.body.users_name])
     if (sql) {
         res.redirect('/ph');
     } else {
@@ -1892,8 +1895,8 @@ const deletephoto = async (req, res) => {
 const updatephoto = async (req, res) => {
     const photos_datetime = req.body.photo_datetime.replace("T", " ");
     if (!req.file || req.file == undefined || req.file == "") {
-        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photos_datetime=$5,tag=$6,directorat=$7,id_province=$8,is_publish=$9 where id = $10",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.id]);
+        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photos_datetime=$5,tag=$6,directorat=$7,id_province=$8,is_publish=$9,users_id=$10,users_name=$11 where id = $12",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.users_id, req.body.users_name, req.body.id]);
         if (sql) {
             res.redirect('/ph');
         } else {
@@ -1902,8 +1905,8 @@ const updatephoto = async (req, res) => {
         }
     } else {
         const fileuploads = site_url + "/uploads/photo/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photo=$5, photos_datetime=$6,tag=$7,directorat=$8,id_province=$9,is_publish=$10 where id = $11",
-            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.id]);
+        const sql = await executeQuery("UPDATE news_photos set  title=$1,title_en=$2,content=$3,content_en=$4,photo=$5, photos_datetime=$6,tag=$7,directorat=$8,id_province=$9,is_publish=$10,users_id=$11,users_name=$12 where id = $13",
+            [req.body.title, req.body.title_en, req.body.content, req.body.content_en, fileuploads, photos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.users_id, req.body.users_name, req.body.id]);
         if (sql) {
             res.redirect('/ph');
         } else {
@@ -1916,8 +1919,8 @@ const updatephoto = async (req, res) => {
 //::::::::::::::::::::::::::::::Start Of Videos:::::::::::::::::::::::::::::::::::::::::::::::::::::
 const insertvideo = async (req, res) => {
     const videos_datetime = req.body.video_datetime.replace("T", " ");
-    const sql = await executeQuery("insert into news_videos(title,title_en,content,content_en,video,duration,videos_datetime,tag,directorat,id_province,is_publish) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published]);
+    const sql = await executeQuery("insert into news_videos(title,title_en,content,content_en,video,duration,videos_datetime,tag,directorat,id_province,is_publish,users_id,users_name) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.users_id, req.body.users_name]);
     if (sql) {
         res.redirect('/v');
     } else {
@@ -1950,8 +1953,8 @@ const deletevideo = async (req, res) => {
 const updatevideos = async (req, res) => {
     // const videos_datetime = req.body.video_datetime.replace("T", " ");
     const videos_datetime = req.body.video_datetime.replace("T", " ");
-    const sql = await executeQuery("update news_videos set title=$1,title_en=$2,content=$3,content_en=$4,video=$5,duration=$6,videos_datetime=$7,tag=$8,directorat=$9,id_province=$10,is_publish=$11 where id = $12",
-        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.id]);
+    const sql = await executeQuery("update news_videos set title=$1,title_en=$2,content=$3,content_en=$4,video=$5,duration=$6,videos_datetime=$7,tag=$8,directorat=$9,id_province=$10,is_publish=$11,users_id=$12,users_name=$13 where id = $14",
+        [req.body.title, req.body.title_en, req.body.content, req.body.content_en, req.body.video, req.body.duration, videos_datetime, req.body.taggings, req.body.directorat, req.body.kdeks, req.body.is_published, req.body.users_id, req.body.users_name, req.body.id]);
     if (sql) {
         res.redirect('/v');
     } else {
@@ -2037,7 +2040,6 @@ const deleteipaddress = async (req, res) => {
     }
 }
 
-
 const approveipaddress = async (req, res) => {
 
     const today = new Date();
@@ -2074,7 +2076,7 @@ const insertusers = async (req, res) => {
     const time_datetime = date + ' ' + time;
     const pw = md5(req.body.password);
     const sql = await executeQuery("insert into users(name,email,password,role_id,created_at,updated_at,ip_address, directorat_id, id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9)",
-        [req.body.name.replace(/\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, req.body.ip_address, req.body.directorat_id, req.body.id_province]);
+        [req.body.name.replace(/\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, '0.0.0.0', req.body.directorat_id, req.body.id_province]);
     if (sql) {
         res.redirect('/u');
     } else {
@@ -2121,10 +2123,10 @@ const deleteuser = async (req, res) => {
 const updateusers = async (req, res) => {
     const id_user = req.body.id;
     if (req.body.passwords == "" || req.body.passwords == null) {
-        await executeQuery("UPDATE users SET name=$1 , email=$2 ,  role_id = $3 , ip_address = $4 , directorat_id = $5, id_province=$6 WHERE id=$7 ", [req.body.names.replace(/\s/g, ''), req.body.emails, req.body.roles_id, req.body.ip_address, req.body.directorat_id, req.body.id_province, id_user]);
+        await executeQuery("UPDATE users SET name=$1 , email=$2 ,  role_id = $3 , ip_address = $4 , directorat_id = $5, id_province=$6 WHERE id=$7 ", [req.body.names.replace(/\s/g, ''), req.body.emails, req.body.roles_id, '0.0.0.0', req.body.directorat_id, req.body.id_province, id_user]);
         res.redirect('/u');
     } else {
-        await executeQuery("UPDATE users SET name=$1 , email=$2 , password = $3 , role_id = $4, ip_address = $5, directorat_id = $6, id_province = $7 WHERE id=$8 ", [req.body.names.replace(/\s/g, ''), req.body.emails, md5(req.body.passwords), req.body.roles_id, req.body.ip_address, req.body.directorat_id, req.body.id_province, id_user]);
+        await executeQuery("UPDATE users SET name=$1 , email=$2 , password = $3 , role_id = $4, ip_address = $5, directorat_id = $6, id_province = $7 WHERE id=$8 ", [req.body.names.replace(/\s/g, ''), req.body.emails, md5(req.body.passwords), req.body.roles_id, '0.0.0.0', req.body.directorat_id, req.body.id_province, id_user]);
         res.redirect('/u');
     }
 }
@@ -2363,7 +2365,7 @@ const deleteslideshow = async (req, res) => {
 const insertslideshow = async (req, res) => {
     if (req.file) {
         const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery('INSERT INTO slideshow (title,title_en,image, date_created,status, content,content)values($1,$2,$3,$4,$5,$6,$7) ', [req.body.title, req.body.title_en, filesimage, req.body.tanggal, req.body.status, req.body.content, req.body.content_en]);
+        const sql = await executeQuery('INSERT INTO slideshow (title,title_en,image, date_created,status, content,content_en)values($1,$2,$3,$4,$5,$6,$7) ', [req.body.title, req.body.title_en, filesimage, req.body.tanggal, req.body.status, req.body.content, req.body.content_en]);
         if (sql) {
             res.redirect('/b');
         } else {
@@ -2794,6 +2796,32 @@ const data_menus = async (req, res) => {
     }
 }
 
+
+const dropdown_menu = async (req, res) => {
+    const result = await executeQuery("SELECT * FROM menu ORDER BY id ASC ");
+    let promises = result.map(async (item) => {
+        return new Promise(async (resolve, reject) => {
+            let r = await executeQuery("SELECT * FROM menu_sub WHERE menu_id = $1", [item.id]);
+            let sub_menux = r;
+            let row = {
+                "id": item?.id,
+                "menu_name": item?.menu_name,
+                "menu_link": item?.menu_link,
+                "menu_orders": item?.orders,
+                "menu_sub": sub_menux
+            };
+            resolve(row);
+        });
+    });
+    Promise.all(promises)
+        .then((rows) => {
+            res.status(200).json(rows);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
+}
+
 const detail_data_menus = async (req, res) => {
     const id_dm = req.params.id;
     const sql = await executeQuery('SELECT * FROM data_menu where id = $1', [id_dm]);
@@ -2949,12 +2977,23 @@ const sourcesdatadetail = async (req, res) => {
 }
 
 const insertsourcesdata = async (req, res) => {
-    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en) values($1,$2,$3,$4) RETURNING id",
-        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en]);
+    // const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en) values($1,$2,$3,$4) RETURNING id",
+    //     [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en]);
+    // sql[0].id // id terkahir
+    const sql = await executeQuery("insert into sourcedata(dataset,source,date_created,dataset_en,description,produsen_data,tanggal_update,api_data) values($1,$2,$3,$4,$5,$6,$7,$8)",
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database]);
     if (sql) {
-        await executeQuery("insert into sourcedata_detail(id_sourcedata,description,produsen_data,tanggal_update,api_data) values($1,$2,$3,$4,$5)",
-            [sql[0].id, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database]);
+        res.redirect('/dataset');
+    } else {
+        console.log(sql)
+        res.redirect('/dataset');
+    }
+}
 
+const updatesourcedata = async (req, res) => {
+    const sql = await executeQuery("update sourcedata set dataset=$1,source=$2,date_created=$3,dataset_en=$4,description=$5,produsen_data=$6,tanggal_update=$7,api_data=$8 where id=$9",
+        [req.body.dataset, req.body.source, '2025-01-01 00:00:00', req.body.dataset_en, req.body.descriptions, req.body.produsen_data, req.body.tanggal_update, req.body.api_database, req.body.idd]);
+    if (sql) {
         res.redirect('/dataset');
     } else {
         console.log(sql)
@@ -2966,22 +3005,13 @@ const deletesourcesdata = async (req, res) => {
     const id_stat = req.params.id;
     const sql = await executeQuery('DELETE FROM sourcedata where id = $1 ', [id_stat]);
     if (sql) {
-        await executeQuery('DELETE FROM sourcedata_detail where id_sourcedata = $1 ', [id_stat]);
+        // await executeQuery('DELETE FROM sourcedata_detail where id_sourcedata = $1 ', [id_stat]);
         res.redirect('/dataset');
     } else {
         res.redirect('/dataset');
     }
 }
 
-const sourcesdatadetaillist = async (req, res) => {
-    const id_source = req.params.id;
-    const sql = await executeQuery("SELECT * FROM sourcedata_detail where id_sourcedata = $1 ", [id_source]);
-    if (sql?.length > 0) {
-        res.status(200).json(sql)
-    } else {
-        res.status(200).json({ "success": false })
-    }
-}
 //:::::::::::::::::::::::::::::::::::::Start Of OPINI :::::::::::::::::::::::::::::::::::::::::::::::::
 
 
@@ -3326,8 +3356,8 @@ module.exports = {
     users_whitelist,
     users_ipaddress,
     approveusers,
-    deleteipaddress,
     approveipaddress,
+    deleteipaddress,
     userroles,
     insertusers,
     updateusers,
@@ -3384,6 +3414,7 @@ module.exports = {
     emptyapidashboard,
     updateapidashboard,
     data_menus,
+    dropdown_menu,
     detail_data_menus,
     deletedatamenus,
     insertdatamenus,
@@ -3391,8 +3422,8 @@ module.exports = {
     sourcesdata,
     sourcesdatadetail,
     deletesourcesdata,
-    sourcesdatadetaillist,
     insertsourcesdata,
+    updatesourcedata,
     api_kneks,
     opini,
     opini_detail,
