@@ -15,8 +15,8 @@ if(path == 'dashboard'){
     breadcrumb2 = "";
 }
 if(path == 'narations'){
-    breadcrumb1 = "Data";
-    breadcrumb2 = "Dashboard";
+    breadcrumb0 = "Data";
+    breadcrumb1 = "Dashboard";
     breadcrumb2 = "Narasi";
 }
 if(path == 'dashboard_add'){
@@ -49,8 +49,8 @@ if(path == 'sliderdata'){
 }
 
 if(path == 'sliderdata_add'){
-    breadcrumb1 = "Data";
-    breadcrumb2 = "Slide";
+    breadcrumb0 = "Data";
+    breadcrumb1 = "Slide";
     breadcrumb2 = "Tambah";
 }
 if(path == 'menu_data'){
