@@ -55,7 +55,7 @@
                                                 <th>Photo</th>
                                                 <th>Nama</th>
                                                 <th>Jabatan</th>
-                                                <th>Publish</th>
+                                                <th>Tayang/Konsep</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -127,9 +127,9 @@
                         "data": null,
                         "render": function (data, type, row) {
                             if (data?.is_publish == 'on') {
-                                return `Published`;
+                                return `Tayang`;
                             } else {
-                                return `Not Published`;
+                                return `Konsep`;
                             }
                         }
                     },

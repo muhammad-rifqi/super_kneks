@@ -170,10 +170,10 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
     document.write(` <li class="nxl-item nxl-hasmenu">
                         <a href="javascript:void(0);" class="nxl-link">
                             <span class="nxl-micon"><i class="feather-bookmark"></i></span>
-                            <span class="nxl-mtext">E-Pustaka</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                            <span class="nxl-mtext">e-Pustaka</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="/f">E-Pustaka</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/f">e-Pustaka</a></li>
                             `);
 }
 //e-pustaka kategori
@@ -199,12 +199,12 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
                             `);
 }
 //data
-if (cookie["roles_id"] == 1) {
+if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`<li class="nxl-item"><a class="nxl-link" href="/dashboard">Dashboard</a></li>`);
     document.write(`<li class="nxl-item"><a class="nxl-link" href="/menu_data">Menu</a></li>`);
     document.write(`<li class="nxl-item"><a class="nxl-link" href="/submenu_data">Submenu</a></li>
         <li class="nxl-item"><a class="nxl-link" href="/dataset">Dataset</a></li>`);
-    document.write(`<li class="nxl-item"><a class="nxl-link" href="/sliderdata">Slider</a></li>`);
+    document.write(`<li class="nxl-item"><a class="nxl-link" href="/sliderdata">Slide</a></li>`);
 }
 
 //e-pustaka kategori
@@ -232,7 +232,7 @@ if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2) {
     document.write(`
                             <li class="nxl-item"><a class="nxl-link" href="/kdeks">Profil</a></li>
-                            <li class="nxl-item"><a class="nxl-link" href="/province">Provinsi Kdeks</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/province">Provinsi</a></li>
                            `);
 }
 if (cookie["roles_id"] == 1 || cookie["roles_id"] == 2 || cookie["roles_id"] == 3 || cookie["roles_id"] == 4 || cookie["roles_id"] == 6) {

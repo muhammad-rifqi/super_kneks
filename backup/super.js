@@ -822,8 +822,6 @@ apps.get('/users_new', db.users_new);
 
 apps.get('/users_whitelist', db.users_whitelist);
 
-apps.get('/deleteipaddress/:id', db.deleteipaddress);
-
 apps.get('/users_ipaddress', db.users_ipaddress);
 
 apps.get('/roles', db.userroles);
@@ -831,6 +829,8 @@ apps.get('/roles', db.userroles);
 apps.get('/approveusers/:id', db.approveusers);
 
 apps.get('/approveipaddress/:id', db.approveipaddress);
+
+apps.get('/deleteipaddress/:id', db.deleteipaddress);
 
 apps.post('/insertusers', db.insertusers);
 

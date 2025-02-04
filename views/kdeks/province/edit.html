@@ -43,16 +43,22 @@
                                 <div class="card-body lead-status">
                                     <div class="mb-5 d-flex align-items-center justify-content-between">
                                         <h5 class="fw-bold mb-0 me-4">
-                                            <span class="d-block mb-2">Ubah Master Provinsi :</span>
+                                            <span class="d-block mb-2">Ubah Provinsi :</span>
                                             <span class="fs-12 fw-normal text-muted text-truncate-1-line">Silahkan
-                                                Ubah
-                                                Data Master Provinsi Di Bawah Ini</span>
+                                                Ubah Provinsi Di Bawah Ini</span>
                                         </h5>
                                     </div>
                                     <div class="row">
                                       
                                         <div class="col-lg-12 mb-4">
-                                            <label class="form-label"> Master Provinsi </label>
+                                            <label class="form-label"> Kode Provinsi </label>
+                                            <input class="form-control" type="number" name="code" id="code"
+                                                required>
+                                        </div>
+
+
+                                        <div class="col-lg-12 mb-4">
+                                            <label class="form-label"> Nama Provinsi </label>
                                             <input class="form-control" name="province_name" id="province_name"
                                                 required>
                                         </div>
@@ -102,6 +108,7 @@
                 .then(data => data.json())
                 .then((rows) => {
                     document.getElementById("id").value = rows[0]?.id;
+                    document.getElementById("code").value = rows[0]?.code;
                     document.getElementById("province_name").value = rows[0]?.province_name;
                 })
         }
