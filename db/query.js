@@ -326,6 +326,7 @@ const structure = async (req, res) => {
                 "description": items?.description,
                 "description_en": items?.description_en,
                 "is_publish": items?.is_publish,
+                "level": items?.level,
             };
             array.push(bbb);
         })
