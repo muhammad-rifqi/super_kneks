@@ -126,7 +126,7 @@ let data_slide_path = multer({ storage: data_slide });
 //:::::::::::::::::::::::::: Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 let kdeks_logo = multer.diskStorage(
     {
-        destination: './public/uploads/kdeks/provinsi/',
+        destination: './public/uploads/kdeks/',
         filename: function (req, file, cb) {
             cb(null, file.originalname.replace(" ", ""));
         }
@@ -703,11 +703,11 @@ apps.get('/api_kdeks', db.kdeks);
 
 apps.get('/detail_kdeks/:id', db.detailkdeks);
 
-apps.post('/insertkdeks', kdeks_logo_province.single('photo'), db.insertkdeks);
+apps.post('/insertkdeks', kdeks_logo_province.fields([{ name: "photo", maxCount: 1 }, { name: "sk", maxCount: 1 }]), db.insertkdeks);
 
-apps.post('/updatekdeks', kdeks_logo_province.single('photo'), db.updatekdeks);
+apps.post('/updatekdeks', kdeks_logo_province.fields([{ name: "photo", maxCount: 1 }, { name: "sk", maxCount: 1 }]), db.updatekdeks);
 
-apps.get('/kdeks_delete/:id/:foto', db.deletekdeks);
+apps.get('/deletekdeks/:id/:foto', db.deletekdeks);
 
 apps.get('/api_kdeks_list', db.abouts_kdeks_list);
 
@@ -828,9 +828,9 @@ apps.get('/roles', db.userroles);
 
 apps.get('/approveusers/:id', db.approveusers);
 
-apps.get('/approveipaddress/:id', db.approveipaddress);
-
 apps.get('/deleteipaddress/:id', db.deleteipaddress);
+
+apps.get('/approveipaddress/:id', db.approveipaddress);
 
 apps.post('/insertusers', db.insertusers);
 
@@ -885,7 +885,7 @@ apps.post('/insertdirectorats', db.insertdirectorats);
 
 apps.post('/directorats_update', db.update_directorats);
 
-apps.post('/directorats_upload', directorats_images.fields([{ name: "images", maxCount: 1 }, { name: "banners", maxCount: 1 },]), db.directorats_uploads);
+apps.post('/directorats_upload', directorats_images.fields([{ name: "images", maxCount: 1 }, { name: "banners", maxCount: 1 }]), db.directorats_uploads);
 
 apps.get('/directorats_delete/:id', db.delete_direactorats);
 

@@ -126,9 +126,8 @@
                         "render": function (data, type, row) {
                             if (cookie['roles_id'] == '1' || cookie['roles_id'] == 2) {
                                 return `<p>
-                                        <button class='view-btn-directorat btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Icon/Banner</button>
                                         <button class='edit-btn-directorat btn btn-warning' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-edit"></i></button>
-                                        <button class='delete-btn-directorat btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px"><i class="feather-trash"></i></button>
+                                        <button class='delete-btn-directorat btn btn-danger' data-id='${row.id}' data-foto_dir='${row.images.split('/')[6]}' data-banner_dir='${row.directiorat_banner.split('/')[6]}' style="padding:2px; float: left; margin: 2px"><i class="feather-trash"></i></button>
                                     </p>`;
                             } else {
                                 return `<p>
@@ -137,6 +136,7 @@
                             }
                         }
                     }
+                    // <button class='view-btn-directorat btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Icon/Banner</button>
                 ], columnDefs: [
                     {
                         targets: 0,
@@ -172,6 +172,8 @@
 
             $('#direktorat').on('click', '.delete-btn-directorat', function () {
                 var id = $(this).data('id');
+                var id_dir = $(this).data('foto_dir');
+                var id_bann = $(this).data('banner_dir');
                 swal({
                     title: "Are you sure?",
                     text: "To Delete this Data ??",
@@ -181,7 +183,7 @@
                 })
                     .then((willOut) => {
                         if (willOut) {
-                            window.location = '/directorats_delete/' + id;
+                            window.location = '/directorats_delete/' + id + '/' + id_dir + '/' + id_bann;
                         } else {
                             console.log('NaN')
                         }
@@ -191,7 +193,7 @@
     </script>
     <script>
         console.log(cookie['roles_id'])
-        if (cookie['roles_id'] == 1 ||cookie['roles_id'] == 2) {
+        if (cookie['roles_id'] == 1 || cookie['roles_id'] == 2) {
             document.getElementById("tambah_directorat").innerHTML = `<button class="btn btn-primary" onclick="window.location.href = '/directorats_add'"> Tambah Direktorat </button>`;
         } else {
             document.getElementById("tambah_directorat").innerHTML = `<h4>Direktorat</h4>`;
