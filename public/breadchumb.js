@@ -517,23 +517,23 @@ if(path == 'kdeks_edit'){
 
 if(path == 'province'){
     breadcrumb0 = "Kdeks";
-    breadcrumb1 = "Provinsi";
+    breadcrumb1 = "Master Provinsi";
     breadcrumb2 = "";
     linkto = "#";
 }
 
 if(path == 'province_add'){
     breadcrumb0 = "Kdeks";
-    breadcrumb1 = "Provinsi";
+    breadcrumb1 = "Master Provinsi";
     breadcrumb2 = "Tambah Provinsi";
-    linkto = "#";
+    linkto = "/province";
 }
 
 if(path == 'province_edit'){
     breadcrumb0 = "Kdeks";
-    breadcrumb1 = "Provinsi";
+    breadcrumb1 = "Master Provinsi";
     breadcrumb2 = "Ubah Provinsi";
-    linkto = "#";
+    linkto = "/province";
 }
 //-----------------------End Of KDEKS Master-----------------------------
 //------------------------ Zona Khas----------------------
