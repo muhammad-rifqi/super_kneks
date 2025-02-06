@@ -1054,10 +1054,10 @@ const maps = async (req, res) => {
 const updatemaps = async (req, res) => {
     const sql = await executeQuery('UPDATE map set embed=$1 where id=$2', [req.body.embed, req.body.id]);
     if (sql) {
-        res.redirect('/m');
+        res.redirect('/m_edit/' + req.body.id);
     } else {
         console.log(sql);
-        res.redirect('/m');
+        res.redirect('/m_edit/' + req.body.id);
     }
 }
 //::::::::::::::::::::::::::::::End Of Maps :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -1075,10 +1075,10 @@ const contacts = async (req, res) => {
 const updatecontacts = async (req, res) => {
     const sql = await executeQuery('UPDATE contacts set address_building=$1, address=$2, phone_number=$3, fax_number=$4, email=$5 where id=$6', [req.body.address_building, req.body.address, req.body.phone_number, req.body.fax_number, req.body.email, req.body.id]);
     if (sql) {
-        res.redirect('/c');
+        res.redirect('/c_edit' + req.body.id);
     } else {
         console.log(sql);
-        res.redirect('/c');
+        res.redirect('/c_edit' + req.body.id);
     }
 }
 
