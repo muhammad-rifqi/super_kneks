@@ -324,7 +324,7 @@ if (cookie["roles_id"] == 1) {
                             <span class="nxl-mtext">Pengaturan</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
                         </a>
                         <ul class="nxl-submenu">
-                            <li class="nxl-item"><a class="nxl-link" href="web_title_edit/1">Judul Situs</a></li>
+                            <li class="nxl-item"><a class="nxl-link" href="/web_title_edit/1">Judul Situs</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/web_logo_edit/1">Logo</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/web_header_edit/1">Header</a></li>
                             <li class="nxl-item"><a class="nxl-link" href="/web_color_edit/1">Warna</a></li>
