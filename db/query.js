@@ -64,7 +64,6 @@ const es_abouts = async (req, res) => {
     }
 }
 
-
 const es_detailabouts = async (req, res) => {
     const id_abouts = req.params.id;
     const sql = await executeQuery('SELECT *  FROM  abouts where id = $1', [id_abouts]);
@@ -85,10 +84,6 @@ const es_updateabouts = async (req, res) => {
     }
 
 }
-
-
-
-
 //:::::::::::::::::::::::::::::::::: End Of Ekonomi Syariah ::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const abouts = async (req, res) => {
@@ -138,19 +133,37 @@ const abouts_kdeks_list = async (req, res) => {
     res.status(200).json(sql)
 }
 
-
 const abouts_kdeks = async (req, res) => {
     const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks' and tag = 'about'");
     res.status(200).json(sql)
 }
 
 const history_kdeks = async (req, res) => {
-    //9
     const sql = await executeQuery("SELECT * FROM abouts where web_identity = 'kdeks' and tag = 'history'");
     res.status(200).json(sql)
 }
 
-//::::::::::::::::::::::::::::::::::::::::::::::::::: END KDEKS ABOUT :::::::::::::::::::::::::::::::::::::::::::::::
+const updateaboutskdeks = async (req, res) => {
+    const sql = await executeQuery('UPDATE abouts set title = $1 , title_en = $2, tag = $3 , content = $4 , content_en = $5 where id = $6', [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.id]);
+    if (sql) {
+        res.redirect('/kdeks');
+    } else {
+        console.log(sql)
+        res.redirect('/kdeks');
+    }
+}
+
+const deleteaboutkdeks = async (req, res) => {
+    const sql = await executeQuery('DELETE FROM abouts where id = $1', [req.params.id]);
+    if (sql) {
+        res.redirect('/kdeks');
+    } else {
+        console.log(sql)
+        res.redirect('/kdeks');
+    }
+}
+//::::::::::::::::::::::::::::::End Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::::::::::::::::::::::: Start KDEKS:::::::::::::::::::::::::::::::::::::::::::::::
 
 const kdeks = async (req, res) => {
     //rifqi
@@ -288,28 +301,7 @@ const history_province_kdeks = async (req, res) => {
         res.status(200).json({ "success": false })
     }
 }
-
-const updateaboutskdeks = async (req, res) => {
-    const sql = await executeQuery('UPDATE abouts set title = $1 , title_en = $2, tag = $3 , content = $4 , content_en = $5 where id = $6', [req.body.title, req.body.title_en, req.body.tag, req.body.content, req.body.content_en, req.body.id]);
-    if (sql) {
-        res.redirect('/kdeks');
-    } else {
-        console.log(sql)
-        res.redirect('/kdeks');
-    }
-}
-
-const deleteaboutkdeks = async (req, res) => {
-    const sql = await executeQuery('DELETE FROM abouts where id = $1', [req.params.id]);
-    if (sql) {
-        res.redirect('/kdeks');
-    } else {
-        console.log(sql)
-        res.redirect('/kdeks');
-    }
-}
-
-//::::::::::::::::::::::::::::::End Of Abouts :::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::::::::::::::::::::::::::::::End Of Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of Structure :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const structure = async (req, res) => {
     const sql = await executeQuery("SELECT * FROM  pejabat");
@@ -326,7 +318,7 @@ const structure = async (req, res) => {
                 "description": items?.description,
                 "description_en": items?.description_en,
                 "is_publish": items?.is_publish,
-                "level": items?.level,
+                "level": items?.level
             };
             array.push(bbb);
         })
@@ -1603,7 +1595,7 @@ const news_categories_menu = async (req, res) => {
     if (sql?.length > 0) {
         res.status(200).json(sql)
     } else {
-        res.status(200).json({ "success": false })
+        res.status(200).json([])
     }
 }
 
@@ -3327,8 +3319,8 @@ module.exports = {
     users_whitelist,
     users_ipaddress,
     approveusers,
-    deleteipaddress,
     approveipaddress,
+    deleteipaddress,
     userroles,
     insertusers,
     updateusers,
