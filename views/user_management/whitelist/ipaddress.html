@@ -115,10 +115,7 @@
                     {
                         "data": null,
                         "render": function (data, type, row) {
-                            return `<p>
-                                        <button class='whitelist-btn-users btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Approve Ip Address</button>
-                                        <button class='whitelist-btn-ip_address btn btn-danger' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Delete Ip Address</button>
-                                    </p>`;
+                            return `<p><button class='whitelist-btn-users btn btn-primary' data-id='${row.id}' style="padding:2px; float: left; margin: 2px">Approve Ip Address</button></p>`;
                         }
                     }
                 ],
@@ -145,24 +142,6 @@
                     .then((willOut) => {
                         if (willOut) {
                             window.location = '/approveipaddress/'+id;
-                        } else {
-                            console.log('NaN')
-                        }
-                    });
-            });
-
-            $('#ipaddress').on('click', '.whitelist-btn-ip_address', function () {
-                var id = $(this).data('id');
-                swal({
-                    title: "Are you sure?",
-                    text: "To Delete this IP Address ??",
-                    icon: "warning",
-                    buttons: true,
-                    dangerMode: true,
-                })
-                    .then((willOut) => {
-                        if (willOut) {
-                            window.location = '/deleteipaddress/' + id;
                         } else {
                             console.log('NaN')
                         }
