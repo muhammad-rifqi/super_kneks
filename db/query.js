@@ -260,6 +260,7 @@ const about_province_kdeks = async (req, res) => {
     const arr = [];
     const sql = await executeQuery("SELECT *  FROM  kdeks where id_province = $1 AND web_identity = 'kdeks'", [id_province]);
     if (sql?.length > 0) {
+        console.log(sql)
         const rows = {
             "id": sql[0]?.id,
             "title": sql[0]?.title,
@@ -271,6 +272,19 @@ const about_province_kdeks = async (req, res) => {
             "web_identity": sql[0]?.web_identity,
             "id_province": sql[0]?.id_province,
             "images": sql[0]?.images,
+            "province_name": sql[0]?.province_name,
+            "structure": sql[0]?.structure,
+            "sk": sql[0]?.sk,
+            "twitter": sql[0]?.twitter,
+            "facebook": sql[0]?.facebook,
+            "linkedin": sql[0]?.linkedin,
+            "instagram": sql[0]?.instagram,
+            "youtube": sql[0]?.youtube,
+            "address": sql[0]?.address,
+            "phone_number": sql[0]?.phone_number,
+            "fax": sql[0]?.fax,
+            "email": sql[0]?.email,
+            "maps": sql[0]?.maps
         }
         arr.push(rows);
         res.status(200).json(arr)
@@ -1976,16 +1990,6 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
-    }
-}
-
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -2015,6 +2019,16 @@ const approveipaddress = async (req, res) => {
 
     const id_params_user = req.params.id;
     const sql = await executeQuery("UPDATE ip_address SET approve=$1, approve_by=$2, approve_date=$3 WHERE id=$4 ", ['Y', req.cookies.name, time_datetime, id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
     if (sql) {
         res.redirect('/ip_address');
     } else {
@@ -3319,9 +3333,9 @@ module.exports = {
     users_new,
     users_whitelist,
     users_ipaddress,
-    deleteipaddress,
     approveusers,
     approveipaddress,
+    deleteipaddress,
     userroles,
     insertusers,
     updateusers,

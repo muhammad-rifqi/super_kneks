@@ -53,6 +53,7 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
+
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::::: Ekonomi Syraiah ::::::::::::::::::::::::::::::::::::::::::::::::
 const es_abouts = async (req, res) => {
@@ -75,7 +76,7 @@ const es_detailabouts = async (req, res) => {
 }
 
 const es_updateabouts = async (req, res) => {
-    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en,req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
+    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en, req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
     if (sql) {
         res.redirect('/es');
     } else {
@@ -107,7 +108,7 @@ const detailabout = async (req, res) => {
 }
 
 const updateabouts = async (req, res) => {
-    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en,req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
+    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en, req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
     if (sql) {
         res.redirect('/tk');
     } else {
@@ -144,7 +145,7 @@ const history_kdeks = async (req, res) => {
 }
 
 const updateaboutskdeks = async (req, res) => {
-    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en,req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
+    const sql = await executeQuery('UPDATE abouts set about = $1,about_en = $2,history=$3 , history_en = $4 , about_content = $5, about_content_en = $6 , history_content = $7, history_content_en = $8 , legal_foundation = $9 , legal_foundation_en = $10, legal_foundation_content = $11 , legal_foundation_content_en = $12, logo_philosophy = $13 , logo_philosophy_en = $14 , logo_philosophy_content = $15, logo_philosophy_content_en = $16 , kneks_task = $17, kneks_task_en = $18 , kneks_task_content = $19 , kneks_task_content_en = $20, function = $21 , function_en = $22, function_content = $23 , function_content_en = $24 where id = $25', [req.body.about, req.body.about_en, req.body.history, req.body.history_en, req.body.about_content, req.body.about_content_en, req.body.history_content, req.body.history_content_en, req.body.legal_foundation, req.body.legal_foundation_en, req.body.legal_foundation_content, req.body.legal_foundation_content_en, req.body.logo_philosophy, req.body.logo_philosophy_en, req.body.logo_philosophy_content, req.body.logo_philosophy_content_en, req.body.kneks_task, req.body.kneks_task_en, req.body.kneks_task_content, req.body.kneks_task_content_en, req.body.function, req.body.function_en, req.body.function_content, req.body.function_content_en, req.body.id]);
     if (sql) {
         res.redirect('/kdeks');
     } else {
@@ -200,7 +201,7 @@ const insertkdeks = async (req, res) => {
     const fileuploads = site_url + "/uploads/kdeks/" + req.files['photo'][0].originalname.replace(" ", "");
     const skuploads = site_url + "/uploads/kdeks/" + req.files['sk'][0].originalname.replace(" ", "");
     const ggg = req.body.id_province.split('-');
-    const sql = await executeQuery("INSERT into kdeks (title,images,id_province,province_name,structure,sk,twitter,facebook,linkedin,instagram,youtube,address,phone_number,fax,email,maps)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16) ", [req.body.title, fileuploads, ggg[0], ggg[1], req.body.structure, skuploads, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.maps]);
+    const sql = await executeQuery("INSERT into kdeks (title,images,id_province,province_name,structure,sk,twitter,facebook,linkedin,instagram,youtube,address,phone_number,fax,email,historys,abouts,maps)values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18) ", [req.body.title, fileuploads, ggg[0], ggg[1], req.body.structure, skuploads, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.abouts, req.body.historys, req.body.maps]);
     if (sql) {
         res.redirect('/master');
     } else {
@@ -211,7 +212,7 @@ const insertkdeks = async (req, res) => {
 const updatekdeks = async (req, res) => {
     const ggg = req.body.id_province.split('-');
     if (!req.files.photo || !req.files.sk) {
-        const sql = await executeQuery("UPDATE kdeks set title=$1,id_province=$2,province_name=$3,structure=$4,twitter=$5,facebook=$6,linkedin=$7,instagram=$8,youtube=$9,address=$10,phone_number=$11,fax=$12,email=$13,maps=$14 where id =$15  ", [req.body.title, ggg[0], ggg[1], req.body.structure, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.maps, req.body.id]);
+        const sql = await executeQuery("UPDATE kdeks set title=$1,id_province=$2,province_name=$3,structure=$4,twitter=$5,facebook=$6,linkedin=$7,instagram=$8,youtube=$9,address=$10,phone_number=$11,fax=$12,email=$13,maps=$14,abouts=$15,historys=$16 where id =$17  ", [req.body.title, ggg[0], ggg[1], req.body.structure, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.maps, req.body.abouts, req.body.historys, req.body.id]);
         if (sql) {
             res.redirect('/master');
         } else {
@@ -220,7 +221,7 @@ const updatekdeks = async (req, res) => {
     } else {
         const fileuploads = site_url + "/uploads/kdeks/" + req.files['photo'][0].originalname.replace(" ", "");
         const skuploads = site_url + "/uploads/kdeks/" + req.files['sk'][0].originalname.replace(" ", "");
-        const sql = await executeQuery("UPDATE kdeks set title=$1,images=$2,id_province=$3,province_name=$4,structure=$5,sk=$6,twitter=$7,facebook=$8,linkedin=$9,instagram=$10,youtube=$11,address=$12,phone_number=$13,fax=$14,email=$15,maps=$16 where id =$17  ", [req.body.title, fileuploads, ggg[0], ggg[1], req.body.structure, skuploads, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.maps, req.body.id]);
+        const sql = await executeQuery("UPDATE kdeks set title=$1,images=$2,id_province=$3,province_name=$4,structure=$5,sk=$6,twitter=$7,facebook=$8,linkedin=$9,instagram=$10,youtube=$11,address=$12,phone_number=$13,fax=$14,email=$15,maps=$16,abouts=$17,historys=$18 where id =$19  ", [req.body.title, fileuploads, ggg[0], ggg[1], req.body.structure, skuploads, req.body.twitter, req.body.facebook, req.body.linkedin, req.body.instagram, req.body.youtube, req.body.address, req.body.phone_number, req.body.fax, req.body.email, req.body.maps, req.body.abouts, req.body.historys, req.body.id]);
         if (sql) {
             res.redirect('/master');
         } else {
@@ -233,8 +234,8 @@ const deletekdeks = async (req, res) => {
     const id_kdeks = req.params.id;
     const foto_kdeks = req.params.foto;
 
-    if (fs.existsSync(fileslinux + 'kdeks/' + foto_kdeks)) {
-        fs.unlink(fileslinux + 'kdeks/' + foto_kdeks, async function (err) {
+    if (fs.existsSync(fileslinux + 'kdeks/provinsi/' + foto_kdeks)) {
+        fs.unlink(fileslinux + 'kdeks/provinsi/' + foto_kdeks, async function (err) {
             if (err) return console.log(err);
             const sql = await executeQuery("DELETE FROM  kdeks where id=$1", [id_kdeks]);
             if (sql) {
@@ -331,8 +332,8 @@ const structure = async (req, res) => {
 
 const inserstructure = async (req, res) => {
     const fileuploads = site_url + "/uploads/structure/" + req.file.originalname.replace(" ", "");
-    const sql = await executeQuery("insert into pejabat(name,position,position_en,photo,description,description_en,is_publish, level) values($1,$2,$3,$4,$5,$6,$7,$8)",
-        [req.body.name, req.body.position, req.body.position_en, fileuploads, req.body.description, req.body.description_en, req.body.is_published, req.body.level]);
+    const sql = await executeQuery("insert into pejabat(name,position,position_en,photo,description,description_en,is_publish, organization, directorat, head) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
+        [req.body.name, req.body.position, req.body.position_en, fileuploads, req.body.description, req.body.description_en, req.body.is_published, req.body.organization, req.body.directorat, req.body.head]);
     if (sql) {
         res.redirect('/s');
     } else {
@@ -379,8 +380,8 @@ const detailstructure = async (req, res) => {
 
 const updatestructure = async (req, res) => {
     if (!req.file || req.file == "" || req.file == undefined) {
-        const sql = await executeQuery("update pejabat set name=$1,position=$2,position_en=$3,description=$4,description_en=$5,is_publish=$6,level=$7 where id = $8",
-            [req.body.name, req.body.position, req.body.position_en, req.body.description, req.body.description_en, req.body.is_published, req.body.level, req.body.id]);
+        const sql = await executeQuery("update pejabat set name=$1,position=$2,position_en=$3,description=$4,description_en=$5,is_publish=$6,organization=$7,directorat=$8,head=$9 where id = $10",
+            [req.body.name, req.body.position, req.body.position_en, req.body.description, req.body.description_en, req.body.is_published, req.body.organization, req.body.directorat, req.body.head, req.body.id]);
         if (sql) {
             res.redirect('/s');
         } else {
@@ -388,8 +389,8 @@ const updatestructure = async (req, res) => {
         }
     } else {
         const fileuploads = site_url + "/uploads/structure/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery("update pejabat set name=$1,position=$2,position_en=$3,photo=$4,description=$5, description_en=$6,is_publish=$7,level=$8 where id=$9",
-            [req.body.name, req.body.position, req.body.position_en, fileuploads, req.body.description, req.body.description_en, req.body.is_published, req.body.level, req.body.id]);
+        const sql = await executeQuery("update pejabat set name=$1,position=$2,position_en=$3,photo=$4,description=$5, description_en=$6,is_publish=$7,organization=$8,directorat=$9,head=$10  where id=$11",
+            [req.body.name, req.body.position, req.body.position_en, fileuploads, req.body.description, req.body.description_en, req.body.is_published, req.body.directorat, req.body.head, req.body.id]);
         if (sql) {
             res.redirect('/s');
         } else {
@@ -1057,7 +1058,7 @@ const updatemaps = async (req, res) => {
         res.redirect('/m_edit/' + req.body.id);
     } else {
         console.log(sql);
-        res.redirect('/m_edit/' + req.body.id);
+        res.redirect('/mm_edit/' + req.body.id);
     }
 }
 //::::::::::::::::::::::::::::::End Of Maps :::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -1075,10 +1076,10 @@ const contacts = async (req, res) => {
 const updatecontacts = async (req, res) => {
     const sql = await executeQuery('UPDATE contacts set address_building=$1, address=$2, phone_number=$3, fax_number=$4, email=$5 where id=$6', [req.body.address_building, req.body.address, req.body.phone_number, req.body.fax_number, req.body.email, req.body.id]);
     if (sql) {
-        res.redirect('/c_edit' + req.body.id);
+        res.redirect('/c_edit/' + req.body.id);
     } else {
         console.log(sql);
-        res.redirect('/c_edit' + req.body.id);
+        res.redirect('/c_edit/' + req.body.id);
     }
 }
 
@@ -1975,6 +1976,16 @@ const users_ipaddress = async (req, res) => {
     }
 };
 
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
 const approveusers = async (req, res) => {
 
     const today = new Date();
@@ -1990,16 +2001,6 @@ const approveusers = async (req, res) => {
         res.redirect('/whitelist');
     } else {
         res.redirect('/whitelist')
-    }
-}
-
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
     }
 }
 
@@ -3318,9 +3319,10 @@ module.exports = {
     users_new,
     users_whitelist,
     users_ipaddress,
-    approveusers,
-    approveipaddress,
     deleteipaddress,
+    approveusers,
+    deleteipaddress,
+    approveipaddress,
     userroles,
     insertusers,
     updateusers,
