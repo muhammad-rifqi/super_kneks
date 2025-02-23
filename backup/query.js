@@ -53,6 +53,27 @@ const do_logout = (req, res) => {
     res.redirect("/");
 }
 
+const analitics = async (req, res) => {
+    const id_users = req.cookies.id;
+
+    const news_mounts = await executeQuery('SELECT * FROM news where users_id = $1', [id_users]);
+    const jumlah1 = news_mounts.length;
+    const videos_mounts = await executeQuery('SELECT * FROM news_videos where users_id = $1', [id_users]);
+    const jumlah2 = videos_mounts.length;
+    const photos_mounts = await executeQuery('SELECT * FROM news_photos where users_id = $1', [id_users]);
+    const jumlah3 = photos_mounts.length;
+    const files_mounts = await executeQuery('SELECT * FROM files where users_id = $1', [id_users]);
+    const jumlah4 = files_mounts.length;
+
+    const mounted = {
+        "news": jumlah1,
+        "videos": jumlah2,
+        "photos": jumlah3,
+        "files": jumlah4,
+    }
+
+    res.status(200).json(mounted)
+}
 
 //::::::::::::::::::::::::::::::End Of Login :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //:::::::::::::::::::::::::::::: Ekonomi Syraiah ::::::::::::::::::::::::::::::::::::::::::::::::
@@ -319,7 +340,7 @@ const history_province_kdeks = async (req, res) => {
 //::::::::::::::::::::::::::::::End Of Kdeks :::::::::::::::::::::::::::::::::::::::::::::::::::::
 //::::::::::::::::::::::::::::::Start Of Structure :::::::::::::::::::::::::::::::::::::::::::::::::::::
 const structure = async (req, res) => {
-    const sql = await executeQuery("SELECT * FROM  pejabat");
+    const sql = await executeQuery("SELECT * FROM  pejabat order by id ASC");
     if (sql?.length > 0) {
         const array = [];
         sql?.forEach((items, index) => {
@@ -2026,6 +2047,7 @@ const approveipaddress = async (req, res) => {
     }
 }
 
+
 const deleteipaddress = async (req, res) => {
     const id_params_user = req.params.id;
     const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
@@ -2774,6 +2796,30 @@ const data_menus = async (req, res) => {
     }
 }
 
+const data_menu_fe = async (req, res) => {
+    const result = await executeQuery("SELECT * FROM data_menu ORDER BY id ASC ");
+    let promises = result.map(async (item) => {
+        return new Promise(async (resolve, reject) => {
+            let r = await executeQuery("SELECT * FROM data_submenu WHERE id_statistic = $1", [item.id]);
+            let data_submenux = r;
+            let row = {
+                "id": item?.id,
+                "title": item?.title,
+                "title_en": item?.title_en,
+                "data_submenu": data_submenux
+            };
+            resolve(row);
+        });
+    });
+    Promise.all(promises)
+        .then((rows) => {
+            res.status(200).json(rows);
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        });
+}
+
 
 const dropdown_menu = async (req, res) => {
     const result = await executeQuery("SELECT * FROM menu ORDER BY id ASC ");
@@ -3201,6 +3247,7 @@ module.exports = {
     do_login,
     do_logout,
     user_register,
+    analitics,
     slideshows,
     insertslideshow,
     updateslideshow,
@@ -3392,6 +3439,7 @@ module.exports = {
     emptyapidashboard,
     updateapidashboard,
     data_menus,
+    data_menu_fe,
     dropdown_menu,
     detail_data_menus,
     deletedatamenus,

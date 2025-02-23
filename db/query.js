@@ -2029,6 +2029,16 @@ const approveusers = async (req, res) => {
     }
 }
 
+const deleteipaddress = async (req, res) => {
+    const id_params_user = req.params.id;
+    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
+    if (sql) {
+        res.redirect('/ip_address');
+    } else {
+        res.redirect('/ip_address')
+    }
+}
+
 const approveipaddress = async (req, res) => {
 
     const today = new Date();
@@ -2040,17 +2050,6 @@ const approveipaddress = async (req, res) => {
 
     const id_params_user = req.params.id;
     const sql = await executeQuery("UPDATE ip_address SET approve=$1, approve_by=$2, approve_date=$3 WHERE id=$4 ", ['Y', req.cookies.name, time_datetime, id_params_user]);
-    if (sql) {
-        res.redirect('/ip_address');
-    } else {
-        res.redirect('/ip_address')
-    }
-}
-
-
-const deleteipaddress = async (req, res) => {
-    const id_params_user = req.params.id;
-    const sql = await executeQuery("DELETE from ip_address WHERE id = $1 ", [id_params_user]);
     if (sql) {
         res.redirect('/ip_address');
     } else {
@@ -2075,8 +2074,8 @@ const insertusers = async (req, res) => {
     const time = today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
     const time_datetime = date + ' ' + time;
     const pw = md5(req.body.password);
-    const sql = await executeQuery("insert into users(name,email,password,role_id,created_at,updated_at,ip_address, directorat_id, id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9)",
-        [req.body.name.replace(/\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, '0.0.0.0', req.body.directorat_id, req.body.id_province]);
+    const sql = await executeQuery("insert into users(name,email,password,role_id,created_at,updated_at,approve, ip_address, directorat_id, id_province) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
+        [req.body.name.replace(/\s/g, ''), req.body.email, pw, req.body.role_id, time_datetime, time_datetime, 'Y', '0.0.0.0', req.body.directorat_id, req.body.id_province]);
     if (sql) {
         res.redirect('/u');
     } else {
@@ -2380,7 +2379,7 @@ const updateslideshow = async (req, res) => {
     const id_slidshowss = req.body.id;
     if (req.file) {
         const filesimage = site_url + "/uploads/slideshow/" + req.file.originalname.replace(" ", "");
-        const sql = await executeQuery('UPDATE slideshow set title=$1, title_en=$2, image=$3,content = $4 ,content_en = $5 , date_created=$6, status=$7  where  id = $8 ', [req.body.title, req.body.title_en, filesimage, req.body.tanggal, req.body.status, id_slidshowss]);
+        const sql = await executeQuery('UPDATE slideshow set title=$1, title_en=$2, image=$3,content = $4 ,content_en = $5 , status=$6  where  id = $7 ', [req.body.title, req.body.title_en, filesimage, req.body.content, req.body.content_en, req.body.status, id_slidshowss]);
         if (sql) {
             res.redirect('/b');
         } else {
